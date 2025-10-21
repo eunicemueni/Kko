@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
 
-// ----- Auth Context -----
+// --------- Auth Context ---------
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
@@ -22,59 +22,53 @@ function AuthProvider({ children }) {
   const signOut = () => setUser(null);
   const upgrade = (plan) => setUser(prev => ({ ...prev, isPaid: true, plan }));
   const decrementFree = () => setUser(prev => ({ ...prev, freeVideosLeft: Math.max(0, (prev.freeVideosLeft || 1) - 1) }));
+  const addFavorite = (template) => setUser(prev => ({ ...prev, favorites: Array.from(new Set([...(prev.favorites || []), template])) }));
 
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut, upgrade, decrementFree }}>
+    <AuthContext.Provider value={{ user, signIn, signOut, upgrade, decrementFree, addFavorite }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-// ----- Utils -----
+// --------- Utils ---------
 const copyText = async (t) => {
-  try { await navigator.clipboard.writeText(t); alert(`Copied: ${t}`); }
+  try { await navigator.clipboard.writeText(t); alert(`Copied: ${t}`); } 
   catch { alert("Copy failed"); }
 };
 
-// ----- Templates -----
+// --------- Templates ---------
 const TEMPLATES = [
-  { name: "Talking Monkey", category: "Animal", thumbnail: "https://via.placeholder.com/400x225?text=Monkey", viralScore: 90, isPaid: true, captions: ["Look at this talking monkey! 🐒"], hashtags: ["monkey", "funny"] },
-  { name: "Cute Kitten", category: "Animal", thumbnail: "https://via.placeholder.com/400x225?text=Kitten", viralScore: 78, isPaid: false, captions: ["Adorable kitten vibes 🐱"], hashtags: ["kitten", "cute"] },
-  { name: "ASMR Glass Cutting", category: "ASMR", thumbnail: "https://via.placeholder.com/400x225?text=ASMR+Glass", viralScore: 85, isPaid: true, captions: ["Relaxing ASMR sounds ✨"], hashtags: ["asmr", "relax"] },
+  { name:"Talking Monkey", category:"Animal", isPaid:true, captions:["Look at this talking monkey! 🐒"], hashtags:["monkey","funny"] },
+  { name:"Cute Kitten", category:"Animal", isPaid:false, captions:["Adorable kitten vibes 🐱"], hashtags:["kitten","cute"] },
+  { name:"ASMR Glass Cutting", category:"ASMR", isPaid:true, captions:["Relaxing ASMR sounds ✨"], hashtags:["asmr","relax"] },
+  { name:"Modern Love Story", category:"Romance", isPaid:true, captions:["Romantic AI cinematic scene 💖"], hashtags:["love","romance"] },
+  { name:"Epic Action Scene", category:"Action", isPaid:true, captions:["Thrilling moment!"], hashtags:["action","movie"] },
 ];
 
-// ----- Header -----
+// --------- Header ---------
 function Header() {
   const { user, signOut } = useAuth();
   return (
-    <header className="flex justify-between p-4 bg-white shadow">
-      <div className="flex gap-4 items-center">
-        <div className="font-bold text-xl" style={{color:"#3D2C41"}}>Kairah</div>
-        <Link to="/studio" className="hover:text-purple-800">Studio</Link>
-        <Link to="/pricing" className="hover:text-purple-800">Pricing</Link>
-      </div>
-      <div>
-        {user ? <><span>{user.name}</span> <button onClick={signOut} className="ml-2 bg-gray-200 px-2 rounded">Logout</button></> :
-        <Link to="/signin" className="bg-purple-800 text-white px-2 py-1 rounded">Login</Link>}
-      </div>
+    <header style={{ padding:"1rem", borderBottom:"1px solid #ccc", marginBottom:"1rem" }}>
+      <Link to="/">Kairah Studio</Link> | <Link to="/studio">Studio</Link> | <Link to="/pricing">Pricing</Link> | 
+      {user ? <span> {user.name} <button onClick={signOut}>Logout</button></span> : <Link to="/signin">Login</Link>}
     </header>
   );
 }
 
-// ----- Landing -----
+// --------- Landing ---------
 function Landing() {
   return (
-    <div className="text-center p-8">
-      <h1 className="text-3xl font-bold" style={{color:"#3D2C41"}}>Kairah Studio + Fame Booster</h1>
-      <p className="mt-2 text-gray-700">Generate stunning AI videos: animals, ASMR, stories, and more!</p>
-      <div className="mt-4 flex justify-center gap-2">
-        <Link to="/studio" className="bg-yellow-500 px-4 py-2 rounded text-white">Try Studio</Link>
-      </div>
+    <div>
+      <h1>Kairah Studio + Fame Booster</h1>
+      <p>Generate stunning AI videos for animals, ASMR, stories, cinematic clips, music, and more.</p>
+      <Link to="/studio"><button>Try Studio</button></Link>
     </div>
   );
 }
 
-// ----- SignIn -----
+// --------- SignIn ---------
 function SignIn() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
@@ -83,104 +77,102 @@ function SignIn() {
 
   const submit = e => {
     e.preventDefault();
-    if(!email) return alert("Enter email");
+    if (!email) return alert("Enter email");
     signIn(email, name);
     navigate("/studio");
   };
 
   return (
-    <div className="max-w-md mx-auto mt-12 p-6 bg-white rounded shadow">
-      <h2 className="font-bold text-xl mb-4">Sign in</h2>
-      <form onSubmit={submit} className="flex flex-col gap-2">
-        <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" className="border px-3 py-2 rounded"/>
-        <input value={name} onChange={e=>setName(e.target.value)} placeholder="Display name (optional)" className="border px-3 py-2 rounded"/>
-        <button type="submit" className="bg-yellow-500 text-white px-4 py-2 rounded mt-2">Sign In</button>
+    <div>
+      <h2>Sign in to Kairah Studio</h2>
+      <form onSubmit={submit}>
+        <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
+        <input value={name} onChange={e => setName(e.target.value)} placeholder="Display name (optional)" />
+        <button type="submit">Sign in</button>
       </form>
     </div>
   );
 }
 
-// ----- Studio -----
+// --------- Studio ---------
 function Studio() {
   const { user, decrementFree } = useAuth();
   const [prompt, setPrompt] = useState("");
   const [selected, setSelected] = useState(null);
-  const [myVideos, setMyVideos] = useState(() => JSON.parse(localStorage.getItem("kairah_my_videos")||"[]"));
+  const [myVideos, setMyVideos] = useState(() => JSON.parse(localStorage.getItem("kairah_my_videos") || "[]"));
   const [playingVideo, setPlayingVideo] = useState(null);
 
-  const promptMagic = () => { if(!prompt) return alert("Enter prompt"); setPrompt("Viral: "+prompt+" 🚀"); };
+  const promptMagic = () => {
+    if(!prompt) return alert("Enter prompt");
+    setPrompt("Viral-enhanced: " + prompt + " 🚀");
+  };
 
   const handleGenerate = () => {
     if(!user) return alert("Sign in first");
     if(!selected) return alert("Select template");
     if(!user.isPaid && (user.freeVideosLeft||0)<=0) return alert("Free video limit reached");
 
-    const newVideo = { id:Date.now(), template:selected.name, status:"ready", createdAt: new Date().toISOString() };
+    const newVideo = { id: Date.now(), template: selected.name, status: "ready", createdAt: new Date().toISOString() };
     const updated = [newVideo, ...myVideos];
     setMyVideos(updated);
     localStorage.setItem("kairah_my_videos", JSON.stringify(updated));
     if(!user.isPaid) decrementFree();
 
     setPlayingVideo(newVideo.id);
-    setTimeout(()=>setPlayingVideo(null),6000);
-    alert("Video generated (mock)!");
+    setTimeout(() => setPlayingVideo(null), 6000);
+    alert("Video generated (mock). Preview will play for 6 seconds.");
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Kairah Studio</h2>
-      <div className="flex gap-2 mb-4">
-        <input value={prompt} onChange={e=>setPrompt(e.target.value)} placeholder="Type your idea..." className="flex-1 border px-3 py-2 rounded"/>
-        <button onClick={promptMagic} className="bg-yellow-500 text-white px-4 py-2 rounded">Prompt Magic</button>
-        <button onClick={handleGenerate} className="bg-[#D4AF37] text-white px-4 py-2 rounded">Generate Video</button>
-      </div>
+    <div>
+      <h2>Kairah Studio</h2>
+      <input value={prompt} onChange={e => setPrompt(e.target.value)} placeholder="Type your idea..." />
+      <button onClick={promptMagic}>Prompt Magic</button>
+      <button onClick={handleGenerate}>Generate Video</button>
 
-      <h3 className="font-bold mb-2">Templates</h3>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {TEMPLATES.map(t => (
-          <div key={t.name} className={`border p-2 rounded cursor-pointer relative ${selected?.name===t.name?"ring-4 ring-yellow-500":""}`}
-               onClick={()=>{ if(t.isPaid && !user?.isPaid) return alert("Upgrade to access"); setSelected(t); }}>
-            <img src={t.thumbnail} alt={t.name} className="w-full h-36 object-cover rounded"/>
-            <div className="font-bold mt-1">{t.name}</div>
-            <div className="text-sm">{t.category}</div>
-            <div style={{position:"absolute", top:4,right:4,background:"#E7D2CB",padding:"2px 6px", borderRadius:6}}>{t.viralScore}⭐</div>
-            {t.isPaid && !user?.isPaid && <div style={{position:"absolute", inset:0,background:"rgba(0,0,0,0.4)",display:"flex",justifyContent:"center",alignItems:"center",color:"white"}}>Locked</div>}
+      <h3>Templates</h3>
+      {TEMPLATES.map(t => (
+        <div key={t.name} style={{ border:"1px solid #ccc", margin:"0.5rem", padding:"0.5rem" }}>
+          <strong>{t.name}</strong> ({t.category}) {t.isPaid && !user?.isPaid ? " [LOCKED]" : ""}
+          <div>
+            <button onClick={() => { if(t.isPaid&&!user?.isPaid) return alert("Upgrade to access"); setSelected(t); }}>Select</button>
           </div>
-        ))}
-      </div>
-
-      {playingVideo && <div className="mt-4 p-4 bg-gray-100 rounded">🎬 Playing {myVideos.find(v=>v.id===playingVideo)?.template} (mock 6s preview)</div>}
-
-      <h3 className="mt-6 font-bold">My Videos</h3>
-      {myVideos.length===0 ? <div>No videos yet.</div> :
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
-          {myVideos.map(v=>(
-            <div key={v.id} className="border p-2 rounded">
-              <div className="font-bold">{v.template}</div>
-              <div className="text-sm">{v.status}</div>
-            </div>
-          ))}
+          <div>
+            {t.captions.map(c => <span key={c} onClick={() => copyText(c)} style={{ margin:"0.2rem", cursor:"pointer" }}>{c}</span>)}
+          </div>
+          <div>
+            {t.hashtags.map(h => <span key={h} onClick={() => copyText(h)} style={{ margin:"0.2rem", cursor:"pointer" }}>#{h}</span>)}
+          </div>
         </div>
+      ))}
+
+      {playingVideo && (
+        <div>
+          🎬 Playing {myVideos.find(v=>v.id===playingVideo)?.template} (mock 6s preview)
+        </div>
+      )}
+
+      <h3>My Videos</h3>
+      {myVideos.length === 0 ? <p>No videos yet.</p> :
+        myVideos.map(v => <div key={v.id}>{v.template} - {v.status}</div>)
       }
     </div>
   );
 }
 
-// ----- Pricing -----
+// --------- Pricing ---------
 function Pricing() {
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4" style={{color:"#3D2C41"}}>Pricing</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="border p-4 rounded"><div className="font-bold">Free</div>1 video free</div>
-        <div className="border p-4 rounded"><div className="font-bold">Pro</div>$9.99 / month</div>
-        <div className="border p-4 rounded"><div className="font-bold">Diamond</div>$29.99 / month</div>
-      </div>
+    <div>
+      <h2>Pricing</h2>
+      <p>Free: 1 video</p>
+      <p>Pro: Unlimited videos</p>
+      <p>Diamond: Unlimited + premium templates</p>
     </div>
   );
 }
 
-// ----- App -----
+// --------- App ---------
 export default function App() {
   return (
     <AuthProvider>
