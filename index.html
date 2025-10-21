@@ -1,0 +1,72 @@
+// --- Studio ---
+function Studio(){
+  const {user,decrementFree}=useAuth();
+  const [prompt,setPrompt]=useState(""); 
+  const [selected,setSelected]=useState(null);
+  const [myVideos,setMyVideos]=useState(()=>JSON.parse(localStorage.getItem("kairah_my_videos")||"[]"));
+  const [playingVideo,setPlayingVideo]=useState(null);
+
+  const promptMagic=()=>{if(!prompt)return alert("Enter prompt");setPrompt("Viral-enhanced: "+prompt+" 🚀");};
+
+  const handleGenerate=()=>{
+    if(!user)return alert("Sign in first");
+    if(!selected)return alert("Select template");
+    if(!user.isPaid && (user.freeVideosLeft||0)<=0)return alert("Free video limit reached");
+
+    const newVideo={id:Date.now(),template:selected.name,status:"ready",createdAt:new Date().toISOString()};
+    const updated=[newVideo,...myVideos]; 
+    setMyVideos(updated); 
+    localStorage.setItem("kairah_my_videos",JSON.stringify(updated)); 
+    if(!user.isPaid) decrementFree();
+
+    // Show mock 6-second video preview
+    setPlayingVideo(newVideo.id);
+    setTimeout(()=>setPlayingVideo(null),6000);
+
+    alert("Video generated (mock). Preview will play for 6 seconds.");
+  };
+
+  return (
+    <div className="p-6 max-w-6xl mx-auto">
+      <h2 className="font-bold text-2xl text-[#3D2C41]">Kairah Studio</h2>
+      <div className="mt-4 flex gap-2">
+        <input value={prompt} onChange={e=>setPrompt(e.target.value)} placeholder="Type your idea..." className="flex-1 border px-3 py-2 rounded"/>
+        <button onClick={promptMagic} className="px-4 py-2 rounded bg-yellow-500 text-white">Prompt Magic</button>
+        <button onClick={handleGenerate} className="px-4 py-2 rounded bg-[#D4AF37] text-white">Generate Video</button>
+      </div>
+
+      <h3 className="mt-6 font-bold text-xl">Templates</h3>
+      <div className="grid md:grid-cols-3 gap-4 mt-3">
+        {TEMPLATES.map(t=>(
+          <div key={t.name} className="border rounded p-2 relative">
+            {t.isPaid && !user?.isPaid && <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-xl">LOCKED</div>}
+            <img src={t.thumbnail} className="w-full rounded mb-2 cursor-pointer" onClick={()=>setSelected(t)}/>
+            <div className="flex justify-between items-center">
+              <span>{t.name}</span>{selected?.name===t.name && <span className="text-green-600 font-bold">✓</span>}
+            </div>
+            <div className="flex gap-1 mt-1">
+              <button onClick={()=>copyText(t.captions[0])} className="text-sm bg-gray-200 px-2 rounded">Copy Caption</button>
+              <button onClick={()=>copyText(t.hashtags.join(" "))} className="text-sm bg-gray-200 px-2 rounded">Copy Hashtags</button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {playingVideo && (
+        <div className="mt-6 p-4 border rounded bg-gray-100 relative flex justify-center items-center">
+          <div className="w-80 h-45 bg-gradient-to-r from-purple-400 via-pink-500 to-yellow-300 animate-pulse rounded"></div>
+          <span className="absolute top-2 right-2 text-white bg-black/50 px-2 py-1 rounded text-sm">6s preview</span>
+        </div>
+      )}
+
+      <h3 className="mt-6 font-bold text-xl">My Videos</h3>
+      <div className="mt-3 space-y-2">
+        {myVideos.length===0?<p>No videos yet.</p>:myVideos.map(v=>(
+          <div key={v.id} className="border p-2 flex justify-between items-center rounded">
+            <span>{v.template}</span><span className="italic">{v.status}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
