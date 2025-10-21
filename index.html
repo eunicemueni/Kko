@@ -1,124 +1,111 @@
-import React, { useState, useEffect, createContext, useContext } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, Link, useNavigate } from "react-router-dom";
-import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kairah Studio - AI Video Generator</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
+    header { background: #D4AF37; color: white; padding: 20px; text-align: center; }
+    .container { max-width: 800px; margin: 30px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h1, h2 { margin-top: 0; }
+    input[type="text"], select, input[type="email"], input[type="password"] { width: 100%; padding: 10px; margin: 5px 0 15px 0; border-radius: 5px; border: 1px solid #ccc; }
+    button { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+    button.generate { background: #28a745; color: white; }
+    button.prompt-magic { background: #ffc107; color: white; }
+    button.download { background: #007bff; color: white; margin-left: 10px; }
+    .video-box { margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background: #f1f1f1; }
+    .history { margin-top: 20px; }
+    .history ul { padding-left: 20px; }
+    .plan { margin-top: 10px; font-weight: bold; }
+    .category-select { margin-bottom: 10px; }
+  </style>
+</head>
+<body>
 
-// ---------------- Firebase Setup ----------------
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+<header>
+  <h1>Kairah Studio</h1>
+  <p>AI Video Generator - Mock Frontend</p>
+</header>
 
-// ---------------- Auth Context ----------------
-const AuthContext = createContext();
-const useAuth = () => useContext(AuthContext);
+<div class="container" id="auth-container">
+  <h2>Sign In / Sign Up</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button id="signin-btn">Sign In</button>
+  <button id="signup-btn">Sign Up</button>
+  <p id="auth-error" style="color:red;"></p>
+</div>
 
-const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [plan, setPlan] = useState("free");
-  const [loading, setLoading] = useState(true);
+<div class="container" id="studio-container" style="display:none;">
+  <h2>Video Generator</h2>
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      if (currentUser?.email.includes("pro")) setPlan("pro");
-      else if (currentUser?.email.includes("diamond")) setPlan("diamond");
-      else setPlan("free");
-      setLoading(false);
-    });
-    return unsubscribe;
-  }, []);
-
-  return (
-    <AuthContext.Provider value={{ user, plan }}>
-      {!loading && children}
-    </AuthContext.Provider>
-  );
-};
-
-// ---------------- Protected Route ----------------
-const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth();
-  return user ? children : <Navigate to="/signin" />;
-};
-
-// ---------------- Landing Page ----------------
-const LandingPage = () => (
-  <div className="p-10">
-    <head>
-      <title>Kairah Studio - AI Video Generator</title>
-      <meta name="description" content="Preview Kairah Studio features. Sign in to generate AI videos." />
-    </head>
-    <h1 className="text-4xl font-bold mb-4">Welcome to Kairah Studio</h1>
-    <p className="mb-4">Explore AI-generated videos, prompts, and templates. Sign in to start creating your own videos.</p>
-    <Link to="/signin" className="bg-blue-500 text-white p-2 rounded">Sign In</Link>
-    <div className="mt-8 p-4 border rounded shadow animate-pulse">
-      <h2 className="font-semibold mb-2">Feature Preview:</h2>
-      <ul className="list-disc ml-6">
-        <li>6-second high-quality AI video generation (Free)</li>
-        <li>Viral video prompts & categories</li>
-        <li>Pro/Diamond unlimited access</li>
-        <li>Prompt Magic button to enhance prompts</li>
-        <li>Download simulation and video history</li>
-      </ul>
-    </div>
+  <div class="category-select">
+    <label>Category:</label>
+    <select id="category">
+      <option value="viral">Viral</option>
+      <option value="royal">Royal</option>
+      <option value="fantasy">Fantasy</option>
+    </select>
   </div>
-);
 
-// ---------------- SignIn Page ----------------
-const SignInPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
-  const navigate = useNavigate();
+  <input type="text" id="prompt" placeholder="Enter your prompt">
+  <button class="prompt-magic" id="prompt-magic-btn">Prompt Magic</button>
+  <br>
+  <button class="generate" id="generate-btn">Generate Video</button>
 
-  const handleAuth = async (e) => {
-    e.preventDefault();
-    try {
-      if (isSignUp) {
-        await createUserWithEmailAndPassword(auth, email, password);
-      } else {
-        await signInWithEmailAndPassword(auth, email, password);
-      }
-      navigate("/generate");
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+  <div class="video-box" id="video-box" style="display:none;">
+    🎬 Your 6-second video is ready! 
+    <button class="download" id="download-btn">Download</button>
+  </div>
 
-  return (
-    <div className="p-10 max-w-md mx-auto">
-      <h2 className="text-2xl mb-4">{isSignUp ? "Sign Up" : "Sign In"}</h2>
-      <form onSubmit={handleAuth} className="flex flex-col gap-4">
-        <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="p-2 border rounded"/>
-        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} className="p-2 border rounded"/>
-        {error && <p className="text-red-500">{error}</p>}
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded">{isSignUp ? "Sign Up" : "Sign In"}</button>
-      </form>
-      <p className="mt-4">
-        {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
-        <span className="text-blue-500 cursor-pointer" onClick={() => setIsSignUp(!isSignUp)}>
-          {isSignUp ? "Sign In" : "Sign Up"}
-        </span>
-      </p>
-    </div>
-  );
-};
+  <div class="history">
+    <h3>Generated Video History:</h3>
+    <ul id="history-list"></ul>
+  </div>
 
-// ---------------- Video Generator Page ----------------
-const VideoGenerator = () => {
-  const { plan } = useAuth();
-  const [generated, setGenerated] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("viral");
-  const [prompt, setPrompt] = useState("Funny cat dancing");
-  const [history, setHistory] = useState([]);
+  <div class="plan">
+    Plan: <span id="user-plan">Free</span>
+  </div>
+</div>
+
+<script>
+  // --- Mock Authentication ---
+  const authContainer = document.getElementById('auth-container');
+  const studioContainer = document.getElementById('studio-container');
+  const authError = document.getElementById('auth-error');
+
+  let user = null;
+  let plan = 'Free'; // free, pro, diamond
+  let videoCount = 0;
+
+  const signinBtn = document.getElementById('signin-btn');
+  const signupBtn = document.getElementById('signup-btn');
+
+  signinBtn.onclick = () => authenticate(false);
+  signupBtn.onclick = () => authenticate(true);
+
+  function authenticate(isSignUp) {
+    const email = document.getElementById('email').value.trim();
+    if(!email) { authError.textContent = "Email required"; return; }
+    user = email;
+    if(email.includes('pro')) plan = 'Pro';
+    else if(email.includes('diamond')) plan = 'Diamond';
+    else plan = 'Free';
+    document.getElementById('user-plan').textContent = plan;
+    authContainer.style.display = 'none';
+    studioContainer.style.display = 'block';
+    authError.textContent = '';
+    loadHistory();
+  }
+
+  // --- Video Generator ---
+  const generateBtn = document.getElementById('generate-btn');
+  const promptInput = document.getElementById('prompt');
+  const promptMagicBtn = document.getElementById('prompt-magic-btn');
+  const videoBox = document.getElementById('video-box');
+  const historyList = document.getElementById('history-list');
+  const categorySelect = document.getElementById('category');
 
   const defaultPrompts = {
     viral: ["Funny cat dancing", "Epic fail moment", "Dance challenge"],
@@ -126,89 +113,46 @@ const VideoGenerator = () => {
     fantasy: ["Dragon flying", "Magic forest scene"]
   };
 
-  useEffect(() => {
-    const email = auth.currentUser?.email;
-    const savedHistory = JSON.parse(localStorage.getItem(`history_${email}`)) || [];
-    setHistory(savedHistory);
-    setPrompt(defaultPrompts[selectedCategory][0]);
-  }, [selectedCategory]);
+  categorySelect.onchange = () => {
+    promptInput.value = defaultPrompts[categorySelect.value][0];
+  };
 
-  const handleGenerateVideo = () => {
-    const email = auth.currentUser.email;
-    if (plan === "free") {
-      const videosUsed = localStorage.getItem(`videos_${email}`) || 0;
-      if (videosUsed >= 1) {
-        alert("Free plan allows only 1 video. Upgrade for more.");
-        return;
-      }
-      localStorage.setItem(`videos_${email}`, Number(videosUsed) + 1);
+  promptMagicBtn.onclick = () => {
+    promptInput.value += " 🔥✨ (Enhanced Prompt Magic!)";
+  };
+
+  generateBtn.onclick = () => {
+    if(plan === 'Free' && videoCount >=1) {
+      alert("Free plan allows only 1 video. Upgrade for more.");
+      return;
     }
-    setGenerated(true);
-    const newHistory = [...history, prompt];
-    setHistory(newHistory);
-    localStorage.setItem(`history_${email}`, JSON.stringify(newHistory));
+    videoBox.style.display = 'block';
+    addToHistory(promptInput.value);
+    videoCount++;
   };
 
-  const handlePromptMagic = () => {
-    const enhanced = `${prompt} 🔥✨ (Enhanced Prompt Magic!)`;
-    setPrompt(enhanced);
+  function addToHistory(prompt) {
+    const li = document.createElement('li');
+    li.textContent = prompt;
+    historyList.appendChild(li);
+    saveHistory();
+  }
+
+  function saveHistory() {
+    const items = Array.from(historyList.children).map(li => li.textContent);
+    localStorage.setItem('videoHistory_'+user, JSON.stringify(items));
+  }
+
+  function loadHistory() {
+    const saved = JSON.parse(localStorage.getItem('videoHistory_'+user)) || [];
+    saved.forEach(p => addToHistory(p));
+  }
+
+  // --- Download button simulation ---
+  document.getElementById('download-btn').onclick = () => {
+    alert('Video download simulated!');
   };
+</script>
 
-  return (
-    <div className="p-10 max-w-xl mx-auto">
-      <h2 className="text-3xl mb-4">Video Generator</h2>
-      <div className="mb-4">
-        <label className="font-semibold mr-2">Category:</label>
-        <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)} className="p-2 border rounded">
-          {Object.keys(defaultPrompts).map(cat => <option key={cat} value={cat}>{cat}</option>)}
-        </select>
-      </div>
-
-      <div className="mb-4 flex gap-2">
-        <input type="text" value={prompt} onChange={e => setPrompt(e.target.value)} className="p-2 border rounded w-full"/>
-        <button onClick={handlePromptMagic} className="bg-yellow-500 text-white p-2 rounded">Prompt Magic</button>
-      </div>
-
-      <button onClick={handleGenerateVideo} className="bg-green-500 text-white p-2 rounded">Generate Video</button>
-
-      {generated && (
-        <div className="mt-4 p-4 border rounded bg-gray-100">
-          🎬 Your 6-second video is ready! 
-          <button className="ml-2 text-blue-500 underline">Download</button>
-        </div>
-      )}
-
-      <div className="mt-6">
-        <h3 className="font-semibold mb-2">Generated Video History:</h3>
-        {history.length === 0 ? (
-          <p className="text-gray-500">No videos generated yet.</p>
-        ) : (
-          <ul className="list-disc ml-6">
-            {history.map((item, idx) => <li key={idx}>{item}</li>)}
-          </ul>
-        )}
-      </div>
-
-      <p className="mt-4 text-sm">Plan: {plan}</p>
-    </div>
-  );
-};
-
-// ---------------- App Component ----------------
-export default function App() {
-  return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/signin" element={<SignInPage />} />
-          <Route path="/generate" element={
-            <ProtectedRoute>
-              <VideoGenerator />
-            </ProtectedRoute>
-          } />
-        </Routes>
-      </Router>
-    </AuthProvider>
-  );
-}
+</body>
+</html>
