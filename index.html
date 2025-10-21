@@ -1,188 +1,212 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, Link, useNavigate } from "react-router-dom";
+import { initializeApp } from "firebase/app";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 
-// --------- Auth Context ---------
+// ---------------- Firebase Setup ----------------
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// ---------------- Auth Context ----------------
 const AuthContext = createContext();
-export const useAuth = () => useContext(AuthContext);
+const useAuth = () => useContext(AuthContext);
 
-function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("kairah_user")) || null);
+const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [plan, setPlan] = useState("free");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) localStorage.setItem("kairah_user", JSON.stringify(user));
-    else localStorage.removeItem("kairah_user");
-  }, [user]);
-
-  const signIn = (email, name) => {
-    const u = { email, name: name || email.split("@")[0], isPaid: false, plan: null, freeVideosLeft: 1, favorites: [] };
-    setUser(u);
-    return u;
-  };
-
-  const signOut = () => setUser(null);
-  const upgrade = (plan) => setUser(prev => ({ ...prev, isPaid: true, plan }));
-  const decrementFree = () => setUser(prev => ({ ...prev, freeVideosLeft: Math.max(0, (prev.freeVideosLeft || 1) - 1) }));
-  const addFavorite = (template) => setUser(prev => ({ ...prev, favorites: Array.from(new Set([...(prev.favorites || []), template])) }));
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser?.email.includes("pro")) setPlan("pro");
+      else if (currentUser?.email.includes("diamond")) setPlan("diamond");
+      else setPlan("free");
+      setLoading(false);
+    });
+    return unsubscribe;
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut, upgrade, decrementFree, addFavorite }}>
-      {children}
+    <AuthContext.Provider value={{ user, plan }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
-}
-
-// --------- Utils ---------
-const copyText = async (t) => {
-  try { await navigator.clipboard.writeText(t); alert(`Copied: ${t}`); } 
-  catch { alert("Copy failed"); }
 };
 
-// --------- Templates ---------
-const TEMPLATES = [
-  { name:"Talking Monkey", category:"Animal", isPaid:true, captions:["Look at this talking monkey! 🐒"], hashtags:["monkey","funny"] },
-  { name:"Cute Kitten", category:"Animal", isPaid:false, captions:["Adorable kitten vibes 🐱"], hashtags:["kitten","cute"] },
-  { name:"ASMR Glass Cutting", category:"ASMR", isPaid:true, captions:["Relaxing ASMR sounds ✨"], hashtags:["asmr","relax"] },
-  { name:"Modern Love Story", category:"Romance", isPaid:true, captions:["Romantic AI cinematic scene 💖"], hashtags:["love","romance"] },
-  { name:"Epic Action Scene", category:"Action", isPaid:true, captions:["Thrilling moment!"], hashtags:["action","movie"] },
-];
+// ---------------- Protected Route ----------------
+const ProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/signin" />;
+};
 
-// --------- Header ---------
-function Header() {
-  const { user, signOut } = useAuth();
-  return (
-    <header style={{ padding:"1rem", borderBottom:"1px solid #ccc", marginBottom:"1rem" }}>
-      <Link to="/">Kairah Studio</Link> | <Link to="/studio">Studio</Link> | <Link to="/pricing">Pricing</Link> | 
-      {user ? <span> {user.name} <button onClick={signOut}>Logout</button></span> : <Link to="/signin">Login</Link>}
-    </header>
-  );
-}
-
-// --------- Landing ---------
-function Landing() {
-  return (
-    <div>
-      <h1>Kairah Studio + Fame Booster</h1>
-      <p>Generate stunning AI videos for animals, ASMR, stories, cinematic clips, music, and more.</p>
-      <Link to="/studio"><button>Try Studio</button></Link>
+// ---------------- Landing Page ----------------
+const LandingPage = () => (
+  <div className="p-10">
+    <head>
+      <title>Kairah Studio - AI Video Generator</title>
+      <meta name="description" content="Preview Kairah Studio features. Sign in to generate AI videos." />
+    </head>
+    <h1 className="text-4xl font-bold mb-4">Welcome to Kairah Studio</h1>
+    <p className="mb-4">Explore AI-generated videos, prompts, and templates. Sign in to start creating your own videos.</p>
+    <Link to="/signin" className="bg-blue-500 text-white p-2 rounded">Sign In</Link>
+    <div className="mt-8 p-4 border rounded shadow animate-pulse">
+      <h2 className="font-semibold mb-2">Feature Preview:</h2>
+      <ul className="list-disc ml-6">
+        <li>6-second high-quality AI video generation (Free)</li>
+        <li>Viral video prompts & categories</li>
+        <li>Pro/Diamond unlimited access</li>
+        <li>Prompt Magic button to enhance prompts</li>
+        <li>Download simulation and video history</li>
+      </ul>
     </div>
-  );
-}
+  </div>
+);
 
-// --------- SignIn ---------
-function SignIn() {
-  const { signIn } = useAuth();
-  const navigate = useNavigate();
+// ---------------- SignIn Page ----------------
+const SignInPage = () => {
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
+  const navigate = useNavigate();
 
-  const submit = e => {
+  const handleAuth = async (e) => {
     e.preventDefault();
-    if (!email) return alert("Enter email");
-    signIn(email, name);
-    navigate("/studio");
+    try {
+      if (isSignUp) {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
+      navigate("/generate");
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
-    <div>
-      <h2>Sign in to Kairah Studio</h2>
-      <form onSubmit={submit}>
-        <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
-        <input value={name} onChange={e => setName(e.target.value)} placeholder="Display name (optional)" />
-        <button type="submit">Sign in</button>
+    <div className="p-10 max-w-md mx-auto">
+      <h2 className="text-2xl mb-4">{isSignUp ? "Sign Up" : "Sign In"}</h2>
+      <form onSubmit={handleAuth} className="flex flex-col gap-4">
+        <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="p-2 border rounded"/>
+        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} className="p-2 border rounded"/>
+        {error && <p className="text-red-500">{error}</p>}
+        <button type="submit" className="bg-blue-500 text-white p-2 rounded">{isSignUp ? "Sign Up" : "Sign In"}</button>
       </form>
+      <p className="mt-4">
+        {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+        <span className="text-blue-500 cursor-pointer" onClick={() => setIsSignUp(!isSignUp)}>
+          {isSignUp ? "Sign In" : "Sign Up"}
+        </span>
+      </p>
     </div>
   );
-}
+};
 
-// --------- Studio ---------
-function Studio() {
-  const { user, decrementFree } = useAuth();
-  const [prompt, setPrompt] = useState("");
-  const [selected, setSelected] = useState(null);
-  const [myVideos, setMyVideos] = useState(() => JSON.parse(localStorage.getItem("kairah_my_videos") || "[]"));
-  const [playingVideo, setPlayingVideo] = useState(null);
+// ---------------- Video Generator Page ----------------
+const VideoGenerator = () => {
+  const { plan } = useAuth();
+  const [generated, setGenerated] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("viral");
+  const [prompt, setPrompt] = useState("Funny cat dancing");
+  const [history, setHistory] = useState([]);
 
-  const promptMagic = () => {
-    if(!prompt) return alert("Enter prompt");
-    setPrompt("Viral-enhanced: " + prompt + " 🚀");
+  const defaultPrompts = {
+    viral: ["Funny cat dancing", "Epic fail moment", "Dance challenge"],
+    royal: ["Queen portrait animation", "Royal crown reveal"],
+    fantasy: ["Dragon flying", "Magic forest scene"]
   };
 
-  const handleGenerate = () => {
-    if(!user) return alert("Sign in first");
-    if(!selected) return alert("Select template");
-    if(!user.isPaid && (user.freeVideosLeft||0)<=0) return alert("Free video limit reached");
+  useEffect(() => {
+    const email = auth.currentUser?.email;
+    const savedHistory = JSON.parse(localStorage.getItem(`history_${email}`)) || [];
+    setHistory(savedHistory);
+    setPrompt(defaultPrompts[selectedCategory][0]);
+  }, [selectedCategory]);
 
-    const newVideo = { id: Date.now(), template: selected.name, status: "ready", createdAt: new Date().toISOString() };
-    const updated = [newVideo, ...myVideos];
-    setMyVideos(updated);
-    localStorage.setItem("kairah_my_videos", JSON.stringify(updated));
-    if(!user.isPaid) decrementFree();
+  const handleGenerateVideo = () => {
+    const email = auth.currentUser.email;
+    if (plan === "free") {
+      const videosUsed = localStorage.getItem(`videos_${email}`) || 0;
+      if (videosUsed >= 1) {
+        alert("Free plan allows only 1 video. Upgrade for more.");
+        return;
+      }
+      localStorage.setItem(`videos_${email}`, Number(videosUsed) + 1);
+    }
+    setGenerated(true);
+    const newHistory = [...history, prompt];
+    setHistory(newHistory);
+    localStorage.setItem(`history_${email}`, JSON.stringify(newHistory));
+  };
 
-    setPlayingVideo(newVideo.id);
-    setTimeout(() => setPlayingVideo(null), 6000);
-    alert("Video generated (mock). Preview will play for 6 seconds.");
+  const handlePromptMagic = () => {
+    const enhanced = `${prompt} 🔥✨ (Enhanced Prompt Magic!)`;
+    setPrompt(enhanced);
   };
 
   return (
-    <div>
-      <h2>Kairah Studio</h2>
-      <input value={prompt} onChange={e => setPrompt(e.target.value)} placeholder="Type your idea..." />
-      <button onClick={promptMagic}>Prompt Magic</button>
-      <button onClick={handleGenerate}>Generate Video</button>
+    <div className="p-10 max-w-xl mx-auto">
+      <h2 className="text-3xl mb-4">Video Generator</h2>
+      <div className="mb-4">
+        <label className="font-semibold mr-2">Category:</label>
+        <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)} className="p-2 border rounded">
+          {Object.keys(defaultPrompts).map(cat => <option key={cat} value={cat}>{cat}</option>)}
+        </select>
+      </div>
 
-      <h3>Templates</h3>
-      {TEMPLATES.map(t => (
-        <div key={t.name} style={{ border:"1px solid #ccc", margin:"0.5rem", padding:"0.5rem" }}>
-          <strong>{t.name}</strong> ({t.category}) {t.isPaid && !user?.isPaid ? " [LOCKED]" : ""}
-          <div>
-            <button onClick={() => { if(t.isPaid&&!user?.isPaid) return alert("Upgrade to access"); setSelected(t); }}>Select</button>
-          </div>
-          <div>
-            {t.captions.map(c => <span key={c} onClick={() => copyText(c)} style={{ margin:"0.2rem", cursor:"pointer" }}>{c}</span>)}
-          </div>
-          <div>
-            {t.hashtags.map(h => <span key={h} onClick={() => copyText(h)} style={{ margin:"0.2rem", cursor:"pointer" }}>#{h}</span>)}
-          </div>
-        </div>
-      ))}
+      <div className="mb-4 flex gap-2">
+        <input type="text" value={prompt} onChange={e => setPrompt(e.target.value)} className="p-2 border rounded w-full"/>
+        <button onClick={handlePromptMagic} className="bg-yellow-500 text-white p-2 rounded">Prompt Magic</button>
+      </div>
 
-      {playingVideo && (
-        <div>
-          🎬 Playing {myVideos.find(v=>v.id===playingVideo)?.template} (mock 6s preview)
+      <button onClick={handleGenerateVideo} className="bg-green-500 text-white p-2 rounded">Generate Video</button>
+
+      {generated && (
+        <div className="mt-4 p-4 border rounded bg-gray-100">
+          🎬 Your 6-second video is ready! 
+          <button className="ml-2 text-blue-500 underline">Download</button>
         </div>
       )}
 
-      <h3>My Videos</h3>
-      {myVideos.length === 0 ? <p>No videos yet.</p> :
-        myVideos.map(v => <div key={v.id}>{v.template} - {v.status}</div>)
-      }
+      <div className="mt-6">
+        <h3 className="font-semibold mb-2">Generated Video History:</h3>
+        {history.length === 0 ? (
+          <p className="text-gray-500">No videos generated yet.</p>
+        ) : (
+          <ul className="list-disc ml-6">
+            {history.map((item, idx) => <li key={idx}>{item}</li>)}
+          </ul>
+        )}
+      </div>
+
+      <p className="mt-4 text-sm">Plan: {plan}</p>
     </div>
   );
-}
+};
 
-// --------- Pricing ---------
-function Pricing() {
-  return (
-    <div>
-      <h2>Pricing</h2>
-      <p>Free: 1 video</p>
-      <p>Pro: Unlimited videos</p>
-      <p>Diamond: Unlimited + premium templates</p>
-    </div>
-  );
-}
-
-// --------- App ---------
+// ---------------- App Component ----------------
 export default function App() {
   return (
     <AuthProvider>
       <Router>
-        <Header />
         <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/studio" element={<Studio />} />
-          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/generate" element={
+            <ProtectedRoute>
+              <VideoGenerator />
+            </ProtectedRoute>
+          } />
         </Routes>
       </Router>
     </AuthProvider>
