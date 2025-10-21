@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
 
-// --------- Auth Context ---------
+// ----- Auth Context -----
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
@@ -14,131 +14,108 @@ function AuthProvider({ children }) {
   }, [user]);
 
   const signIn = (email, name) => {
-    const u = {
-      email,
-      name: name || email.split("@")[0],
-      isPaid: false,
-      plan: null,
-      freeVideosLeft: 1,
-      favorites: [],
-    };
+    const u = { email, name: name || email.split("@")[0], isPaid: false, plan: null, freeVideosLeft: 1, favorites: [] };
     setUser(u);
     return u;
   };
 
   const signOut = () => setUser(null);
   const upgrade = (plan) => setUser(prev => ({ ...prev, isPaid: true, plan }));
-  const decrementFree = () => setUser(prev => ({ ...prev, freeVideosLeft: Math.max(0, (prev.freeVideosLeft||1)-1) }));
-  const addFavorite = (template) => setUser(prev => ({ ...prev, favorites: Array.from(new Set([...(prev.favorites||[]), template])) }));
+  const decrementFree = () => setUser(prev => ({ ...prev, freeVideosLeft: Math.max(0, (prev.freeVideosLeft || 1) - 1) }));
 
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut, upgrade, decrementFree, addFavorite, setUser }}>
+    <AuthContext.Provider value={{ user, signIn, signOut, upgrade, decrementFree }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-// --------- Utils ---------
+// ----- Utils -----
 const copyText = async (t) => {
-  try {
-    await navigator.clipboard.writeText(t);
-    alert(`Copied: ${t}`);
-  } catch {
-    alert("Copy failed");
-  }
+  try { await navigator.clipboard.writeText(t); alert(`Copied: ${t}`); }
+  catch { alert("Copy failed"); }
 };
 
-// --------- Templates ---------
+// ----- Templates -----
 const TEMPLATES = [
-  { name:"Talking Monkey", category:"Animal", thumbnail:"https://via.placeholder.com/400x225?text=Monkey", viralScore:90, isPaid:true, captions:["Look at this talking monkey! 🐒"], hashtags:["monkey","funny"], ctaLink:"/studio" },
-  { name:"Cute Kitten", category:"Animal", thumbnail:"https://via.placeholder.com/400x225?text=Kitten", viralScore:78, isPaid:false, captions:["Adorable kitten vibes 🐱"], hashtags:["kitten","cute"], ctaLink:"/studio" },
-  { name:"ASMR Glass Cutting", category:"ASMR", thumbnail:"https://via.placeholder.com/400x225?text=ASMR+Glass", viralScore:85, isPaid:true, captions:["Relaxing ASMR sounds ✨"], hashtags:["asmr","relax"], ctaLink:"/studio" },
-  { name:"Modern Love Story", category:"Romance", thumbnail:"https://via.placeholder.com/400x225?text=Love+Story", viralScore:80, isPaid:true, captions:["Romantic AI cinematic scene 💖"], hashtags:["love","romance"], ctaLink:"/studio" },
-  { name:"Epic Action Scene", category:"Action", thumbnail:"https://via.placeholder.com/400x225?text=Action+Scene", viralScore:92, isPaid:true, captions:["Thrilling moment!"], hashtags:["action","movie"], ctaLink:"/studio" },
-  { name:"AI Girl Star", category:"AI", thumbnail:"https://via.placeholder.com/400x225?text=AI+Girl", viralScore:85, isPaid:true, captions:["Meet this AI star ✨"], hashtags:["ai","girl"], ctaLink:"/studio" },
-  { name:"Music Vibes", category:"Music", thumbnail:"https://via.placeholder.com/400x225?text=Music+Clip", viralScore:88, isPaid:true, captions:["Awesome music vibes 🎵"], hashtags:["music","video"], ctaLink:"/studio" },
+  { name: "Talking Monkey", category: "Animal", thumbnail: "https://via.placeholder.com/400x225?text=Monkey", viralScore: 90, isPaid: true, captions: ["Look at this talking monkey! 🐒"], hashtags: ["monkey", "funny"] },
+  { name: "Cute Kitten", category: "Animal", thumbnail: "https://via.placeholder.com/400x225?text=Kitten", viralScore: 78, isPaid: false, captions: ["Adorable kitten vibes 🐱"], hashtags: ["kitten", "cute"] },
+  { name: "ASMR Glass Cutting", category: "ASMR", thumbnail: "https://via.placeholder.com/400x225?text=ASMR+Glass", viralScore: 85, isPaid: true, captions: ["Relaxing ASMR sounds ✨"], hashtags: ["asmr", "relax"] },
 ];
 
-// --------- Header ---------
+// ----- Header -----
 function Header() {
   const { user, signOut } = useAuth();
   return (
-    <header className="bg-white shadow p-4 flex justify-between items-center">
-      <div className="flex items-center gap-3">
-        <div className="text-2xl font-bold" style={{color:"#3D2C41"}}>Kairah</div>
-        <nav className="hidden md:flex gap-4">
-          <Link to="/studio" className="text-gray-700 hover:text-purple-800">Studio</Link>
-          <Link to="/fame" className="text-gray-700 hover:text-purple-800">Fame</Link>
-          <Link to="/pricing" className="text-gray-700 hover:text-purple-800">Pricing</Link>
-        </nav>
+    <header className="flex justify-between p-4 bg-white shadow">
+      <div className="flex gap-4 items-center">
+        <div className="font-bold text-xl" style={{color:"#3D2C41"}}>Kairah</div>
+        <Link to="/studio" className="hover:text-purple-800">Studio</Link>
+        <Link to="/pricing" className="hover:text-purple-800">Pricing</Link>
       </div>
-      <div className="flex items-center gap-4">
-        {user ? <>
-          <Link to="/dashboard" className="text-gray-700">{user.name}</Link>
-          <button onClick={signOut} className="px-3 py-1 rounded bg-gray-100">Logout</button>
-        </> : <Link to="/signin" className="px-3 py-1 rounded bg-purple-800 text-white">Login</Link>}
+      <div>
+        {user ? <><span>{user.name}</span> <button onClick={signOut} className="ml-2 bg-gray-200 px-2 rounded">Logout</button></> :
+        <Link to="/signin" className="bg-purple-800 text-white px-2 py-1 rounded">Login</Link>}
       </div>
     </header>
   );
 }
 
-// --------- Landing ---------
+// ----- Landing -----
 function Landing() {
   return (
-    <div className="max-w-5xl mx-auto p-6 text-center">
-      <h1 className="text-4xl font-bold" style={{color:"#3D2C41"}}>Kairah Studio + Fame Booster</h1>
-      <p className="mt-4 text-lg text-gray-700">Generate stunning AI videos for any purpose: animals, ASMR, stories, cinematic clips, music, and more.</p>
-      <div className="mt-6 flex justify-center gap-3">
-        <Link to="/studio" className="px-4 py-2 rounded bg-[#D4AF37] text-white font-bold">Try Studio</Link>
-        <Link to="/fame" className="px-4 py-2 rounded bg-[#3D2C41] text-white">Open Fame Booster</Link>
+    <div className="text-center p-8">
+      <h1 className="text-3xl font-bold" style={{color:"#3D2C41"}}>Kairah Studio + Fame Booster</h1>
+      <p className="mt-2 text-gray-700">Generate stunning AI videos: animals, ASMR, stories, and more!</p>
+      <div className="mt-4 flex justify-center gap-2">
+        <Link to="/studio" className="bg-yellow-500 px-4 py-2 rounded text-white">Try Studio</Link>
       </div>
     </div>
   );
 }
 
-// --------- SignIn ---------
+// ----- SignIn -----
 function SignIn() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+
   const submit = e => {
     e.preventDefault();
     if(!email) return alert("Enter email");
     signIn(email, name);
     navigate("/studio");
   };
+
   return (
-    <div className="max-w-md mx-auto mt-12 bg-white p-6 rounded shadow">
-      <h2 className="font-bold mb-4">Sign in to Kairah Studio</h2>
-      <form onSubmit={submit} className="space-y-3">
-        <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" className="w-full border px-3 py-2 rounded"/>
-        <input value={name} onChange={e=>setName(e.target.value)} placeholder="Display name (optional)" className="w-full border px-3 py-2 rounded"/>
-        <div className="flex gap-2">
-          <button type="submit" className="px-4 py-2 bg-[#D4AF37] text-white rounded font-bold">Sign in</button>
-          <Link to="/" className="px-4 py-2 border rounded">Back</Link>
-        </div>
+    <div className="max-w-md mx-auto mt-12 p-6 bg-white rounded shadow">
+      <h2 className="font-bold text-xl mb-4">Sign in</h2>
+      <form onSubmit={submit} className="flex flex-col gap-2">
+        <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" className="border px-3 py-2 rounded"/>
+        <input value={name} onChange={e=>setName(e.target.value)} placeholder="Display name (optional)" className="border px-3 py-2 rounded"/>
+        <button type="submit" className="bg-yellow-500 text-white px-4 py-2 rounded mt-2">Sign In</button>
       </form>
     </div>
   );
 }
 
-// --------- Studio ---------
+// ----- Studio -----
 function Studio() {
   const { user, decrementFree } = useAuth();
   const [prompt, setPrompt] = useState("");
   const [selected, setSelected] = useState(null);
-  const [myVideos, setMyVideos] = useState(()=>JSON.parse(localStorage.getItem("kairah_my_videos")||"[]"));
+  const [myVideos, setMyVideos] = useState(() => JSON.parse(localStorage.getItem("kairah_my_videos")||"[]"));
   const [playingVideo, setPlayingVideo] = useState(null);
 
-  const promptMagic = () => { if(!prompt) return alert("Enter prompt"); setPrompt("Viral-enhanced: "+prompt+" 🚀"); };
+  const promptMagic = () => { if(!prompt) return alert("Enter prompt"); setPrompt("Viral: "+prompt+" 🚀"); };
 
   const handleGenerate = () => {
     if(!user) return alert("Sign in first");
     if(!selected) return alert("Select template");
     if(!user.isPaid && (user.freeVideosLeft||0)<=0) return alert("Free video limit reached");
 
-    const newVideo = { id:Date.now(), template:selected.name, status:"ready", createdAt:new Date().toISOString() };
+    const newVideo = { id:Date.now(), template:selected.name, status:"ready", createdAt: new Date().toISOString() };
     const updated = [newVideo, ...myVideos];
     setMyVideos(updated);
     localStorage.setItem("kairah_my_videos", JSON.stringify(updated));
@@ -146,31 +123,28 @@ function Studio() {
 
     setPlayingVideo(newVideo.id);
     setTimeout(()=>setPlayingVideo(null),6000);
-    alert("Video generated (mock). Preview will play for 6 seconds.");
+    alert("Video generated (mock)!");
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <h2 className="text-2xl font-bold" style={{color:"#3D2C41"}}>Kairah Studio</h2>
-      <div className="mt-4 flex gap-2">
+    <div className="p-6 max-w-5xl mx-auto">
+      <h2 className="text-2xl font-bold mb-4">Kairah Studio</h2>
+      <div className="flex gap-2 mb-4">
         <input value={prompt} onChange={e=>setPrompt(e.target.value)} placeholder="Type your idea..." className="flex-1 border px-3 py-2 rounded"/>
-        <button onClick={promptMagic} className="px-4 py-2 rounded bg-yellow-500 text-white">Prompt Magic</button>
-        <button onClick={handleGenerate} className="px-4 py-2 rounded bg-[#D4AF37] text-white">Generate Video</button>
+        <button onClick={promptMagic} className="bg-yellow-500 text-white px-4 py-2 rounded">Prompt Magic</button>
+        <button onClick={handleGenerate} className="bg-[#D4AF37] text-white px-4 py-2 rounded">Generate Video</button>
       </div>
 
-      <h3 className="mt-6 font-bold">Templates</h3>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+      <h3 className="font-bold mb-2">Templates</h3>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {TEMPLATES.map(t => (
-          <div key={t.name} className={`relative bg-white rounded shadow p-2 cursor-pointer ${selected?.name===t.name?"ring-4 ring-[#D4AF37]":""}`} onClick={()=>{if(t.isPaid&&!user?.isPaid) return alert("Upgrade to access"); setSelected(t);}}>
+          <div key={t.name} className={`border p-2 rounded cursor-pointer relative ${selected?.name===t.name?"ring-4 ring-yellow-500":""}`}
+               onClick={()=>{ if(t.isPaid && !user?.isPaid) return alert("Upgrade to access"); setSelected(t); }}>
             <img src={t.thumbnail} alt={t.name} className="w-full h-36 object-cover rounded"/>
-            <div className="mt-1 font-bold">{t.name}</div>
-            <div className="text-sm text-gray-500">{t.category}</div>
-            <div style={{position:"absolute", top:8, right:8, background:"#E7D2CB", color:"#3D2C41", padding:"4px 6px", borderRadius:6, fontWeight:700}}>{t.viralScore}⭐</div>
-            {t.isPaid && !user?.isPaid && <div style={{position:"absolute", inset:0, background:"rgba(0,0,0,0.45)", display:"flex", justifyContent:"center", alignItems:"center", color:"white"}}>Locked</div>}
-            <div className="mt-1 flex gap-1 flex-wrap">
-              {t.captions.map((c,i)=><span key={i} onClick={()=>copyText(c)} className="text-sm bg-gray-200 px-2 rounded cursor-pointer">{c}</span>)}
-              {t.hashtags.map((h,i)=><span key={i} onClick={()=>copyText(h)} className="text-sm bg-gray-200 px-2 rounded cursor-pointer">#{h}</span>)}
-            </div>
+            <div className="font-bold mt-1">{t.name}</div>
+            <div className="text-sm">{t.category}</div>
+            <div style={{position:"absolute", top:4,right:4,background:"#E7D2CB",padding:"2px 6px", borderRadius:6}}>{t.viralScore}⭐</div>
+            {t.isPaid && !user?.isPaid && <div style={{position:"absolute", inset:0,background:"rgba(0,0,0,0.4)",display:"flex",justifyContent:"center",alignItems:"center",color:"white"}}>Locked</div>}
           </div>
         ))}
       </div>
@@ -178,7 +152,7 @@ function Studio() {
       {playingVideo && <div className="mt-4 p-4 bg-gray-100 rounded">🎬 Playing {myVideos.find(v=>v.id===playingVideo)?.template} (mock 6s preview)</div>}
 
       <h3 className="mt-6 font-bold">My Videos</h3>
-      {myVideos.length===0? <div>No videos yet.</div> : (
+      {myVideos.length===0 ? <div>No videos yet.</div> :
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
           {myVideos.map(v=>(
             <div key={v.id} className="border p-2 rounded">
@@ -187,59 +161,26 @@ function Studio() {
             </div>
           ))}
         </div>
-      )}
+      }
     </div>
   );
 }
 
-// --------- Fame Booster (Mocked) ---------
-function Fame() {
-  return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold" style={{color:"#3D2C41"}}>Fame Booster (Mock)</h2>
-      <p className="mt-2 text-gray-700">Simulate virality: analyze your videos' potential, trending hashtags, and captions.</p>
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-        {TEMPLATES.map(t => (
-          <div key={t.name} className="border p-3 rounded">
-            <div className="font-bold">{t.name}</div>
-            <div className="text-sm">Viral Score: {t.viralScore} ⭐</div>
-            <div className="flex gap-1 flex-wrap mt-1">
-              {t.hashtags.map((h,i)=><span key={i} className="bg-gray-200 px-2 rounded text-sm cursor-pointer" onClick={()=>copyText(h)}>#{h}</span>)}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// --------- Pricing ---------
+// ----- Pricing -----
 function Pricing() {
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold" style={{color:"#3D2C41"}}>Pricing & Plans</h2>
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="border p-4 rounded">
-          <div className="font-bold">Free</div>
-          <div>1 video free</div>
-          <div className="mt-2 text-sm text-gray-500">Upgrade to unlock all templates</div>
-        </div>
-        <div className="border p-4 rounded">
-          <div className="font-bold">Pro</div>
-          <div>$9.99 / month</div>
-          <div className="mt-2 text-sm text-gray-500">Unlimited videos, premium templates</div>
-        </div>
-        <div className="border p-4 rounded">
-          <div className="font-bold">Diamond</div>
-          <div>$29.99 / month</div>
-          <div className="mt-2 text-sm text-gray-500">All Pro features + viral boosters</div>
-        </div>
+      <h2 className="text-2xl font-bold mb-4" style={{color:"#3D2C41"}}>Pricing</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="border p-4 rounded"><div className="font-bold">Free</div>1 video free</div>
+        <div className="border p-4 rounded"><div className="font-bold">Pro</div>$9.99 / month</div>
+        <div className="border p-4 rounded"><div className="font-bold">Diamond</div>$29.99 / month</div>
       </div>
     </div>
   );
 }
 
-// --------- App ---------
+// ----- App -----
 export default function App() {
   return (
     <AuthProvider>
@@ -249,7 +190,6 @@ export default function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/studio" element={<Studio />} />
-          <Route path="/fame" element={<Fame />} />
           <Route path="/pricing" element={<Pricing />} />
         </Routes>
       </Router>
