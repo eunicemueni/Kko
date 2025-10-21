@@ -1,13 +1,260 @@
-import React, { useState } from "react";
-import { useAuth } from "./AuthContext"; // Assuming AuthContext is set up
-import { TEMPLATES } from "./templates"; // Mocked templates
+import React, { useState, useEffect, createContext, useContext } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
-function Studio() {
-  const { user, decrementFree, addFavorite } = useAuth();
+// ---------------- Auth Context ----------------
+const AuthContext = createContext();
+export const useAuth = () => useContext(AuthContext);
+
+const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("kairah_user")) || null;
+    } catch {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    if (user) localStorage.setItem("kairah_user", JSON.stringify(user));
+    else localStorage.removeItem("kairah_user");
+  }, [user]);
+
+  const signIn = (email, name) => {
+    const u = {
+      email,
+      name: name || email.split("@")[0],
+      isPaid: false,
+      plan: null,
+      freeVideosLeft: 1,
+      favorites: [],
+    };
+    setUser(u);
+    return u;
+  };
+
+  const signOut = () => setUser(null);
+
+  const upgrade = (plan) =>
+    setUser((prev) => ({ ...prev, isPaid: true, plan }));
+
+  const decrementFree = () =>
+    setUser((prev) => ({
+      ...prev,
+      freeVideosLeft: Math.max(0, (prev.freeVideosLeft || 1) - 1),
+    }));
+
+  return (
+    <AuthContext.Provider
+      value={{ user, signIn, signOut, upgrade, decrementFree }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+// ---------------- Mock Templates ----------------
+const TEMPLATES = [
+  {
+    name: "Talking Monkey",
+    category: "Animal",
+    thumbnail: "https://via.placeholder.com/400x225?text=Monkey",
+    viralScore: 90,
+    isPaid: true,
+    captions: ["Look at this talking monkey! 🐒"],
+    hashtags: ["monkey", "funny"],
+  },
+  {
+    name: "Cute Kitten",
+    category: "Animal",
+    thumbnail: "https://via.placeholder.com/400x225?text=Kitten",
+    viralScore: 78,
+    isPaid: false,
+    captions: ["Adorable kitten vibes 🐱"],
+    hashtags: ["kitten", "cute"],
+  },
+  {
+    name: "ASMR Glass Cutting",
+    category: "ASMR",
+    thumbnail: "https://via.placeholder.com/400x225?text=ASMR+Glass",
+    viralScore: 85,
+    isPaid: true,
+    captions: ["Relaxing ASMR sounds ✨"],
+    hashtags: ["asmr", "relax"],
+  },
+  {
+    name: "Modern Love Story",
+    category: "Romance",
+    thumbnail: "https://via.placeholder.com/400x225?text=Love+Story",
+    viralScore: 80,
+    isPaid: true,
+    captions: ["Romantic AI cinematic scene 💖"],
+    hashtags: ["love", "romance"],
+  },
+  {
+    name: "African Village Scene",
+    category: "Cultural",
+    thumbnail: "https://via.placeholder.com/400x225?text=African+Village",
+    viralScore: 92,
+    isPaid: true,
+    captions: ["Experience ancient African life"],
+    hashtags: ["africa", "culture"],
+  },
+];
+
+// ---------------- Utilities ----------------
+const copyText = async (t) => {
+  try {
+    await navigator.clipboard.writeText(t);
+    alert(`Copied: ${t}`);
+  } catch {
+    alert("Copy failed");
+  }
+};
+
+// ---------------- Header ----------------
+const Header = () => {
+  const { user, signOut } = useAuth();
+  return (
+    <header className="bg-white shadow p-4 flex justify-between items-center">
+      <div className="flex items-center gap-3">
+        <div className="text-2xl font-bold" style={{ color: "#3D2C41" }}>
+          Kairah
+        </div>
+        <nav className="hidden md:flex gap-4">
+          <Link to="/studio" className="text-gray-700 hover:text-purple-800">
+            Studio
+          </Link>
+          <Link to="/fame" className="text-gray-700 hover:text-purple-800">
+            Fame
+          </Link>
+          <Link to="/pricing" className="text-gray-700 hover:text-purple-800">
+            Pricing
+          </Link>
+        </nav>
+      </div>
+      <div className="flex items-center gap-4">
+        {user ? (
+          <>
+            <Link to="/dashboard" className="text-gray-700">
+              {user.name}
+            </Link>
+            <button
+              onClick={signOut}
+              className="px-3 py-1 rounded bg-gray-100"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <Link
+            to="/signin"
+            className="px-3 py-1 rounded bg-purple-800 text-white"
+          >
+            Login
+          </Link>
+        )}
+      </div>
+    </header>
+  );
+};
+
+// ---------------- Landing ----------------
+const Landing = () => {
+  return (
+    <div className="max-w-5xl mx-auto p-6">
+      <div className="grid md:grid-cols-2 gap-6 items-center">
+        <div>
+          <h1 className="text-4xl font-bold" style={{ color: "#3D2C41" }}>
+            Kairah Studio + Fame Booster
+          </h1>
+          <p className="mt-4 text-lg text-gray-700">
+            Generate stunning AI videos for any purpose: animals, ASMR,
+            stories, cinematic clips, music, and more.
+          </p>
+          <div className="mt-6 flex gap-3">
+            <Link
+              to="/studio"
+              className="px-4 py-2 rounded bg-[#D4AF37] text-white font-bold"
+            >
+              Try Studio
+            </Link>
+            <Link
+              to="/fame"
+              className="px-4 py-2 rounded bg-[#3D2C41] text-white"
+            >
+              Open Fame Booster
+            </Link>
+          </div>
+        </div>
+        <div className="bg-gray-100 rounded p-4">
+          <img
+            src="https://via.placeholder.com/800x450?text=Showcase"
+            alt="showcase"
+            className="w-full rounded"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ---------------- SignIn ----------------
+const SignIn = () => {
+  const { signIn } = useAuth();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const submit = (e) => {
+    e.preventDefault();
+    if (!email) return alert("Enter email");
+    signIn(email, name);
+    navigate("/studio");
+  };
+  return (
+    <div className="max-w-md mx-auto mt-12 bg-white p-6 rounded shadow">
+      <h2 className="font-bold mb-4">Sign in to Kairah Studio</h2>
+      <form onSubmit={submit} className="space-y-3">
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="w-full border px-3 py-2 rounded"
+        />
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Display name (optional)"
+          className="w-full border px-3 py-2 rounded"
+        />
+        <div className="flex gap-2">
+          <button
+            type="submit"
+            className="px-4 py-2 bg-[#D4AF37] text-white rounded font-bold"
+          >
+            Sign in
+          </button>
+          <Link to="/" className="px-4 py-2 border rounded">
+            Back
+          </Link>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+// ---------------- Studio ----------------
+const Studio = () => {
+  const { user, decrementFree } = useAuth();
   const [prompt, setPrompt] = useState("");
-  const [selected, setSelected] = useState(null);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [myVideos, setMyVideos] = useState(
-    () => JSON.parse(localStorage.getItem("kairah_my_videos") || "[]")
+    JSON.parse(localStorage.getItem("kairah_my_videos") || "[]")
   );
   const [playingVideo, setPlayingVideo] = useState(null);
 
@@ -18,76 +265,56 @@ function Studio() {
 
   const handleGenerate = () => {
     if (!user) return alert("Sign in first");
-    if (!selected) return alert("Select template");
+    if (!selectedTemplate) return alert("Select template");
     if (!user.isPaid && (user.freeVideosLeft || 0) <= 0)
       return alert("Free video limit reached");
-
     const newVideo = {
       id: Date.now(),
-      template: selected.name,
+      template: selectedTemplate.name,
       status: "ready",
       createdAt: new Date().toISOString(),
     };
     const updated = [newVideo, ...myVideos];
     setMyVideos(updated);
     localStorage.setItem("kairah_my_videos", JSON.stringify(updated));
-
     if (!user.isPaid) decrementFree();
-
-    // Show mock 6-second video preview
     setPlayingVideo(newVideo.id);
     setTimeout(() => setPlayingVideo(null), 6000);
-
     alert("Video generated (mock). Preview will play for 6 seconds.");
-  };
-
-  const copyText = async (text) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      alert(`Copied: ${text}`);
-    } catch {
-      alert("Copy failed");
-    }
   };
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      <h2 className="font-bold text-2xl mb-4">Kairah Studio</h2>
+      <h2 className="font-bold text-2xl" style={{ color: "#3D2C41" }}>
+        Kairah Studio
+      </h2>
 
-      {/* Prompt input */}
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mt-4">
         <input
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="Type your idea..."
           className="flex-1 border px-3 py-2 rounded"
         />
-        <button
-          onClick={promptMagic}
-          className="px-4 py-2 rounded bg-yellow-500 text-white"
-        >
+        <button onClick={promptMagic} className="px-4 py-2 rounded bg-yellow-500 text-white">
           Prompt Magic
         </button>
-        <button
-          onClick={handleGenerate}
-          className="px-4 py-2 rounded bg-[#D4AF37] text-white"
-        >
+        <button onClick={handleGenerate} className="px-4 py-2 rounded bg-[#D4AF37] text-white">
           Generate Video
         </button>
       </div>
 
-      {/* Templates */}
-      <h3 className="font-bold mb-2">Templates</h3>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <h3 className="mt-6 font-bold text-xl">Templates</h3>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
         {TEMPLATES.map((t) => (
           <div
             key={t.name}
             className={`relative bg-white rounded shadow p-2 cursor-pointer ${
-              selected?.name === t.name ? "ring-4 ring-[#D4AF37]" : ""
+              selectedTemplate?.name === t.name ? "ring-4 ring-[#D4AF37]" : ""
             }`}
             onClick={() => {
-              if (t.isPaid && !user?.isPaid) return alert("Upgrade to access");
-              setSelected(t);
+              if (!user?.isPaid && t.isPaid) return alert("Upgrade to access");
+              setSelectedTemplate(t);
             }}
           >
             <img
@@ -96,60 +323,94 @@ function Studio() {
               className="w-full h-36 object-cover rounded"
             />
             <div className="mt-1 font-bold">{t.name}</div>
-            {selected?.name === t.name && (
-              <div className="absolute top-1 right-1 bg-[#D4AF37] text-white px-1 rounded">
-                ✓
-              </div>
-            )}
+            <div className="text-sm text-gray-500">{t.category}</div>
             {t.isPaid && !user?.isPaid && (
-              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white font-bold">
+              <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold rounded">
                 LOCKED
               </div>
             )}
-            <div className="mt-1 flex gap-1 flex-wrap">
-              <button
-                onClick={() => copyText(t.captions[0])}
-                className="text-sm bg-gray-200 px-2 rounded"
-              >
-                Copy Caption
-              </button>
-              <button
-                onClick={() => copyText(t.hashtags.join(" "))}
-                className="text-sm bg-gray-200 px-2 rounded"
-              >
-                Copy Hashtags
-              </button>
-            </div>
           </div>
         ))}
       </div>
 
-      {/* Playing mock video */}
-      {playingVideo && (
-        <div className="mb-6 p-4 bg-gray-200 rounded text-center font-bold">
-          Playing 6s preview...
+      {selectedTemplate && (
+        <div className="mt-4 p-4 bg-white rounded shadow">
+          <div className="font-bold">Captions:</div>
+          <div className="flex gap-2 flex-wrap mt-1">
+            {selectedTemplate.captions.map((c, i) => (
+              <button
+                key={i}
+                onClick={() => copyText(c)}
+                className="px-2 py-1 bg-gray-200 rounded text-sm"
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+          <div className="font-bold mt-2">Hashtags:</div>
+          <div className="flex gap-2 flex-wrap mt-1">
+            {selectedTemplate.hashtags.map((h, i) => (
+              <button
+                key={i}
+                onClick={() => copyText("#" + h)}
+                className="px-2 py-1 bg-gray-200 rounded text-sm"
+              >
+                #{h}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
-      {/* My Videos */}
-      <h3 className="font-bold mb-2">My Videos</h3>
+      {playingVideo && (
+        <div className="mt-6 p-4 bg-gray-100 rounded shadow">
+          <div className="font-bold mb-2">Playing 6s preview (mock)</div>
+          <div className="h-48 bg-black/20 flex items-center justify-center text-white text-lg rounded">
+            {selectedTemplate?.name}
+          </div>
+        </div>
+      )}
+
+      <h3 className="mt-6 font-bold text-xl">My Videos</h3>
       {myVideos.length === 0 ? (
-        <p>No videos yet.</p>
+        <div className="mt-2 text-gray-500">No videos yet.</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
           {myVideos.map((v) => (
-            <div key={v.id} className="p-2 bg-white rounded shadow">
-              <div className="font-bold">{v.template}</div>
-              <div className="text-sm text-gray-500">{v.status}</div>
-              <div className="text-xs text-gray-400">
-                {new Date(v.createdAt).toLocaleString()}
-              </div>
+            <div
+              key={v.id}
+              className="p-2 bg-white rounded shadow text-center text-sm"
+            >
+              {v.template}
+              <div>{v.status}</div>
             </div>
           ))}
         </div>
       )}
     </div>
   );
-}
+};
 
-export default Studio;
+// ---------------- Fame / Pricing (placeholder) ----------------
+const Fame = () => <div className="p-6">Fame Booster Coming Soon...</div>;
+const Pricing = () => <div className="p-6">Pricing Page Coming Soon...</div>;
+const Dashboard = () => <div className="p-6">User Dashboard Coming Soon...</div>;
+
+// ---------------- App ----------------
+export default function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/studio" element={<Studio />} />
+          <Route path="/fame" element={<Fame />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
+}
