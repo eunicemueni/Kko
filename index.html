@@ -1,31 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kairah Studio - AI Video Generator</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
-    header { background: #D4AF37; color: white; padding: 20px; text-align: center; }
-    .container { max-width: 800px; margin: 30px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h1, h2 { margin-top: 0; }
-    input[type="text"], select, input[type="email"], input[type="password"] { width: 100%; padding: 10px; margin: 5px 0 15px 0; border-radius: 5px; border: 1px solid #ccc; }
-    button { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
-    button.generate { background: #28a745; color: white; }
-    button.prompt-magic { background: #ffc107; color: white; }
-    button.download { background: #007bff; color: white; margin-left: 10px; }
-    .video-box { margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background: #f1f1f1; }
-    .history { margin-top: 20px; }
-    .history ul { padding-left: 20px; }
-    .plan { margin-top: 10px; font-weight: bold; }
-    .category-select { margin-bottom: 10px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kairah Studio + Fame Mock</title>
+<style>
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9; }
+header { background:#D4AF37; color:white; padding:20px; text-align:center; }
+.container { max-width:1000px; margin:20px auto; background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1); }
+input, select { width:100%; padding:10px; margin:5px 0 15px 0; border-radius:5px; border:1px solid #ccc; }
+button { cursor:pointer; border:none; border-radius:5px; transition: transform 0.2s, box-shadow 0.2s; }
+#auth-container button { background:#3D2C41; color:white; padding:10px 15px; margin-right:5px; }
+nav { text-align:center; margin-top:20px; }
+nav button { margin:0 5px; padding:10px 20px; border-radius:5px; background:#3D2C41; color:white; }
+nav button.active { background:#D4AF37; color:white; }
+.tab-panel { margin-top:20px; display:none; }
+.tab-panel.active { display:block; }
+.card { background:#E7D2CB; border-radius:10px; padding:15px; margin:10px 0; box-shadow:0 0 5px rgba(0,0,0,0.1); position:relative; transition: transform 0.3s, box-shadow 0.3s; }
+.card:hover { transform: translateY(-5px); box-shadow:0 8px 20px rgba(0,0,0,0.2); }
+.card::before { content: attr(data-plan); position: absolute; top:0; left:0; background: #D4AF37; color:white; padding:5px 10px; border-top-left-radius:10px; border-bottom-right-radius:10px; font-size:0.8em; font-weight:bold; }
+.card button { background: linear-gradient(45deg,#D4AF37,#FFC107); color:white; border:none; padding:8px 15px; border-radius:5px; margin-top:5px; }
+.card button:hover { transform: translateY(-2px); box-shadow:0 5px 15px rgba(0,0,0,0.2); }
+.media-box { margin-top:15px; padding:15px; border-radius:10px; background:#f1f1f1; position:relative; }
+.shimmer { background: linear-gradient(to right, #f1f1f1 8%, #e0d3d3 18%, #f1f1f1 33%); background-size: 1200px 104px; animation: shimmer 1.5s infinite linear; }
+@keyframes shimmer { 0%{background-position:-1200px 0} 100%{background-position:1200px 0} }
+.history, .fame-list { display:flex; flex-wrap:wrap; }
+.history .card, .fame-list .card { flex:1 1 200px; margin:10px; }
+.pricing-cards { display:flex; justify-content:space-around; flex-wrap:wrap; margin-top:20px; }
+.pricing-cards .card { flex:1 1 200px; text-align:center; }
+.generate { background: linear-gradient(45deg,#28a745,#21c25f); color:white; padding:10px 15px; margin-top:5px; }
+.prompt-magic { background: linear-gradient(45deg,#ffc107,#ffdd57); color:white; padding:10px 15px; margin-top:5px; }
+@media(max-width:700px){ .pricing-cards, .history, .fame-list { flex-direction:column; } nav button { margin:5px 0; } }
+</style>
 </head>
 <body>
 
 <header>
-  <h1>Kairah Studio</h1>
-  <p>AI Video Generator - Mock Frontend</p>
+  <h1>Kairah Studio + Fame</h1>
+  <p>AI Video & Audio Generator + Fame Booster</p>
 </header>
 
 <div class="container" id="auth-container">
@@ -37,121 +49,171 @@
   <p id="auth-error" style="color:red;"></p>
 </div>
 
-<div class="container" id="studio-container" style="display:none;">
-  <h2>Video Generator</h2>
-
-  <div class="category-select">
-    <label>Category:</label>
-    <select id="category">
-      <option value="viral">Viral</option>
-      <option value="royal">Royal</option>
-      <option value="fantasy">Fantasy</option>
-    </select>
-  </div>
-
-  <input type="text" id="prompt" placeholder="Enter your prompt">
-  <button class="prompt-magic" id="prompt-magic-btn">Prompt Magic</button>
-  <br>
-  <button class="generate" id="generate-btn">Generate Video</button>
-
-  <div class="video-box" id="video-box" style="display:none;">
-    🎬 Your 6-second video is ready! 
-    <button class="download" id="download-btn">Download</button>
-  </div>
-
-  <div class="history">
-    <h3>Generated Video History:</h3>
-    <ul id="history-list"></ul>
-  </div>
-
+<div class="container" id="main-container" style="display:none;">
   <div class="plan">
-    Plan: <span id="user-plan">Free</span>
+    Logged in as: <span id="user-email"></span> | Plan: <span id="user-plan">Free</span> 
+    <button id="logout-btn" style="background:#D4AF37;color:white;padding:5px 10px;margin-left:10px;">Logout</button>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard" style="margin-top:20px; padding:15px; background:#f1f1f1; border-radius:10px;">
+    <h3>Dashboard (Mock Stats)</h3>
+    <p>Total Videos Generated: <span id="stat-videos">0</span></p>
+    <p>Total Photos Generated: <span id="stat-photos">0</span></p>
+    <p>Total Audio Generated: <span id="stat-audio">0</span></p>
+    <p>Total Fame Boosts: <span id="stat-fame">0</span></p>
+    <p>Total Downloads: <span id="stat-downloads">0</span></p>
+  </div>
+
+  <h2>Select Plan (Mock)</h2>
+  <div class="pricing-cards">
+    <div class="card" data-plan="Free"><h3>Free</h3><p>1 text-to-video & download per day</p><button onclick="upgradePlan('Free')">Select</button></div>
+    <div class="card" data-plan="Pro"><h3>Pro - $19/mo</h3><p>Unlimited text/video/audio<br>Prompt Magic</p><button onclick="upgradePlan('Pro')">Select</button></div>
+    <div class="card" data-plan="Diamond"><h3>Diamond - $49/mo</h3><p>All Pro features + Fame Booster</p><button onclick="upgradePlan('Diamond')">Select</button></div>
+    <div class="card" data-plan="Lifetime"><h3>Lifetime - $299</h3><p>All Diamond features permanently</p><button onclick="upgradePlan('Lifetime')">Select</button></div>
+  </div>
+
+  <nav>
+    <button class="active" data-tab="text-video">Text-to-Video</button>
+    <button data-tab="photo-video">Photo-to-Video</button>
+    <button data-tab="audio-gen">Audio Generator</button>
+    <button data-tab="fame-booster">Kairah Fame Booster</button>
+  </nav>
+
+  <div id="tab-content">
+    <div class="tab-panel active" id="text-video">
+      <h3>Text-to-Video</h3>
+      <select id="category">
+        <option value="viral">Viral</option>
+        <option value="royal">Royal</option>
+        <option value="fantasy">Fantasy</option>
+      </select>
+      <input type="text" id="prompt" placeholder="Enter your prompt">
+      <button class="prompt-magic" id="prompt-magic-btn">Prompt Magic</button>
+      <button class="generate" id="generate-btn">Generate Video</button>
+      <div class="media-box" id="video-box" style="display:none;">🎬 Generating...</div>
+      <div class="history" id="video-history"></div>
+    </div>
+
+    <div class="tab-panel" id="photo-video">
+      <h3>Photo-to-Video</h3>
+      <input type="file" id="photo-upload" accept="image/*">
+      <button class="generate" id="generate-photo-btn">Generate Video</button>
+      <div class="media-box" id="photo-video-box" style="display:none;">🎬 Generating...</div>
+      <div class="history" id="photo-history"></div>
+    </div>
+
+    <div class="tab-panel" id="audio-gen">
+      <h3>Audio Generator</h3>
+      <input type="text" id="audio-prompt" placeholder="Enter text for audio">
+      <button class="generate" id="generate-audio-btn">Generate Audio</button>
+      <div class="media-box" id="audio-box" style="display:none;">🎵 Generating...</div>
+      <div class="history" id="audio-history"></div>
+    </div>
+
+    <div class="tab-panel" id="fame-booster">
+      <h3>Kairah Fame Booster</h3>
+      <div class="fame-list" id="fame-list"></div>
+    </div>
   </div>
 </div>
 
+<canvas id="confetti-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>
+
 <script>
-  // --- Mock Authentication ---
-  const authContainer = document.getElementById('auth-container');
-  const studioContainer = document.getElementById('studio-container');
-  const authError = document.getElementById('auth-error');
+// ---------- Auth ----------
+const authContainer=document.getElementById('auth-container');
+const mainContainer=document.getElementById('main-container');
+const authError=document.getElementById('auth-error');
+let user=null, plan='Free';
+document.getElementById('signin-btn').onclick=()=>login(false);
+document.getElementById('signup-btn').onclick=()=>login(true);
+document.getElementById('logout-btn').onclick=()=>logout();
+function login(isSignUp){
+  const email=document.getElementById('email').value.trim();
+  if(!email){ authError.textContent="Email required"; return; }
+  user=email;
+  if(email.includes('pro')) plan='Pro';
+  else if(email.includes('diamond')) plan='Diamond';
+  else plan='Free';
+  document.getElementById('user-email').textContent=user;
+  document.getElementById('user-plan').textContent=plan;
 
-  let user = null;
-  let plan = 'Free'; // free, pro, diamond
-  let videoCount = 0;
-
-  const signinBtn = document.getElementById('signin-btn');
-  const signupBtn = document.getElementById('signup-btn');
-
-  signinBtn.onclick = () => authenticate(false);
-  signupBtn.onclick = () => authenticate(true);
-
-  function authenticate(isSignUp) {
-    const email = document.getElementById('email').value.trim();
-    if(!email) { authError.textContent = "Email required"; return; }
-    user = email;
-    if(email.includes('pro')) plan = 'Pro';
-    else if(email.includes('diamond')) plan = 'Diamond';
-    else plan = 'Free';
-    document.getElementById('user-plan').textContent = plan;
-    authContainer.style.display = 'none';
-    studioContainer.style.display = 'block';
-    authError.textContent = '';
-    loadHistory();
+  // Daily download reset
+  const today = new Date().toDateString();
+  if(localStorage.getItem('download_day') !== today){
+    localStorage.setItem('download_day', today);
+    localStorage.setItem(`downloads_${user}`, 0);
   }
 
-  // --- Video Generator ---
-  const generateBtn = document.getElementById('generate-btn');
-  const promptInput = document.getElementById('prompt');
-  const promptMagicBtn = document.getElementById('prompt-magic-btn');
-  const videoBox = document.getElementById('video-box');
-  const historyList = document.getElementById('history-list');
-  const categorySelect = document.getElementById('category');
+  authContainer.style.display='none';
+  mainContainer.style.display='block';
+  loadHistories(); loadFame(); updateDashboard();
+}
+function logout(){ user=null; plan='Free'; authContainer.style.display='block'; mainContainer.style.display='none'; }
+function upgradePlan(newPlan){ plan=newPlan; document.getElementById('user-plan').textContent=plan; alert("Plan upgraded to "+plan); }
 
-  const defaultPrompts = {
-    viral: ["Funny cat dancing", "Epic fail moment", "Dance challenge"],
-    royal: ["Queen portrait animation", "Royal crown reveal"],
-    fantasy: ["Dragon flying", "Magic forest scene"]
-  };
+// ---------- Tabs ----------
+const tabs=document.querySelectorAll('nav button');
+const panels=document.querySelectorAll('.tab-panel');
+tabs.forEach(tab=>{ tab.onclick=()=>{ tabs.forEach(t=>t.classList.remove('active')); tab.classList.add('active'); panels.forEach(p=>p.classList.remove('active')); document.getElementById(tab.dataset.tab).classList.add('active'); } });
 
-  categorySelect.onchange = () => {
-    promptInput.value = defaultPrompts[categorySelect.value][0];
-  };
+// ---------- Dashboard Stats ----------
+const statVideos = document.getElementById('stat-videos');
+const statPhotos = document.getElementById('stat-photos');
+const statAudio = document.getElementById('stat-audio');
+const statFame = document.getElementById('stat-fame');
+const statDownloads = document.getElementById('stat-downloads');
+let countVideos = 0, countPhotos = 0, countAudio = 0, countFame = 0, countDownloads = 0;
+function updateDashboard(){ statVideos.textContent=countVideos; statPhotos.textContent=countPhotos; statAudio.textContent=countAudio; statFame.textContent=countFame; statDownloads.textContent=countDownloads; }
 
-  promptMagicBtn.onclick = () => {
-    promptInput.value += " 🔥✨ (Enhanced Prompt Magic!)";
-  };
+// ---------- Prompts ----------
+const defaultPrompts={viral:["Funny cat","Epic fail","Dance"],royal:["Queen portrait","Crown reveal"],fantasy:["Dragon flying","Magic forest"]};
+const categorySelect=document.getElementById('category');
+const promptInput=document.getElementById('prompt');
+categorySelect.onchange=()=> promptInput.value=defaultPrompts[categorySelect.value][0];
+document.getElementById('prompt-magic-btn').onclick=()=> promptInput.value+=" 🔥✨";
 
-  generateBtn.onclick = () => {
-    if(plan === 'Free' && videoCount >=1) {
-      alert("Free plan allows only 1 video. Upgrade for more.");
-      return;
-    }
-    videoBox.style.display = 'block';
-    addToHistory(promptInput.value);
-    videoCount++;
-  };
+// ---------- Histories ----------
+const videoHistory=document.getElementById('video-history');
+const photoHistory=document.getElementById('photo-history');
+const audioHistory=document.getElementById('audio-history');
+const fameList=document.getElementById('fame-list');
 
-  function addToHistory(prompt) {
-    const li = document.createElement('li');
-    li.textContent = prompt;
-    historyList.appendChild(li);
-    saveHistory();
-  }
+function addCard(container,text){ const card=document.createElement('div'); card.className='card'; card.textContent=text; const btn=document.createElement('button'); btn.textContent='Download'; btn.onclick=()=>downloadItem(btn); const fameBtn=document.createElement('button'); fameBtn.textContent='Boost Fame'; fameBtn.onclick=()=>boostFame(fameBtn); card.appendChild(btn); card.appendChild(fameBtn); container.appendChild(card); }
+function addFameItem(text){ const card=document.createElement('div'); card.className='card'; card.textContent=text+" (Fame!)"; const btn=document.createElement('button'); btn.textContent='Boost Fame'; btn.onclick=()=>boostFame(btn); fameList.appendChild(card); }
 
-  function saveHistory() {
-    const items = Array.from(historyList.children).map(li => li.textContent);
-    localStorage.setItem('videoHistory_'+user, JSON.stringify(items));
-  }
+// ---------- Generate Buttons ----------
+document.getElementById('generate-btn').onclick=()=>{ if(plan==='Free' && videoHistory.children.length>=1){ alert("Free plan: 1 video only"); return; } addCard(videoHistory,promptInput.value); addFameItem(promptInput.value); triggerConfetti(); countVideos++; updateDashboard(); };
+document.getElementById('generate-photo-btn').onclick=()=>{ if(plan==='Free'){ alert("Free plan cannot generate photo-to-video"); return; } const file=document.getElementById('photo-upload').files[0]; if(!file){ alert("Upload photo"); return; } addCard(photoHistory,file.name); addFameItem(file.name); triggerConfetti(); countPhotos++; updateDashboard(); };
+document.getElementById('generate-audio-btn').onclick=()=>{ if(plan==='Free'){ alert("Free plan cannot generate audio"); return; } const text=document.getElementById('audio-prompt').value.trim(); if(!text){ alert("Enter text"); return; } addCard(audioHistory,text); triggerConfetti(); countAudio++; updateDashboard(); };
 
-  function loadHistory() {
-    const saved = JSON.parse(localStorage.getItem('videoHistory_'+user)) || [];
-    saved.forEach(p => addToHistory(p));
-  }
+// ---------- Fame Boost ----------
+function boostFame(btn){
+  const card=btn.parentElement;
+  countFame++; updateDashboard(); triggerConfetti();
+}
 
-  // --- Download button simulation ---
-  document.getElementById('download-btn').onclick = () => {
-    alert('Video download simulated!');
-  };
+// ---------- Download ----------
+function downloadItem(btn){
+  const downloadsUsed=Number(localStorage.getItem(`downloads_${user}`)||0);
+  if(plan==='Free' && downloadsUsed>=1){ alert("Free plan allows only 1 download/day."); return; }
+  if(plan==='Free') localStorage.setItem(`downloads_${user}`, downloadsUsed+1);
+  countDownloads++; updateDashboard();
+  alert('Download simulated!');
+}
+
+// ---------- Load histories/fame ----------
+function loadHistories(){ videoHistory.innerHTML=''; photoHistory.innerHTML=''; audioHistory.innerHTML=''; }
+function loadFame(){ fameList.innerHTML=''; }
+
+// ---------- Confetti ----------
+const canvas=document.getElementById('confetti-canvas'); const ctx=canvas.getContext('2d'); let confettiParticles=[];
+function resizeCanvas(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; } window.addEventListener('resize',resizeCanvas); resizeCanvas();
+function createConfetti(x,y){ for(let i=0;i<50;i++){ confettiParticles.push({x:x,y:y,r:Math.random()*6+2,dx:(Math.random()-0.5)*6,dy:(Math.random()-1.5)*6,color:`hsl(${Math.random()*360},70%,60%)`}); } }
+function drawConfetti(){ ctx.clearRect(0,0,canvas.width,canvas.height); confettiParticles.forEach((p,index)=>{ ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=p.color; ctx.fill(); p.x+=p.dx; p.y+=p.dy; p.dy+=0.05; if(p.y>canvas.height){ confettiParticles.splice(index,1); } }); requestAnimationFrame(drawConfetti); }
+drawConfetti();
+function triggerConfetti(){ createConfetti(window.innerWidth/2,window.innerHeight/2); }
 </script>
 
 </body>
