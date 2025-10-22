@@ -1,140 +1,465 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kairah Studio + Fame</title>
-<style>
-body,html{margin:0;padding:0;font-family:Arial,sans-serif;background:#0b1d3a;color:white;}
-a{text-decoration:none;color:#D4AF37;}
-header{position:relative;background:#0b1d3a;height:80vh;display:flex;justify-content:center;align-items:center;text-align:center;overflow:hidden;}
-header video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.5;}
-header .hero-text{position:relative;z-index:2;}
-header h1{font-size:3em;margin:0;}
-header p{font-size:1.2em;margin-top:10px;}
-header a.hero-btn{background:#D4AF37;padding:10px 20px;border-radius:6px;color:white;display:inline-block;margin-top:15px;}
-nav{background:#1c2a50;text-align:center;padding:10px;}
-nav a{margin:0 10px;padding:8px 15px;border-radius:6px;background:#3D2C41;color:white;font-weight:bold;display:inline-block;transition:0.2s;}
-nav a:hover{background:#D4AF37;color:white;}
-.container{max-width:1000px;margin:20px auto;background:#1c2a50;padding:25px;border-radius:12px;box-shadow:0 0 20px rgba(0,0,0,0.5);}
-.pricing-cards{display:flex;justify-content:space-around;flex-wrap:wrap;margin-top:25px;}
-.pricing-cards .card,.features .feature-card{flex:1 1 200px;text-align:center;background:#3D2C41;border-radius:12px;padding:18px;margin:10px;position:relative;transition:0.3s;cursor:pointer;}
-.pricing-cards .card video,.features .feature-card video{width:100%;border-radius:12px;opacity:0.8;}
-.pricing-cards .card button,.mock-paypal,.mock-stripe{margin-top:10px;background:linear-gradient(45deg,#D4AF37,#FFC107);color:white;padding:10px 18px;border:none;border-radius:6px;font-weight:bold;cursor:pointer;display:inline-block;transition:0.2s;}
-.mock-paypal:hover,.mock-stripe:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(212,175,55,0.6);}
-.features{display:flex;flex-wrap:wrap;justify-content:space-around;margin-top:25px;}
-.features .feature-card .locked-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);color:#FFC107;display:flex;justify-content:center;align-items:center;font-size:1em;font-weight:bold;border-radius:12px;}
-footer{background:#1c2a50;text-align:center;padding:20px;margin-top:30px;font-size:0.9em;color:#ccc;}
-.tabs button{margin:0 6px;padding:10px 15px;border-radius:6px;background:#3D2C41;color:white;font-weight:bold;border:none;transition:0.2s;}
-.tabs button.active{background:#D4AF37;color:white;}
-.tab-panel{display:none;margin-top:20px;}
-.tab-panel.active{display:block;}
-.card .locked-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);color:#FFC107;display:flex;justify-content:center;align-items:center;font-size:1em;font-weight:bold;border-radius:12px;}
-/* Modal */
-.modal{display:none;position:fixed;z-index:999;left:0;top:0;width:100%;height:100%;overflow:auto;background:rgba(0,0,0,0.85);}
-.modal-content{position:relative;margin:10% auto;padding:0;width:80%;max-width:800px;}
-.modal video{width:100%;border-radius:12px;}
-.close-modal{position:absolute;top:10px;right:15px;color:#FFF;font-size:30px;font-weight:bold;cursor:pointer;}
-@media(max-width:768px){.pricing-cards,.features{flex-direction:column;}}
-</style>
-</head>
-<body>
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-<header>
-  <video src="https://cdn.pixabay.com/vimeo/451534/beautiful_fantasy_woman.mp4" autoplay muted loop></video>
-  <div class="hero-text">
-    <h1>Kairah Studio + Fame</h1>
-    <p>Create Cinematic AI Videos & Boost Your Fame</p>
-    <a href="#pricing" class="hero-btn">See Pricing & Subscribe</a>
-  </div>
-</header>
+// Single-file React app mock for Kairah Studio + Kairah Fame
+// TailwindCSS assumed available in the project
+// Framer Motion used for motion UI
 
-<nav>
-  <a href="#home">Home</a>
-  <a href="#about">About</a>
-  <a href="#pricing">Pricing</a>
-  <a href="#dashboard">Dashboard</a>
-</nav>
+// --- Helper: localStorage user simulation ---
+const USER_KEY = "kairah_user";
+const getUser = () => {
+  try {
+    const raw = localStorage.getItem(USER_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (e) {
+    return null;
+  }
+};
+const saveUser = (u) => localStorage.setItem(USER_KEY, JSON.stringify(u));
 
-<div class="container" id="home">
-  <h2>Explore Cinematic AI Templates</h2>
-  <div class="features">
-    <div class="feature-card" data-video="https://cdn.pixabay.com/vimeo/451534/beautiful_fantasy_woman.mp4">
-      <video src="https://cdn.pixabay.com/vimeo/451534/beautiful_fantasy_woman.mp4" loop muted autoplay></video>
-      <div class="locked-overlay">Subscribe to Unlock</div>
-      <h4>Fantasy Woman</h4>
+// --- Brand colors ---
+const COLORS = {
+  gold: "#D4AF37",
+  plum: "#3D2C41",
+  blush: "#E7D2CB",
+  teal1: "#00C2B8",
+  teal2: "#2AB7F6",
+};
+
+// --- Nav ---
+function Nav() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const user = getUser();
+
+  return (
+    <nav className="bg-gradient-to-r from-[rgba(3,37,65,0.9)] to-[rgba(2,102,89,0.8)] text-white p-4">
+      <div className="max-w-6xl mx-auto flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-gold font-bold" style={{color: COLORS.gold}}>K</div>
+          <div>
+            <div className="text-lg font-bold">Kairah</div>
+            <div className="text-xs opacity-80">Create • Boost • Shine</div>
+          </div>
+        </Link>
+
+        <div className="hidden md:flex items-center gap-6">
+          <Link to="/" className="hover:underline">Home</Link>
+          <Link to="/studio" className="hover:underline">Studio</Link>
+          <Link to="/pricing" className="hover:underline">Pricing</Link>
+          <Link to="/booster" className="hover:underline">Booster</Link>
+          <Link to="/about" className="hover:underline">About</Link>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {!user ? (
+            <Link to="/signin" className="bg-white/10 px-4 py-2 rounded-md">Sign in</Link>
+          ) : (
+            <div className="flex items-center gap-3">
+              <div className="text-sm opacity-90">{user.email}</div>
+              <Link to="/studio" className="bg-[rgba(212,175,55,0.95)] text-black px-3 py-1 rounded">Open Studio</Link>
+            </div>
+          )}
+
+          <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      {menuOpen && (
+        <div className="md:hidden mt-3 px-4">
+          <Link to="/" className="block py-2">Home</Link>
+          <Link to="/studio" className="block py-2">Studio</Link>
+          <Link to="/pricing" className="block py-2">Pricing</Link>
+          <Link to="/booster" className="block py-2">Booster</Link>
+          <Link to="/about" className="block py-2">About</Link>
+        </div>
+      )}
+    </nav>
+  );
+}
+
+// --- Home ---
+function Home() {
+  return (
+    <div className="min-h-[70vh] flex items-center">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 items-center px-6">
+        <div>
+          <motion.h1 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-4xl md:text-6xl font-extrabold leading-tight">
+            Create <span style={{ color: COLORS.gold }}>Cinematic</span> AI Videos — in seconds.
+          </motion.h1>
+          <p className="mt-6 text-lg opacity-90">Kairah Studio crafts short, high-impact videos designed to stop thumbs and spark follows. No experience required.</p>
+
+          <div className="mt-8 flex gap-4">
+            <Link to="/signin" className="px-6 py-3 rounded-lg bg-white text-black font-semibold">Try Free</Link>
+            <Link to="/pricing" className="px-6 py-3 rounded-lg border border-white/20">View Pricing</Link>
+          </div>
+
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="rounded-lg overflow-hidden bg-gradient-to-tr from-white/5 to-white/2 p-2">
+                <div className="h-32 bg-[linear-gradient(135deg,#3D2C41,#00C2B8)] rounded"></div>
+                <div className="mt-2 text-sm">Cinematic preview #{i + 1}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm">
+          <div className="text-sm opacity-80">Featured Template</div>
+          <div className="mt-4 h-72 rounded-lg bg-gradient-to-br from-[#2AB7F6] to-[#00C2B8] flex items-center justify-center text-white text-lg">Royal Glow — 6s</div>
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <div className="p-3 rounded bg-white/10">Royal</div>
+            <div className="p-3 rounded bg-white/10">Fantasy</div>
+            <div className="p-3 rounded bg-white/10">Realistic</div>
+            <div className="p-3 rounded bg-white/10">Baby</div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="feature-card" data-video="https://cdn.pixabay.com/vimeo/451536/fantasy_landscape_loop.mp4">
-      <video src="https://cdn.pixabay.com/vimeo/451536/fantasy_landscape_loop.mp4" loop muted autoplay></video>
-      <div class="locked-overlay">Subscribe to Unlock</div>
-      <h4>Fantasy Landscape</h4>
+  );
+}
+
+// --- Signin (mock) ---
+function Signin() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setTimeout(() => {
+      const u = { email: email || "user@kairah.test", plan: "free", videosGenerated: 0 };
+      saveUser(u);
+      setLoading(false);
+      navigate("/studio");
+    }, 800);
+  };
+
+  return (
+    <div className="min-h-[70vh] flex items-center justify-center">
+      <div className="w-full max-w-md p-6 rounded-2xl bg-white/5 backdrop-blur-sm">
+        <h2 className="text-2xl font-bold">Sign in to Kairah Studio</h2>
+        <p className="mt-2 text-sm opacity-80">Mock sign-in (no backend yet). Use any email.</p>
+        <form onSubmit={handleSignIn} className="mt-6 flex flex-col gap-4">
+          <input className="p-3 rounded bg-white/10" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
+          <button className="p-3 rounded bg-[rgba(212,175,55,0.95)] font-semibold" disabled={loading}>{loading ? 'Signing in...' : 'Sign in'}</button>
+        </form>
+
+        <div className="mt-4">
+          <button onClick={() => { setLoading(true); setTimeout(() => { const u = { email: 'google@kairah.test', plan: 'free', videosGenerated: 0 }; saveUser(u); setLoading(false); navigate('/studio'); }, 600); }} className="w-full p-3 rounded border border-white/20">Sign in with Google (mock)</button>
+        </div>
+      </div>
     </div>
-    <div class="feature-card" data-video="https://cdn.pixabay.com/vimeo/451538/royal_queen_loop.mp4">
-      <video src="https://cdn.pixabay.com/vimeo/451538/royal_queen_loop.mp4" loop muted autoplay></video>
-      <div class="locked-overlay">Subscribe to Unlock</div>
-      <h4>Royal Queen</h4>
+  );
+}
+
+// --- Studio Page (mock generation) ---
+function Studio() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(getUser());
+  const [prompt, setPrompt] = useState("");
+  const [template, setTemplate] = useState("Royal");
+  const [generating, setGenerating] = useState(false);
+  const [videoReady, setVideoReady] = useState(null);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
+
+  if (!user) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-xl font-bold">Please sign in to use the Studio</div>
+          <div className="mt-4"><Link to="/signin" className="px-4 py-2 rounded bg-white text-black">Sign in</Link></div>
+        </div>
+      </div>
+    );
+  }
+
+  const handlePromptMagic = () => {
+    // simple visual refinement
+    setPrompt((p) => (p ? `${p} — cinematic, dramatic lighting, golden hour, smooth camera dolly` : 'A beautiful queen in golden light, cinematic, smooth camera dolly'));
+    setMessage('Prompt refined');
+    setTimeout(() => setMessage(''), 1500);
+  };
+
+  const handleGenerate = () => {
+    // Check free plan limit
+    const u = getUser();
+    if (u.plan === 'free' && u.videosGenerated >= 1) {
+      setMessage('Free plan limit reached — upgrade to generate more');
+      return;
+    }
+
+    setGenerating(true);
+    setVideoReady(null);
+    setMessage('Generating cinematic preview...');
+
+    setTimeout(() => {
+      // Mock video object
+      const v = { id: Date.now(), title: `Cinematic ${template}`, duration: 6 };
+      setVideoReady(v);
+      setGenerating(false);
+      setMessage('Video ready');
+
+      // update user generated count locally
+      u.videosGenerated = (u.videosGenerated || 0) + 1;
+      u.lastVideo = v;
+      saveUser(u);
+      setUser(u);
+    }, 1800);
+  };
+
+  const handleDownload = () => {
+    const u = getUser();
+    if (u.plan === 'free' && u.videosGenerated > 1) {
+      setMessage('Download locked — upgrade to Pro');
+      return;
+    }
+    // simulate download
+    setMessage('Starting download...');
+    setTimeout(() => setMessage('Downloaded! (mock)'), 800);
+  };
+
+  return (
+    <div className="min-h-[70vh] p-6">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
+        <div className="md:col-span-2 p-6 rounded-2xl bg-white/5">
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="text-sm opacity-80">Signed in as</div>
+              <div className="font-semibold">{user.email} • <span className="text-yellow-300">{user.plan}</span></div>
+            </div>
+
+            <div>
+              <div className="text-right text-sm opacity-80">Videos used</div>
+              <div className="font-semibold">{user.videosGenerated || 0} / {user.plan === 'free' ? 1 : '∞'}</div>
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <label className="text-sm opacity-80">Prompt</label>
+            <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="Describe the scene, mood, subject..." className="w-full mt-2 p-3 rounded bg-white/10 h-28" />
+            <div className="flex items-center gap-3 mt-3">
+              <button onClick={handlePromptMagic} className="px-4 py-2 rounded bg-[rgba(212,175,55,0.95)]">Prompt Magic</button>
+              <select value={template} onChange={(e) => setTemplate(e.target.value)} className="p-2 rounded bg-white/5">
+                <option>Royal</option>
+                <option>Fantasy</option>
+                <option>Realistic</option>
+                <option>Baby</option>
+                <option>Glam</option>
+              </select>
+
+              <button onClick={handleGenerate} className="ml-auto px-4 py-2 rounded bg-gradient-to-r from-[#2AB7F6] to-[#00C2B8]">{generating ? 'Generating...' : 'Generate'}</button>
+            </div>
+
+            <div className="mt-6">
+              {message && <div className="text-sm opacity-80">{message}</div>}
+
+              {generating && (
+                <div className="mt-4 p-6 rounded bg-white/5 flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full animate-spin border-4 border-white/30 border-t-white"></div>
+                  <div>Rendering cinematic frames...</div>
+                </div>
+              )}
+
+              {videoReady && (
+                <div className="mt-4 p-4 rounded bg-gradient-to-br from-[#3D2C41] to-[#2AB7F6] text-white">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-semibold">{videoReady.title}</div>
+                      <div className="text-sm opacity-90">Duration: {videoReady.duration}s • Mock preview</div>
+                    </div>
+                    <div className="flex gap-3">
+                      <button onClick={handleDownload} className="px-3 py-1 rounded bg-white/10">Download</button>
+                      <button onClick={() => { navigator.clipboard?.writeText('mock-share-link'); setMessage('Share link copied'); }} className="px-3 py-1 rounded border">Share</button>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 h-48 rounded bg-black/40 flex items-center justify-center">Mock video player</div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <aside className="p-6 rounded-2xl bg-white/3">
+          <div className="text-sm opacity-80">Side Tools</div>
+          <div className="mt-4 grid gap-3">
+            <div className="p-3 rounded bg-white/5">Cinematic Templates</div>
+            <div className="p-3 rounded bg-white/5">Prompt Presets</div>
+            <div className="p-3 rounded bg-white/5">Royal Filters</div>
+          </div>
+
+          <div className="mt-6">
+            <div className="text-sm opacity-80">Quick Actions</div>
+            <div className="mt-2 flex gap-2">
+              <Link to="/pricing" className="px-3 py-2 rounded bg-[rgba(212,175,55,0.95)]">Upgrade</Link>
+              <button onClick={() => { localStorage.removeItem(USER_KEY); window.location.reload(); }} className="px-3 py-2 rounded border">Sign out</button>
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
-  </div>
-</div>
+  );
+}
 
-<div class="container" id="pricing">
-  <h2>Pricing Plans</h2>
-  <div class="pricing-cards">
-    <div class="card" data-video="https://cdn.pixabay.com/vimeo/451534/beautiful_fantasy_woman.mp4">
-      <video src="https://cdn.pixabay.com/vimeo/451534/beautiful_fantasy_woman.mp4" loop muted autoplay></video>
-      <h3>Trial - $1</h3>
-      <p>7 days, 1 six-second video</p>
-      <span class="mock-paypal">PayPal</span> <span class="mock-stripe">Stripe</span>
+// --- Pricing (mock payments) ---
+function Pricing() {
+  const [status, setStatus] = useState("");
+
+  const handleMockPay = (plan) => {
+    setStatus('Processing...');
+    setTimeout(() => {
+      const u = getUser() || { email: 'guest@kairah.test', videosGenerated: 0 };
+      u.plan = plan;
+      saveUser(u);
+      setStatus('Payment successful — plan updated');
+      setTimeout(() => setStatus(''), 2200);
+    }, 900);
+  };
+
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center">
+      <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-6 p-6">
+        {[
+          { id: 'free', name: 'Free', price: '$0', perks: ['1 free 6s video'] },
+          { id: 'pro', name: 'Pro', price: '$9/mo', perks: ['Unlimited videos', 'Remove watermark'] },
+          { id: 'diamond', name: 'Diamond', price: '$29/mo', perks: ['Cinematic HD', 'Exclusive templates'] },
+        ].map((p) => (
+          <div key={p.id} className="p-6 rounded-2xl bg-white/5 text-center">
+            <div className="text-xl font-bold">{p.name}</div>
+            <div className="mt-2 text-2xl font-extrabold">{p.price}</div>
+            <ul className="mt-4 text-sm opacity-90 text-left">
+              {p.perks.map((x) => <li key={x}>• {x}</li>)}
+            </ul>
+            <div className="mt-6">
+              <button onClick={() => handleMockPay(p.id)} className="px-4 py-2 rounded bg-[rgba(212,175,55,0.95)]">Pay (mock)</button>
+            </div>
+
+            <div className="mt-3 text-xs opacity-80">PayPal/Stripe buttons are mocked for this frontend demo.</div>
+          </div>
+        ))}
+      </div>
+
+      {status && <div className="fixed bottom-6 right-6 p-3 bg-white/10 rounded">{status}</div>}
     </div>
-    <div class="card" data-video="https://cdn.pixabay.com/vimeo/451536/fantasy_landscape_loop.mp4">
-      <video src="https://cdn.pixabay.com/vimeo/451536/fantasy_landscape_loop.mp4" loop muted autoplay></video>
-      <h3>Pro - $19</h3>
-      <p>10 videos included</p>
-      <span class="mock-paypal">PayPal</span> <span class="mock-stripe">Stripe</span>
+  );
+}
+
+// --- About ---
+function About() {
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center p-6">
+      <div className="max-w-3xl text-center">
+        <h2 className="text-3xl font-bold">The Kairah Vision</h2>
+        <p className="mt-4 text-lg opacity-90">Kairah is a creative empire — blending cinematic AI creation with distribution tools that help creators go viral. We design for beauty, power, and honest transformation.</p>
+      </div>
     </div>
-    <div class="card" data-video="https://cdn.pixabay.com/vimeo/451540/cinematic_viral_loop.mp4">
-      <video src="https://cdn.pixabay.com/vimeo/451540/cinematic_viral_loop.mp4" loop muted autoplay></video>
-      <h3>Diamond - $49</h3>
-      <p>Unlimited videos + Fame Booster</p>
-      <span class="mock-paypal">PayPal</span> <span class="mock-stripe">Stripe</span>
+  );
+}
+
+// --- Booster (Fame teaser) ---
+function Booster() {
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center p-6">
+      <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+        <div className="rounded-2xl p-6 bg-white/5">
+          <h3 className="text-2xl font-bold">Kairah Fame</h3>
+          <p className="mt-2 opacity-90">A viral growth toolbox that pairs with Studio. Get AI scripts, trending audio ideas, captions, and a dashboard to measure growth.</p>
+          <div className="mt-6">
+            <Link to="/fame" className="px-4 py-2 rounded bg-gradient-to-r from-[#2AB7F6] to-[#00C2B8]">Try Fame Preview</Link>
+          </div>
+        </div>
+
+        <div className="rounded-2xl p-6 bg-white/3">
+          <div className="text-sm opacity-80">Why Fame?</div>
+          <ul className="mt-3">
+            <li>• AI viral script generator</li>
+            <li>• Caption and hashtag suggestions</li>
+            <li>• Auto import from Kairah Studio</li>
+          </ul>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+  );
+}
 
-<div class="container" id="about">
-  <h2>About Kairah Studio + Fame</h2>
-  <video src="https://cdn.pixabay.com/vimeo/451536/fantasy_landscape_loop.mp4" autoplay muted loop style="width:100%;border-radius:12px;"></video>
-  <p>We provide cinematic AI-generated videos and tools to make your content viral. Explore stunning visuals, surreal AI imagery, and bring your ideas to life.</p>
-</div>
+// --- Fame Preview (simple viral script generator) ---
+function FamePreview() {
+  const [topic, setTopic] = useState("");
+  const [script, setScript] = useState(null);
 
-<!-- Modal for cinematic preview -->
-<div id="videoModal" class="modal">
-  <div class="modal-content">
-    <span class="close-modal">&times;</span>
-    <video id="modalVideo" controls autoplay loop></video>
-  </div>
-</div>
+  const generate = () => {
+    if (!topic) return;
+    // Quick mock generator using template
+    setScript(null);
+    setTimeout(() => {
+      setScript(`Hook: You won't believe this about ${topic}!\n\nScene: Quick close-up, dramatic beat.\n\nLine: \"I tried ${topic} and this happened...\"\n\nCTA: Follow for more.`);
+    }, 700);
+  };
 
-<footer>
-  <p>© 2025 Kairah Studio. All rights reserved.</p>
-  <p><a href="#">Affiliate Program</a> | <a href="#">Non-refundable Agreement</a></p>
-</footer>
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center p-6">
+      <div className="max-w-3xl w-full p-6 rounded-2xl bg-white/5">
+        <h3 className="text-2xl font-bold">Viral Script Generator (Preview)</h3>
+        <p className="mt-2 text-sm opacity-80">Enter a short topic and get a quick viral short-form script.</p>
+        <div className="mt-4 flex gap-2">
+          <input value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="Topic (e.g. glass skin routine)" className="p-3 rounded bg-white/10 flex-1" />
+          <button onClick={generate} className="px-4 py-2 rounded bg-[rgba(212,175,55,0.95)]">Generate</button>
+        </div>
 
-<script>
-// Modal logic
-const modal = document.getElementById('videoModal');
-const modalVideo = document.getElementById('modalVideo');
-const closeModal = document.querySelector('.close-modal');
-document.querySelectorAll('.feature-card, .pricing-cards .card').forEach(card=>{
-  card.addEventListener('click', ()=>{
-    const vid = card.dataset.video;
-    modalVideo.src = vid;
-    modal.style.display = 'block';
-  });
-});
-closeModal.onclick = ()=>{modal.style.display='none'; modalVideo.pause(); modalVideo.src='';}
-window.onclick = e=>{if(e.target==modal){modal.style.display='none'; modalVideo.pause(); modalVideo.src='';}}
-</script>
+        {script && (
+          <div className="mt-4 p-4 rounded bg-black/40 text-white whitespace-pre-line">{script}</div>
+        )}
+      </div>
+    </div>
+  );
+}
 
-</body>
-</html>
+// --- Footer ---
+function Footer() {
+  return (
+    <footer className="bg-gradient-to-r from-[rgba(3,37,65,0.95)] to-[rgba(2,102,89,0.95)] text-white p-6 mt-12">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between">
+        <div>© {new Date().getFullYear()} Kairah — All rights reserved</div>
+        <div className="mt-3 md:mt-0 flex gap-4">
+          <Link to="/about">About</Link>
+          <Link to="/pricing">Pricing</Link>
+          <a href="#" onClick={(e)=>{e.preventDefault(); alert('SilkGlow coming soon (mock)')}}>SilkGlow</a>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// --- Main App ---
+export default function AppMock() {
+  return (
+    <Router>
+      <div className="min-h-screen bg-[linear-gradient(180deg,#081224,#021926)] text-white">
+        <Nav />
+
+        <main className="py-10">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signin" element={<Signin />} />
+            <Route path="/studio" element={<Studio />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/booster" element={<Booster />} />
+            <Route path="/fame" element={<FamePreview />} />
+            <Route path="*" element={<Home />} />
+          </Routes>
+        </main>
+
+        <Footer />
+      </div>
+    </Router>
+  );
+}
