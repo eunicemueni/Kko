@@ -1,465 +1,721 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kairah Studio + Fame — Cinematic AI Mock</title>
+  <meta name="description" content="Kairah Studio + Fame — cinematic AI video & audio generator mockup with pricing, templates, fame booster, affiliate, and checkout (mock)." />
+  <meta property="og:title" content="Kairah Studio + Fame" />
+  <meta property="og:description" content="Preview cinematic AI videos before subscribing. Mock PayPal/Stripe checkout, templates, and Fame Booster demo." />
+  <meta property="og:type" content="website" />
+  <style>
+    :root{
+      --bg:#071428; --panel:#112038; --card:#17283e; --accent:#D4AF37;
+      --muted:#a9b4c9; --glass:rgba(255,255,255,0.03);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#04101f 0%, #071428 100%);color:#EAF0F8}
+    a{color:var(--accent);text-decoration:none}
+    /* NAV / HERO */
+    header{position:relative;min-height:62vh;display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.03)}
+    header .hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.52;filter:brightness(0.6) saturate(1.05)}
+    .hero-inner{position:relative;z-index:2;text-align:center;padding:36px 20px}
+    .hero-inner h1{font-size:44px;margin:0 0 10px;color:white;letter-spacing:0.6px}
+    .hero-inner p{margin:0 0 18px;color:var(--muted);font-size:18px}
+    .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn{background:linear-gradient(45deg,var(--accent),#FFC107);border:none;color:#041427;padding:12px 18px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 6px 24px rgba(212,175,55,0.12);transition:transform .15s}
+    .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    nav{display:flex;gap:12px;align-items:center;justify-content:center;padding:12px;background:transparent;position:sticky;top:0;z-index:40}
+    nav a{padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);color:var(--muted);font-weight:600}
+    nav a.active, nav a:hover{background:linear-gradient(90deg, rgba(212,175,55,0.12), rgba(212,175,55,0.02));color:white}
+    .wrap{max-width:1200px;margin:24px auto;padding:0 18px}
+    .panel{background:var(--panel);border-radius:14px;padding:18px;margin-bottom:18px;box-shadow:0 6px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.02)}
+    .grid{display:flex;gap:14px;flex-wrap:wrap}
+    .card{background:var(--card);padding:12px;border-radius:12px;min-width:220px;flex:1 1 260px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.02)}
+    .card h3{margin:8px 0;color:#FFF;font-size:18px}
+    .muted{color:var(--muted);font-size:14px}
+    .thumb{width:100%;height:150px;border-radius:10px;overflow:hidden;background:#000;display:block;position:relative;cursor:pointer}
+    .thumb video, .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .locked-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(2,6,23,0.45), rgba(2,6,23,0.6));display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800;font-size:15px;backdrop-filter:blur(2px)}
+    .small-badge{position:absolute;left:10px;top:10px;padding:6px 8px;background:rgba(0,0,0,0.5);border-radius:8px;color:#fff;font-weight:700;font-size:13px}
+    .pricing-grid{display:flex;gap:12px;flex-wrap:wrap}
+    .price-card{flex:1 1 200px;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.03)}
+    .price-big{font-size:20px;font-weight:800;color:var(--accent)}
+    .price-card .features{margin-top:10px;font-size:14px;color:var(--muted)}
+    .pay-row{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+    .mock-paypal,.mock-stripe{margin-top:8px;padding:8px 12px;border-radius:6px;background:#ffc; color:#111;font-weight:700;cursor:pointer}
+    .wave-wrap{height:60px;background:linear-gradient(90deg,#092233, #071a2b);border-radius:8px;display:flex;align-items:center;padding:8px;gap:8px}
+    .wave{height:40px;flex:1;background:linear-gradient(90deg,#21c25f,#28a745);border-radius:6px;animation:wave 1s linear infinite;transform-origin:left center}
+    @keyframes wave{0%{transform:scaleX(1)}50%{transform:scaleX(0.5)}100%{transform:scaleX(1)}}
+    .tabs button{margin:0 6px;padding:10px 15px;border-radius:6px;background:#3D2C41;color:white;font-weight:bold;border:none;transition:0.2s}
+    .tabs button.active{background:var(--accent);color:white}
+    .tab-panel{display:none;margin-top:20px}
+    .tab-panel.active{display:block}
+    .modal{position:fixed;inset:0;background:rgba(2,6,23,0.86);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
+    .modal .panel{max-width:900px;width:100%;padding:0}
+    .modal .media{height:56vh;border-radius:14px;overflow:hidden}
+    .modal .close{position:absolute;right:18px;top:14px;background:rgba(255,255,255,0.06);padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:700}
+    .row{display:flex;gap:12px;align-items:center}
+    .pill{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;font-weight:700}
+    .tiny{font-size:12px;color:var(--muted)}
+    .footer{padding:28px;text-align:center;color:var(--muted);font-size:13px}
+    @media(max-width:900px){ .thumb{height:120px} header{min-height:50vh} .hero-inner h1{font-size:28px} .pricing-grid{flex-direction:column} .grid{flex-direction:column} }
+  </style>
+</head>
+<body>
 
-// Single-file React app mock for Kairah Studio + Kairah Fame
-// TailwindCSS assumed available in the project
-// Framer Motion used for motion UI
+<!-- HERO -->
+<header>
+  <video class="hero-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" autoplay muted loop playsinline></video>
+  <div class="hero-inner">
+    <h1>Kairah Studio + Fame</h1>
+    <p>Create Cinematic Magic with AI — preview everything before subscribing.</p>
+    <div class="cta-row">
+      <button class="btn" id="open-pricing">See Pricing — Subscribe</button>
+      <button class="btn secondary" id="open-about">About Us</button>
+    </div>
+  </div>
+</header>
 
-// --- Helper: localStorage user simulation ---
-const USER_KEY = "kairah_user";
-const getUser = () => {
-  try {
-    const raw = localStorage.getItem(USER_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch (e) {
-    return null;
-  }
-};
-const saveUser = (u) => localStorage.setItem(USER_KEY, JSON.stringify(u));
+<!-- NAV -->
+<nav style="backdrop-filter: blur(6px)">
+  <a href="#home" class="active" data-link>Home</a>
+  <a href="#features" data-link>Templates</a>
+  <a href="#pricingPanel" data-link>Pricing</a>
+  <a href="#aboutSection" data-link>About</a>
+  <a href="#dashboardPanel" data-link>Dashboard</a>
+  <a href="#" id="open-affiliate" style="margin-left:12px">Affiliate</a>
+  <span style="margin-left:auto"></span>
+  <button class="btn secondary" id="signin-btn-top">Sign In / Sign Up</button>
+</nav>
 
-// --- Brand colors ---
-const COLORS = {
-  gold: "#D4AF37",
-  plum: "#3D2C41",
-  blush: "#E7D2CB",
-  teal1: "#00C2B8",
-  teal2: "#2AB7F6",
-};
+<!-- WRAPPER -->
+<div class="wrap" id="home">
 
-// --- Nav ---
-function Nav() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const user = getUser();
-
-  return (
-    <nav className="bg-gradient-to-r from-[rgba(3,37,65,0.9)] to-[rgba(2,102,89,0.8)] text-white p-4">
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-gold font-bold" style={{color: COLORS.gold}}>K</div>
-          <div>
-            <div className="text-lg font-bold">Kairah</div>
-            <div className="text-xs opacity-80">Create • Boost • Shine</div>
-          </div>
-        </Link>
-
-        <div className="hidden md:flex items-center gap-6">
-          <Link to="/" className="hover:underline">Home</Link>
-          <Link to="/studio" className="hover:underline">Studio</Link>
-          <Link to="/pricing" className="hover:underline">Pricing</Link>
-          <Link to="/booster" className="hover:underline">Booster</Link>
-          <Link to="/about" className="hover:underline">About</Link>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {!user ? (
-            <Link to="/signin" className="bg-white/10 px-4 py-2 rounded-md">Sign in</Link>
-          ) : (
-            <div className="flex items-center gap-3">
-              <div className="text-sm opacity-90">{user.email}</div>
-              <Link to="/studio" className="bg-[rgba(212,175,55,0.95)] text-black px-3 py-1 rounded">Open Studio</Link>
-            </div>
-          )}
-
-          <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
+  <!-- PITCH -->
+  <section class="panel">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div style="flex:1;min-width:260px">
+        <h2 style="margin:0 0 6px">Preview Cinematic AI templates — before you sign up</h2>
+        <p class="muted" style="margin:0 0 14px">Let users see high-quality AI previews (locked) so they understand the value. Everything below is mocked visually — no real generation or payments occur until backend is connected.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" id="signup-cta">Sign Up Now</button>
+          <button class="btn secondary" id="demo-tour">Take a Tour</button>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div className="md:hidden mt-3 px-4">
-          <Link to="/" className="block py-2">Home</Link>
-          <Link to="/studio" className="block py-2">Studio</Link>
-          <Link to="/pricing" className="block py-2">Pricing</Link>
-          <Link to="/booster" className="block py-2">Booster</Link>
-          <Link to="/about" className="block py-2">About</Link>
-        </div>
-      )}
-    </nav>
-  );
-}
-
-// --- Home ---
-function Home() {
-  return (
-    <div className="min-h-[70vh] flex items-center">
-      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 items-center px-6">
-        <div>
-          <motion.h1 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-4xl md:text-6xl font-extrabold leading-tight">
-            Create <span style={{ color: COLORS.gold }}>Cinematic</span> AI Videos — in seconds.
-          </motion.h1>
-          <p className="mt-6 text-lg opacity-90">Kairah Studio crafts short, high-impact videos designed to stop thumbs and spark follows. No experience required.</p>
-
-          <div className="mt-8 flex gap-4">
-            <Link to="/signin" className="px-6 py-3 rounded-lg bg-white text-black font-semibold">Try Free</Link>
-            <Link to="/pricing" className="px-6 py-3 rounded-lg border border-white/20">View Pricing</Link>
+      <div style="width:420px;min-width:260px">
+        <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03)">
+          <video style="width:100%;display:block" src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4" loop muted autoplay playsinline></video>
+          <div style="padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02))">
+            <div class="row" style="justify-content:space-between">
+              <div><strong>Sample Cinematic Clip</strong><div class="muted tiny">6s loop • cinematic • AI-styled</div></div>
+              <div class="pill">Preview</div>
+            </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="rounded-lg overflow-hidden bg-gradient-to-tr from-white/5 to-white/2 p-2">
-                <div className="h-32 bg-[linear-gradient(135deg,#3D2C41,#00C2B8)] rounded"></div>
-                <div className="mt-2 text-sm">Cinematic preview #{i + 1}</div>
+  <!-- TEMPLATES & FEATURES -->
+  <section class="panel" id="features">
+    <h2 style="margin-top:0">Templates & Features (previews)</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="thumb" data-video="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4">
+          <video src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" muted loop playsinline></video>
+          <div class="small-badge">Text→Video</div>
+          <div class="locked-overlay">Subscribe to Unlock</div>
+        </div>
+        <h3>Viral Short — Beautiful Woman</h3>
+        <div class="muted">6s cinematic loop • dreamy lighting • slow dolly</div>
+      </div>
+
+      <div class="card">
+        <div class="thumb" data-video="https://www.w3schools.com/html/mov_bbb.mp4">
+          <video src="https://www.w3schools.com/html/mov_bbb.mp4" muted loop playsinline></video>
+          <div class="small-badge">Photo→Video</div>
+          <div class="locked-overlay">Subscribe to Unlock</div>
+        </div>
+        <h3>Royal Portrait — Cinematic</h3>
+        <div class="muted">6s portrait • regal color grade</div>
+      </div>
+
+      <div class="card">
+        <div class="thumb" data-video="https://www.w3schools.com/html/movie.mp4">
+          <video src="https://www.w3schools.com/html/movie.mp4" muted loop playsinline></video>
+          <div class="small-badge">Audio</div>
+          <div class="locked-overlay">Subscribe to Unlock</div>
+        </div>
+        <h3>Surreal Vocal — AI Voice</h3>
+        <div class="muted">8s sample • includes waveform preview</div>
+      </div>
+
+      <div class="card">
+        <div class="thumb" data-video="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4">
+          <video src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4" muted loop playsinline></video>
+          <div class="small-badge">Fame</div>
+          <div class="locked-overlay">Subscribe to Unlock</div>
+        </div>
+        <h3>Viral Boost Clip</h3>
+        <div class="muted">Social-ready edit with overlay likes & views</div>
+      </div>
+    </div>
+
+    <p class="muted" style="margin-top:12px">Click any thumbnail to open a larger cinematic preview modal. Locked overlays show to non-subscribers; unlock via mock checkout.</p>
+  </section>
+
+  <!-- PRICING -->
+  <section class="panel" id="pricingPanel">
+    <h2 style="margin-top:0">Pricing & Plans</h2>
+    <p class="muted">All plans display a cinematic preview. Click PayPal/Stripe to simulate payment and unlock previews in this demo.</p>
+
+    <div class="pricing-grid">
+      <!-- Trial -->
+      <div class="price-card card" data-plan="Trial" data-video="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4">
+        <div class="thumb"><video src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" muted loop playsinline></video><div class="locked-overlay">Subscribe to Unlock</div></div>
+        <h3 style="margin:12px 0 6px">Trial <span class="price-big">$1</span></h3>
+        <div class="features">7 days • 1 six-second video</div>
+        <div class="pay-row">
+          <button class="mock-paypal" data-plan="Trial">PayPal</button>
+          <button class="mock-stripe" data-plan="Trial">Stripe</button>
+        </div>
+      </div>
+
+      <!-- Free -->
+      <div class="price-card card" data-plan="Free" data-video="https://www.w3schools.com/html/mov_bbb.mp4">
+        <div class="thumb"><video src="https://www.w3schools.com/html/mov_bbb.mp4" muted loop playsinline></video><div class="locked-overlay">Subscribe to Unlock</div></div>
+        <h3 style="margin:12px 0 6px">Free <span class="price-big">Free</span></h3>
+        <div class="features">1 six-second video • Demo access</div>
+        <div class="pay-row">
+          <button class="mock-paypal" data-plan="Free">PayPal</button>
+          <button class="mock-stripe" data-plan="Free">Stripe</button>
+        </div>
+      </div>
+
+      <!-- Pro -->
+      <div class="price-card card" data-plan="Pro" data-video="https://www.w3schools.com/html/movie.mp4">
+        <div class="thumb"><video src="https://www.w3schools.com/html/movie.mp4" muted loop playsinline></video><div class="locked-overlay">Subscribe to Unlock</div></div>
+        <h3 style="margin:12px 0 6px">Pro <span class="price-big">$19 / mo</span></h3>
+        <div class="features">10 videos included • HD outputs</div>
+        <div class="pay-row">
+          <button class="mock-paypal" data-plan="Pro">PayPal</button>
+          <button class="mock-stripe" data-plan="Pro">Stripe</button>
+        </div>
+      </div>
+
+      <!-- Diamond -->
+      <div class="price-card card" data-plan="Diamond" data-video="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4">
+        <div class="thumb"><video src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4" muted loop playsinline></video><div class="small-badge">Best</div><div class="locked-overlay">Subscribe to Unlock</div></div>
+        <h3 style="margin:12px 0 6px">Diamond <span class="price-big">$49 / mo</span></h3>
+        <div class="features">Unlimited • Fame Booster • Priority</div>
+        <div class="pay-row">
+          <button class="mock-paypal" data-plan="Diamond">PayPal</button>
+          <button class="mock-stripe" data-plan="Diamond">Stripe</button>
+        </div>
+      </div>
+
+      <!-- Lifetime -->
+      <div class="price-card card" data-plan="Lifetime" data-video="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4">
+        <div class="thumb"><video src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" muted loop playsinline></video><div class="locked-overlay">Subscribe to Unlock</div></div>
+        <h3 style="margin:12px 0 6px">Lifetime <span class="price-big">$199</span></h3>
+        <div class="features">All features permanently • VIP</div>
+        <div class="pay-row">
+          <button class="mock-paypal" data-plan="Lifetime">PayPal</button>
+          <button class="mock-stripe" data-plan="Lifetime">Stripe</button>
+        </div>
+      </div>
+
+      <!-- Pay-per-video / Booster -->
+      <div class="price-card card" data-plan="Boost" data-video="https://www.w3schools.com/html/mov_bbb.mp4">
+        <div class="thumb"><video src="https://www.w3schools.com/html/mov_bbb.mp4" muted loop playsinline></video><div class="locked-overlay">Subscribe to Unlock</div></div>
+        <h3 style="margin:12px 0 6px">Pay-per-video / Booster <span class="price-big">$5 / $9</span></h3>
+        <div class="features">$5 single cinematic • $9 Fame Booster mock</div>
+        <div class="pay-row">
+          <button class="mock-paypal" data-plan="Boost">PayPal</button>
+          <button class="mock-stripe" data-plan="Boost">Stripe</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="muted" style="margin-top:12px">At checkout (mock) you’ll see a non-refundable checkbox — accepting it simulates finalizing the purchase in this demo.</p>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="panel" id="aboutSection">
+    <h2 style="margin-top:0">About Kairah Studio + Fame</h2>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+      <div style="flex:1;min-width:280px">
+        <p class="muted">Kairah Studio + Fame is a demo showcasing cinematic AI previews — our mock UI is designed to show your audience the value up front. When ready, we wire real auth/payments and swap the placeholder videos with your AI-generated cinematic clips.</p>
+        <ul class="muted">
+          <li>AI cinematic templates: surreal, royal, dreamy, viral</li>
+          <li>Audio generator and waveform previews</li>
+          <li>Fame Booster demo to show viral push (mock)</li>
+          <li>Affiliate mock dashboard for referrals</li>
+        </ul>
+      </div>
+      <div style="width:420px;min-width:240px">
+        <div style="border-radius:12px;overflow:hidden">
+          <video src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4" autoplay muted loop playsinline style="width:100%;display:block"></video>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD (mock) -->
+  <section class="panel" id="dashboardPanel" style="display:none">
+    <h2>Dashboard (Mock)</h2>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start">
+      <div style="flex:1;min-width:240px">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><strong id="accountEmail">guest@demo.com</strong><div class="muted tiny">Plan: <span id="accountPlan">Free</span></div></div>
+            <button class="btn secondary" id="open-settings">Settings</button>
+          </div>
+        </div>
+
+        <div style="margin-top:12px" class="card">
+          <h3 style="margin:0 0 6px">Mock Stats</h3>
+          <div class="muted">Videos generated: <strong id="statVideos">0</strong></div>
+          <div class="muted">Fame boosts: <strong id="statBoosts">0</strong></div>
+          <div class="muted">Downloads: <strong id="statDownloads">0</strong></div>
+        </div>
+      </div>
+
+      <div style="flex:2;min-width:320px">
+        <div class="tabs" style="margin-bottom:12px">
+          <button class="active tab-btn" data-tab="tabText">Text-to-Video</button>
+          <button class="tab-btn" data-tab="tabPhoto">Photo-to-Video</button>
+          <button class="tab-btn" data-tab="tabAudio">Audio</button>
+          <button class="tab-btn" data-tab="tabFame">Fame Booster</button>
+        </div>
+
+        <div id="tabText" class="tab-panel active">
+          <div class="grid">
+            <div class="card">
+              <div class="thumb" data-video="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4">
+                <video src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" muted loop playsinline></video>
+                <div class="locked-overlay">Subscribe to Unlock</div>
               </div>
-            ))}
+              <h3>Viral — Beautiful Woman</h3>
+              <div class="muted">Prompt: "Ethereal portrait, cinematic filmic light"</div>
+              <div style="margin-top:8px"><button class="btn secondary previewBtn" data-video="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4">Preview</button></div>
+            </div>
+
+            <div class="card">
+              <div class="thumb" data-video="https://www.w3schools.com/html/mov_bbb.mp4">
+                <video src="https://www.w3schools.com/html/mov_bbb.mp4" muted loop playsinline></video>
+                <div class="locked-overlay">Subscribe to Unlock</div>
+              </div>
+              <h3>Royal — Queen Portrait</h3>
+              <div class="muted">Prompt: "Royal, gold accents, shallow depth"</div>
+              <div style="margin-top:8px"><button class="btn secondary previewBtn" data-video="https://www.w3schools.com/html/mov_bbb.mp4">Preview</button></div>
+            </div>
+
+            <div class="card">
+              <div class="thumb" data-video="https://www.w3schools.com/html/movie.mp4">
+                <video src="https://www.w3schools.com/html/movie.mp4" muted loop playsinline></video>
+                <div class="locked-overlay">Subscribe to Unlock</div>
+              </div>
+              <h3>Fantasy — Dreamscape</h3>
+              <div class="muted">Prompt: "Dreamlike landscape, pastel glow"</div>
+              <div style="margin-top:8px"><button class="btn secondary previewBtn" data-video="https://www.w3schools.com/html/movie.mp4">Preview</button></div>
+            </div>
           </div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm">
-          <div className="text-sm opacity-80">Featured Template</div>
-          <div className="mt-4 h-72 rounded-lg bg-gradient-to-br from-[#2AB7F6] to-[#00C2B8] flex items-center justify-center text-white text-lg">Royal Glow — 6s</div>
-          <div className="mt-4 grid grid-cols-2 gap-2">
-            <div className="p-3 rounded bg-white/10">Royal</div>
-            <div className="p-3 rounded bg-white/10">Fantasy</div>
-            <div className="p-3 rounded bg-white/10">Realistic</div>
-            <div className="p-3 rounded bg-white/10">Baby</div>
+        <div id="tabPhoto" class="tab-panel">
+          <div class="grid">
+            <div class="card">
+              <div class="thumb" data-video="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4">
+                <video src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4" muted loop playsinline></video>
+                <div class="locked-overlay">Subscribe to Unlock</div>
+              </div>
+              <h3>Photo Edit: Cinematic Motion</h3>
+              <div class="muted">Upload your photo to see mock preview</div>
+              <div style="margin-top:8px"><input type="file" id="uploadPhoto" accept="image/*"></div>
+            </div>
           </div>
+        </div>
+
+        <div id="tabAudio" class="tab-panel">
+          <div class="card">
+            <h3>Audio Generator — Sample</h3>
+            <div class="muted">Enter text and preview audio mock (locked for non-subscribers)</div>
+            <div style="margin-top:12px" class="wave-wrap">
+              <div class="wave" style="width:80%"></div>
+              <div style="width:90px;text-align:center"><button class="btn secondary preview-audio">Play Snippet</button></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tabFame" class="tab-panel">
+          <div class="card">
+            <h3>Fame Booster (Mock)</h3>
+            <p class="muted">Apply a mock boost to a video — shows sample metrics and trending preview.</p>
+            <div style="display:flex;gap:8px;margin-top:10px">
+              <button class="btn" id="applyBoost">Apply Boost (Mock $9)</button>
+              <button class="btn secondary" id="seeBoostDemo">See Demo</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SETTINGS (mock) -->
+  <section class="panel" id="settingsPanel" style="display:none">
+    <h2>Account Settings (Mock)</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Profile</h3>
+        <p class="muted">Email: <span id="profileEmail">guest@demo.com</span></p>
+        <p class="muted">Plan: <strong id="profilePlan">Free</strong></p>
+        <div style="margin-top:10px">
+          <label class="tiny">Display name</label>
+          <input id="displayName" placeholder="Your display name (mock)" />
+          <div style="margin-top:8px"><button class="btn">Save (Mock)</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Billing & Refunds</h3>
+        <p class="muted">This is a demo. Real refunds and chargebacks are handled by Stripe/PayPal integration when backend is connected.</p>
+        <p class="muted">Non-refundable policy text is shown at mock checkout.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- AFFILIATE (mock panel hidden) -->
+  <div id="affiliateBox" style="display:none" class="panel">
+    <h3>Affiliate (Mock)</h3>
+    <p class="muted">Share your referral link. Earnings & clicks are simulated.</p>
+    <div class="card">
+      <p>Referral link: <input id="refLink" value="https://kairah.studio/ref/DEMO123" readonly style="width:100%;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04)"></p>
+      <div class="muted">Clicks: <strong id="affClicks">0</strong> • Referrals: <strong id="affRef">0</strong> • Earnings: $<strong id="affEarn">0.00</strong></div>
+    </div>
+  </div>
+
+</div> <!-- /wrap -->
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="min-width:240px">
+        <strong>Kairah Studio + Fame</strong><div class="muted tiny">Cinematic AI previews & fame boosting — demo only</div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <a href="#" id="open-terms" class="tiny">Terms & Non-Refundable Policy</a>
+        <a href="#" id="open-aff-modal" class="tiny">Affiliate Program</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- MODALS -->
+<!-- Preview modal -->
+<div id="previewModal" class="modal" style="display:none">
+  <div class="panel" style="padding:0;position:relative">
+    <button class="close" id="previewClose">✕</button>
+    <div class="media">
+      <video id="previewVideo" src="" controls autoplay playsinline style="width:100%;height:100%;object-fit:cover"></video>
+    </div>
+    <div style="padding:12px;background:linear-gradient(180deg,#071428,#051025);border-top:1px solid rgba(255,255,255,0.02)">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div><strong id="previewTitle">Preview</strong><div class="muted tiny">Cinematic sample — locked for non-subscribers</div></div>
+        <div>
+          <button class="btn secondary" id="previewTryUnlock">Unlock (Mock)</button>
         </div>
       </div>
     </div>
-  );
-}
+  </div>
+</div>
 
-// --- Signin (mock) ---
-function Signin() {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
+<!-- Checkout modal -->
+<div id="checkoutModal" class="modal" style="display:none">
+  <div class="panel" style="padding:20px;max-width:520px">
+    <button class="close" id="checkoutClose">✕</button>
+    <h2 id="checkoutTitle">Subscribe</h2>
+    <p class="muted">This is a visual mock checkout. No real card is charged. Check "I accept non-refundable" to simulate purchase.</p>
+    <div style="margin-top:10px">
+      <label style="display:block;margin-bottom:8px"><input type="checkbox" id="nonRefundCheck" checked> I accept <strong>non-refundable</strong> policy (mock)</label>
+      <div style="display:flex;gap:10px">
+        <button class="btn" id="mockPayPalBtn">Pay with PayPal (Mock)</button>
+        <button class="btn" id="mockStripeBtn">Pay with Stripe (Mock)</button>
+      </div>
+      <div id="checkoutResult" style="margin-top:10px;color:var(--muted)"></div>
+    </div>
+    <div style="margin-top:12px;text-align:right">
+      <button class="btn secondary" id="checkoutCancel">Cancel</button>
+    </div>
+  </div>
+</div>
 
-  const handleSignIn = (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      const u = { email: email || "user@kairah.test", plan: "free", videosGenerated: 0 };
-      saveUser(u);
-      setLoading(false);
-      navigate("/studio");
-    }, 800);
+<!-- Affiliate modal -->
+<div id="affModal" class="modal" style="display:none">
+  <div class="panel" style="padding:20px;max-width:480px">
+    <button class="close" id="affClose">✕</button>
+    <h3>Affiliate Program — Mock Signup</h3>
+    <p class="muted">Create a mock affiliate account for demo purposes.</p>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <input id="affEmail" placeholder="you@example.com" />
+      <button class="btn" id="affCreate">Create (Mock)</button>
+    </div>
+    <div id="affMsg" class="muted" style="margin-top:8px"></div>
+    <div style="margin-top:12px">
+      <button class="btn secondary" id="affCloseBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Terms modal -->
+<div id="termsModal" class="modal" style="display:none">
+  <div class="panel" style="padding:20px;max-width:760px">
+    <button class="close" id="termsClose">✕</button>
+    <h3>Terms & Non-Refundable Policy (Mock)</h3>
+    <p class="muted">This is a demo policy. In production, use a lawyer-reviewed policy. For demo, "non-refundable" will be simulated at checkout.</p>
+    <ul class="muted">
+      <li>All purchases in this demo are simulated and do not charge real payment methods.</li>
+      <li>When integrating real Stripe/PayPal, ensure you implement refunds/chargebacks per platform rules.</li>
+    </ul>
+    <div style="text-align:right"><button class="btn secondary" id="termsCloseBtn">Close</button></div>
+  </div>
+</div>
+
+<!-- SCRIPTS: Mock UX -->
+<script>
+(function(){
+  // Helpers
+  const show = id => document.getElementById(id).style.display='flex';
+  const hide = id => document.getElementById(id).style.display='none';
+  const state = {
+    loggedIn:false, email:null, plan:'Free', unlocked:false,
+    stats:{videos:0, boosts:0, downloads:0},
+    affiliate:{clicks:0, referrals:0, earn:0}
   };
 
-  return (
-    <div className="min-h-[70vh] flex items-center justify-center">
-      <div className="w-full max-w-md p-6 rounded-2xl bg-white/5 backdrop-blur-sm">
-        <h2 className="text-2xl font-bold">Sign in to Kairah Studio</h2>
-        <p className="mt-2 text-sm opacity-80">Mock sign-in (no backend yet). Use any email.</p>
-        <form onSubmit={handleSignIn} className="mt-6 flex flex-col gap-4">
-          <input className="p-3 rounded bg-white/10" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
-          <button className="p-3 rounded bg-[rgba(212,175,55,0.95)] font-semibold" disabled={loading}>{loading ? 'Signing in...' : 'Sign in'}</button>
-        </form>
+  // Smooth nav scroll behavior and 'router'
+  document.querySelectorAll('[data-link]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      e.preventDefault();
+      const target = a.getAttribute('href').replace('#','');
+      if(target==='dashboardPanel'){ document.getElementById('dashboardPanel').style.display='block'; document.getElementById('dashboardPanel').scrollIntoView({behavior:'smooth'}); }
+      else {
+        const el = document.getElementById(target) || document.getElementById(target+'Panel') || document.getElementById(target+'Section');
+        if(el) el.scrollIntoView({behavior:'smooth'});
+      }
+      document.querySelectorAll('nav a').forEach(n=>n.classList.remove('active'));
+      a.classList.add('active');
+    });
+  });
 
-        <div className="mt-4">
-          <button onClick={() => { setLoading(true); setTimeout(() => { const u = { email: 'google@kairah.test', plan: 'free', videosGenerated: 0 }; saveUser(u); setLoading(false); navigate('/studio'); }, 600); }} className="w-full p-3 rounded border border-white/20">Sign in with Google (mock)</button>
-        </div>
-      </div>
-    </div>
-  );
-}
+  // Open preview modal when clicking thumbs
+  document.querySelectorAll('.thumb').forEach(el=>{
+    el.addEventListener('click', e=>{
+      const vid = el.dataset.video || (el.querySelector('video') && el.querySelector('video').src);
+      openPreview(vid, el.closest('.card')?.querySelector('h3')?.innerText || 'Preview');
+    });
+  });
 
-// --- Studio Page (mock generation) ---
-function Studio() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(getUser());
-  const [prompt, setPrompt] = useState("");
-  const [template, setTemplate] = useState("Royal");
-  const [generating, setGenerating] = useState(false);
-  const [videoReady, setVideoReady] = useState(null);
-  const [message, setMessage] = useState("");
+  // Preview buttons
+  document.querySelectorAll('.previewBtn').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      e.stopPropagation();
+      const v = btn.dataset.video || btn.getAttribute('data-video') || btn.parentElement.parentElement.querySelector('.thumb video').src;
+      openPreview(v, 'Template Preview');
+    });
+  });
 
-  useEffect(() => {
-    setUser(getUser());
-  }, []);
+  // open preview
+  function openPreview(src, title){
+    const modal = document.getElementById('previewModal');
+    const video = document.getElementById('previewVideo');
+    document.getElementById('previewTitle').innerText = title || 'Preview';
+    video.src = src || '';
+    show('previewModal');
+  }
+  document.getElementById('previewClose').onclick = ()=>{
+    const v = document.getElementById('previewVideo'); v.pause(); v.src=''; hide('previewModal');
+  };
+  window.addEventListener('click', e=>{ if(e.target.id==='previewModal'){ document.getElementById('previewVideo').pause(); document.getElementById('previewVideo').src=''; hide('previewModal'); }});
 
-  if (!user) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-xl font-bold">Please sign in to use the Studio</div>
-          <div className="mt-4"><Link to="/signin" className="px-4 py-2 rounded bg-white text-black">Sign in</Link></div>
-        </div>
-      </div>
-    );
+  // Open checkout modal with plan context
+  function openCheckout(plan){
+    document.getElementById('checkoutTitle').innerText = 'Subscribe — ' + (plan || 'Plan');
+    document.getElementById('checkoutResult').innerText = '';
+    show('checkoutModal');
+  }
+  window.openCheckout = openCheckout; // expose for quick testing
+
+  // Wire Pay buttons (cards + pay-row buttons)
+  document.querySelectorAll('.mock-paypal, .mock-stripe').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      e.stopPropagation();
+      const plan = btn.getAttribute('data-plan') || btn.closest('.price-card')?.dataset?.plan || btn.closest('.card')?.dataset?.plan || 'Pro';
+      openCheckout(plan);
+      // when user clicks the modal's Pay buttons, simulate payment
+      document.getElementById('mockPayPalBtn').onclick = ()=> simulatePayment('PayPal (mock)', plan);
+      document.getElementById('mockStripeBtn').onclick = ()=> simulatePayment('Stripe (mock)', plan);
+    });
+  });
+
+  // Simulate payment
+  function simulatePayment(method, plan){
+    if(!document.getElementById('nonRefundCheck').checked){
+      document.getElementById('checkoutResult').innerText = 'Please accept the non-refundable checkbox (mock).';
+      return;
+    }
+    // fake processing
+    document.getElementById('checkoutResult').innerText = 'Processing ' + method + '...';
+    setTimeout(()=>{
+      state.loggedIn = true;
+      state.email = 'user@kairah.studio';
+      state.plan = plan || 'Pro';
+      state.unlocked = true;
+      // remove all locked overlays visually
+      document.querySelectorAll('.locked-overlay').forEach(o=>o.style.display='none');
+      document.getElementById('accountEmail').innerText = state.email;
+      document.getElementById('profileEmail').innerText = state.email;
+      document.getElementById('accountPlan').innerText = state.plan;
+      document.getElementById('profilePlan').innerText = state.plan;
+      document.getElementById('checkoutResult').innerText = 'Payment successful via '+method+' (mock). Content unlocked for demo.';
+      setTimeout(()=>hide('checkoutModal'),1000);
+      // small affiliate bump
+      state.affiliate.clicks += Math.floor(Math.random()*3);
+      state.affiliate.referrals += Math.floor(Math.random()*1.2);
+      state.affiliate.earn = (state.affiliate.earn*1) || 0;
+      document.getElementById('affClicks').innerText = state.affiliate.clicks;
+      document.getElementById('affRef').innerText = state.affiliate.referrals;
+      document.getElementById('affEarn').innerText = (state.affiliate.earn||0).toFixed(2);
+    }, 900);
   }
 
-  const handlePromptMagic = () => {
-    // simple visual refinement
-    setPrompt((p) => (p ? `${p} — cinematic, dramatic lighting, golden hour, smooth camera dolly` : 'A beautiful queen in golden light, cinematic, smooth camera dolly'));
-    setMessage('Prompt refined');
-    setTimeout(() => setMessage(''), 1500);
-  };
+  // Checkout modal close
+  document.getElementById('checkoutCancel').onclick = ()=> hide('checkoutModal');
+  document.getElementById('checkoutClose').onclick = ()=> hide('checkoutModal');
 
-  const handleGenerate = () => {
-    // Check free plan limit
-    const u = getUser();
-    if (u.plan === 'free' && u.videosGenerated >= 1) {
-      setMessage('Free plan limit reached — upgrade to generate more');
-      return;
+  // Signin mock
+  document.getElementById('signin-btn-top').addEventListener('click', ()=>{
+    state.loggedIn = true; state.email = 'user@demo.com'; state.plan='Free';
+    document.getElementById('accountEmail').innerText = state.email;
+    document.getElementById('profileEmail').innerText = state.email;
+    alert('Signed in (mock) as ' + state.email + '. You are still on Free plan — subscribe to unlock previews.');
+  });
+
+  // CTA buttons
+  document.getElementById('open-pricing').addEventListener('click', ()=> document.getElementById('pricingPanel').scrollIntoView({behavior:'smooth'}));
+  document.getElementById('open-about').addEventListener('click', ()=> document.getElementById('aboutSection').scrollIntoView({behavior:'smooth'}));
+  document.getElementById('signup-cta').addEventListener('click', ()=> openCheckout('Trial'));
+  document.getElementById('demo-tour').addEventListener('click', ()=>{ document.getElementById('features').scrollIntoView({behavior:'smooth'}); alert('Demo tour: click any template to preview, then click a plan to simulate checkout.'); });
+
+  // Affiliate modal wiring
+  document.getElementById('open-affiliate').addEventListener('click', ()=> show('affModal'));
+  document.getElementById('open-aff-modal').addEventListener('click', ()=> show('affModal'));
+  document.getElementById('affCreate').addEventListener('click', ()=>{
+    const email = document.getElementById('affEmail').value || 'affiliate@demo';
+    document.getElementById('affMsg').innerText = 'Affiliate created for ' + email + ' (mock).';
+    state.affiliate.clicks = Math.floor(Math.random()*120);
+    state.affiliate.referrals = Math.floor(Math.random()*12);
+    state.affiliate.earn = (Math.floor(Math.random()*20)*5).toFixed(2);
+    document.getElementById('affClicks').innerText = state.affiliate.clicks;
+    document.getElementById('affRef').innerText = state.affiliate.referrals;
+    document.getElementById('affEarn').innerText = state.affiliate.earn;
+    setTimeout(()=> hide('affModal'),1200);
+  });
+  document.getElementById('affClose').addEventListener('click', ()=> hide('affModal'));
+  document.getElementById('affCloseBtn').addEventListener('click', ()=> hide('affModal'));
+
+  // Terms
+  document.getElementById('open-terms').addEventListener('click', (e)=>{ e.preventDefault(); show('termsModal'); });
+  document.getElementById('termsClose').addEventListener('click', ()=> hide('termsModal'));
+  document.getElementById('termsCloseBtn').addEventListener('click', ()=> hide('termsModal'));
+
+  // Preview unlock shortcut from modal
+  document.getElementById('previewTryUnlock').addEventListener('click', ()=> { hide('previewModal'); openCheckout('Pro'); });
+
+  // Clicking outside modal closes
+  window.addEventListener('click', (e)=> {
+    ['previewModal','checkoutModal','affModal','termsModal'].forEach(id=>{
+      if(e.target.id === id) {
+        const video = document.getElementById('previewVideo');
+        if(video){ video.pause(); video.src=''; }
+        hide(id);
+      }
+    });
+  });
+
+  // Apply Boost mock
+  document.getElementById('applyBoost').addEventListener('click', ()=>{
+    if(!state.unlocked){ openCheckout('Boost'); return; }
+    state.stats.boosts++;
+    document.getElementById('statBoosts').innerText = state.stats.boosts;
+    alert('Boost applied (mock). Metrics updated.');
+  });
+  document.getElementById('seeBoostDemo').addEventListener('click', ()=> openPreview('https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', 'Fame Booster Demo'));
+
+  // Tab switching (dashboard)
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = btn.getAttribute('data-tab');
+      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+      document.getElementById(target).classList.add('active');
+    });
+  });
+
+  // Preview buttons inside cards also open preview
+  document.querySelectorAll('.previewBtn').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation();
+    openPreview(b.dataset.video || b.getAttribute('data-video') || b.parentElement.parentElement.querySelector('.thumb video').src, 'Template preview');
+  }));
+
+  // Demo file upload (photo)
+  const upload = document.getElementById('uploadPhoto');
+  if(upload) upload.addEventListener('change', (e)=>{
+    const file = e.target.files && e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      // show a quick modal with the uploaded image as simulated "photo to video" background
+      const dataUrl = ev.target.result;
+      openPreview('', 'Uploaded Photo Preview');
+      const pv = document.getElementById('previewVideo');
+      pv.pause();
+      pv.src = '';
+      // Replace modal media area with image temporarily
+      const media = document.querySelector('#previewModal .media');
+      media.innerHTML = '<img src="'+dataUrl+'" style="width:100%;height:100%;object-fit:cover">';
+      show('previewModal');
+      // clicking close will restore normal behavior
+      document.getElementById('previewClose').onclick = ()=>{
+        media.innerHTML = '<video id="previewVideo" controls autoplay playsinline style="width:100%;height:100%;object-fit:cover"></video>';
+        hide('previewModal');
+      };
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // small ongoing simulation: if unlocked, increment stats
+  setInterval(()=>{
+    if(state.unlocked){
+      state.stats.videos += Math.floor(Math.random()*2);
+      state.stats.downloads += Math.floor(Math.random()*3);
+      document.getElementById('statVideos').innerText = state.stats.videos;
+      document.getElementById('statDownloads').innerText = state.stats.downloads;
     }
+  }, 6000);
 
-    setGenerating(true);
-    setVideoReady(null);
-    setMessage('Generating cinematic preview...');
+  // initial affiliate values
+  document.getElementById('affClicks').innerText = state.affiliate.clicks;
+  document.getElementById('affRef').innerText = state.affiliate.referrals;
+  document.getElementById('affEarn').innerText = (state.affiliate.earn||0).toFixed(2);
 
-    setTimeout(() => {
-      // Mock video object
-      const v = { id: Date.now(), title: `Cinematic ${template}`, duration: 6 };
-      setVideoReady(v);
-      setGenerating(false);
-      setMessage('Video ready');
+})(); // IIFE
+</script>
 
-      // update user generated count locally
-      u.videosGenerated = (u.videosGenerated || 0) + 1;
-      u.lastVideo = v;
-      saveUser(u);
-      setUser(u);
-    }, 1800);
-  };
-
-  const handleDownload = () => {
-    const u = getUser();
-    if (u.plan === 'free' && u.videosGenerated > 1) {
-      setMessage('Download locked — upgrade to Pro');
-      return;
-    }
-    // simulate download
-    setMessage('Starting download...');
-    setTimeout(() => setMessage('Downloaded! (mock)'), 800);
-  };
-
-  return (
-    <div className="min-h-[70vh] p-6">
-      <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 p-6 rounded-2xl bg-white/5">
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="text-sm opacity-80">Signed in as</div>
-              <div className="font-semibold">{user.email} • <span className="text-yellow-300">{user.plan}</span></div>
-            </div>
-
-            <div>
-              <div className="text-right text-sm opacity-80">Videos used</div>
-              <div className="font-semibold">{user.videosGenerated || 0} / {user.plan === 'free' ? 1 : '∞'}</div>
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <label className="text-sm opacity-80">Prompt</label>
-            <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="Describe the scene, mood, subject..." className="w-full mt-2 p-3 rounded bg-white/10 h-28" />
-            <div className="flex items-center gap-3 mt-3">
-              <button onClick={handlePromptMagic} className="px-4 py-2 rounded bg-[rgba(212,175,55,0.95)]">Prompt Magic</button>
-              <select value={template} onChange={(e) => setTemplate(e.target.value)} className="p-2 rounded bg-white/5">
-                <option>Royal</option>
-                <option>Fantasy</option>
-                <option>Realistic</option>
-                <option>Baby</option>
-                <option>Glam</option>
-              </select>
-
-              <button onClick={handleGenerate} className="ml-auto px-4 py-2 rounded bg-gradient-to-r from-[#2AB7F6] to-[#00C2B8]">{generating ? 'Generating...' : 'Generate'}</button>
-            </div>
-
-            <div className="mt-6">
-              {message && <div className="text-sm opacity-80">{message}</div>}
-
-              {generating && (
-                <div className="mt-4 p-6 rounded bg-white/5 flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full animate-spin border-4 border-white/30 border-t-white"></div>
-                  <div>Rendering cinematic frames...</div>
-                </div>
-              )}
-
-              {videoReady && (
-                <div className="mt-4 p-4 rounded bg-gradient-to-br from-[#3D2C41] to-[#2AB7F6] text-white">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-semibold">{videoReady.title}</div>
-                      <div className="text-sm opacity-90">Duration: {videoReady.duration}s • Mock preview</div>
-                    </div>
-                    <div className="flex gap-3">
-                      <button onClick={handleDownload} className="px-3 py-1 rounded bg-white/10">Download</button>
-                      <button onClick={() => { navigator.clipboard?.writeText('mock-share-link'); setMessage('Share link copied'); }} className="px-3 py-1 rounded border">Share</button>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 h-48 rounded bg-black/40 flex items-center justify-center">Mock video player</div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <aside className="p-6 rounded-2xl bg-white/3">
-          <div className="text-sm opacity-80">Side Tools</div>
-          <div className="mt-4 grid gap-3">
-            <div className="p-3 rounded bg-white/5">Cinematic Templates</div>
-            <div className="p-3 rounded bg-white/5">Prompt Presets</div>
-            <div className="p-3 rounded bg-white/5">Royal Filters</div>
-          </div>
-
-          <div className="mt-6">
-            <div className="text-sm opacity-80">Quick Actions</div>
-            <div className="mt-2 flex gap-2">
-              <Link to="/pricing" className="px-3 py-2 rounded bg-[rgba(212,175,55,0.95)]">Upgrade</Link>
-              <button onClick={() => { localStorage.removeItem(USER_KEY); window.location.reload(); }} className="px-3 py-2 rounded border">Sign out</button>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </div>
-  );
-}
-
-// --- Pricing (mock payments) ---
-function Pricing() {
-  const [status, setStatus] = useState("");
-
-  const handleMockPay = (plan) => {
-    setStatus('Processing...');
-    setTimeout(() => {
-      const u = getUser() || { email: 'guest@kairah.test', videosGenerated: 0 };
-      u.plan = plan;
-      saveUser(u);
-      setStatus('Payment successful — plan updated');
-      setTimeout(() => setStatus(''), 2200);
-    }, 900);
-  };
-
-  return (
-    <div className="min-h-[60vh] flex items-center justify-center">
-      <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-6 p-6">
-        {[
-          { id: 'free', name: 'Free', price: '$0', perks: ['1 free 6s video'] },
-          { id: 'pro', name: 'Pro', price: '$9/mo', perks: ['Unlimited videos', 'Remove watermark'] },
-          { id: 'diamond', name: 'Diamond', price: '$29/mo', perks: ['Cinematic HD', 'Exclusive templates'] },
-        ].map((p) => (
-          <div key={p.id} className="p-6 rounded-2xl bg-white/5 text-center">
-            <div className="text-xl font-bold">{p.name}</div>
-            <div className="mt-2 text-2xl font-extrabold">{p.price}</div>
-            <ul className="mt-4 text-sm opacity-90 text-left">
-              {p.perks.map((x) => <li key={x}>• {x}</li>)}
-            </ul>
-            <div className="mt-6">
-              <button onClick={() => handleMockPay(p.id)} className="px-4 py-2 rounded bg-[rgba(212,175,55,0.95)]">Pay (mock)</button>
-            </div>
-
-            <div className="mt-3 text-xs opacity-80">PayPal/Stripe buttons are mocked for this frontend demo.</div>
-          </div>
-        ))}
-      </div>
-
-      {status && <div className="fixed bottom-6 right-6 p-3 bg-white/10 rounded">{status}</div>}
-    </div>
-  );
-}
-
-// --- About ---
-function About() {
-  return (
-    <div className="min-h-[60vh] flex items-center justify-center p-6">
-      <div className="max-w-3xl text-center">
-        <h2 className="text-3xl font-bold">The Kairah Vision</h2>
-        <p className="mt-4 text-lg opacity-90">Kairah is a creative empire — blending cinematic AI creation with distribution tools that help creators go viral. We design for beauty, power, and honest transformation.</p>
-      </div>
-    </div>
-  );
-}
-
-// --- Booster (Fame teaser) ---
-function Booster() {
-  return (
-    <div className="min-h-[60vh] flex items-center justify-center p-6">
-      <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
-        <div className="rounded-2xl p-6 bg-white/5">
-          <h3 className="text-2xl font-bold">Kairah Fame</h3>
-          <p className="mt-2 opacity-90">A viral growth toolbox that pairs with Studio. Get AI scripts, trending audio ideas, captions, and a dashboard to measure growth.</p>
-          <div className="mt-6">
-            <Link to="/fame" className="px-4 py-2 rounded bg-gradient-to-r from-[#2AB7F6] to-[#00C2B8]">Try Fame Preview</Link>
-          </div>
-        </div>
-
-        <div className="rounded-2xl p-6 bg-white/3">
-          <div className="text-sm opacity-80">Why Fame?</div>
-          <ul className="mt-3">
-            <li>• AI viral script generator</li>
-            <li>• Caption and hashtag suggestions</li>
-            <li>• Auto import from Kairah Studio</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// --- Fame Preview (simple viral script generator) ---
-function FamePreview() {
-  const [topic, setTopic] = useState("");
-  const [script, setScript] = useState(null);
-
-  const generate = () => {
-    if (!topic) return;
-    // Quick mock generator using template
-    setScript(null);
-    setTimeout(() => {
-      setScript(`Hook: You won't believe this about ${topic}!\n\nScene: Quick close-up, dramatic beat.\n\nLine: \"I tried ${topic} and this happened...\"\n\nCTA: Follow for more.`);
-    }, 700);
-  };
-
-  return (
-    <div className="min-h-[60vh] flex items-center justify-center p-6">
-      <div className="max-w-3xl w-full p-6 rounded-2xl bg-white/5">
-        <h3 className="text-2xl font-bold">Viral Script Generator (Preview)</h3>
-        <p className="mt-2 text-sm opacity-80">Enter a short topic and get a quick viral short-form script.</p>
-        <div className="mt-4 flex gap-2">
-          <input value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="Topic (e.g. glass skin routine)" className="p-3 rounded bg-white/10 flex-1" />
-          <button onClick={generate} className="px-4 py-2 rounded bg-[rgba(212,175,55,0.95)]">Generate</button>
-        </div>
-
-        {script && (
-          <div className="mt-4 p-4 rounded bg-black/40 text-white whitespace-pre-line">{script}</div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// --- Footer ---
-function Footer() {
-  return (
-    <footer className="bg-gradient-to-r from-[rgba(3,37,65,0.95)] to-[rgba(2,102,89,0.95)] text-white p-6 mt-12">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between">
-        <div>© {new Date().getFullYear()} Kairah — All rights reserved</div>
-        <div className="mt-3 md:mt-0 flex gap-4">
-          <Link to="/about">About</Link>
-          <Link to="/pricing">Pricing</Link>
-          <a href="#" onClick={(e)=>{e.preventDefault(); alert('SilkGlow coming soon (mock)')}}>SilkGlow</a>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-// --- Main App ---
-export default function AppMock() {
-  return (
-    <Router>
-      <div className="min-h-screen bg-[linear-gradient(180deg,#081224,#021926)] text-white">
-        <Nav />
-
-        <main className="py-10">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/signin" element={<Signin />} />
-            <Route path="/studio" element={<Studio />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/booster" element={<Booster />} />
-            <Route path="/fame" element={<FamePreview />} />
-            <Route path="*" element={<Home />} />
-          </Routes>
-        </main>
-
-        <Footer />
-      </div>
-    </Router>
-  );
-}
+</body>
+</html>
