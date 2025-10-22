@@ -3,183 +3,143 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kairah Studio + Fame Demo</title>
+<title>Kairah Studio + Fame</title>
 <style>
-body {font-family: Arial,sans-serif; margin:0; padding:0; background:#0b1d3a; color:white;}
-header {background:#D4AF37; color:white; padding:25px; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.3);}
-header h1 {margin:0; font-size:2em;}
-header p {margin:5px 0 0; font-size:1em;}
-nav.main-nav {display:flex; justify-content:center; gap:10px; margin-top:15px; flex-wrap:wrap;}
-nav.main-nav button {margin:5px; padding:10px 20px; border-radius:6px; border:none; background:#3D2C41; color:white; font-weight:bold; cursor:pointer; transition:0.2s;}
-nav.main-nav button.active {background:#D4AF37; color:white;}
-.container {max-width:1100px; margin:20px auto; padding:20px; background:#1c2a50; border-radius:12px; box-shadow:0 0 15px rgba(0,0,0,0.4);}
-input, select {width:100%; padding:12px; margin:8px 0 15px 0; border-radius:6px; border:1px solid #ccc;}
-button {cursor:pointer; border:none; border-radius:6px; transition: transform 0.2s, box-shadow 0.2s;}
-button:hover {transform:translateY(-2px); box-shadow:0 5px 15px rgba(212,175,55,0.6);}
-.card {background:#3D2C41; border-radius:12px; padding:15px; margin:12px 0; box-shadow:0 0 10px rgba(0,0,0,0.3); text-align:center; position:relative; transition:0.3s;}
-.card:hover {transform:translateY(-6px); box-shadow:0 10px 25px rgba(212,175,55,0.6);}
-.card::before {content:attr(data-plan); position:absolute; top:0; left:0; background:#D4AF37; color:white; padding:6px 12px; border-top-left-radius:12px; border-bottom-right-radius:12px; font-size:0.85em; font-weight:bold;}
-.generate {background: linear-gradient(45deg,#28a745,#21c25f); color:white; padding:12px 18px; margin-top:8px; font-weight:bold;}
-.prompt-magic {background: linear-gradient(45deg,#ffc107,#ffdd57); color:white; padding:12px 18px; margin-top:8px; font-weight:bold;}
-.media-box {margin-top:15px; padding:18px; border-radius:12px; background:#10203a; text-align:center; position:relative; height:180px; display:flex; justify-content:center; align-items:center;}
-.shimmer {background: linear-gradient(to right, #10203a 8%, #1c2a50 18%, #10203a 33%); background-size:1200px 104px; animation:shimmer 1.5s infinite linear; width:100%; height:100%; border-radius:12px;}
-@keyframes shimmer {0%{background-position:-1200px 0}100%{background-position:1200px 0}}
-.history, .fame-list {display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;}
-.history .card, .fame-list .card {flex:1 1 220px;}
-.download-btn {background:#FFC107; color:#10203a; padding:6px 12px; margin:5px; font-weight:bold; border-radius:5px; cursor:pointer;}
-.modal-bg {position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:none; justify-content:center; align-items:center; z-index:1000;}
-.modal {background:#1c2a50; padding:25px; border-radius:12px; max-width:500px; text-align:center; box-shadow:0 0 20px rgba(212,175,55,0.6);}
-.close-modal {background:#D4AF37; color:#10203a; padding:6px 12px; margin-top:15px; cursor:pointer;}
-footer {background:#10203a; text-align:center; padding:15px; font-size:0.9em; color:#ccc; margin-top:20px; border-top:1px solid #3D2C41;}
-.payment-btn {background:#FFC107; color:#10203a; padding:10px 18px; margin:5px; border-radius:6px; font-weight:bold; cursor:pointer;}
-.locked {opacity:0.6; cursor:not-allowed;}
-@media(max-width:700px){.history,.fame-list{flex-direction:column;} nav.main-nav{flex-direction:column;}}
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#0b1d3a; color:white; }
+header { background:#D4AF37; color:white; padding:25px; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.3);}
+header h1 { margin:0; font-size:2em; }
+header p { margin:5px 0 0; font-size:1em; }
+nav.main-nav { text-align:center; margin:15px 0; }
+nav.main-nav button { margin:0 6px; padding:12px 22px; border-radius:6px; background:#3D2C41; color:white; font-weight:bold; cursor:pointer; }
+nav.main-nav button.active { background:#D4AF37; color:white; }
+.container { max-width:1200px; margin:20px auto; padding:20px; }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+.cards-grid { display:flex; flex-wrap:wrap; justify-content:space-around; }
+.card { background:#3D2C41; border-radius:12px; padding:12px; margin:10px; flex:1 1 220px; position:relative; cursor:pointer; overflow:hidden; transition: transform 0.3s, box-shadow 0.3s; }
+.card:hover { transform: scale(1.05); box-shadow:0 10px 25px rgba(212,175,55,0.6); }
+.media-box { width:100%; height:140px; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#10203a; position:relative; }
+.media-box img, .media-box video { width:100%; height:100%; object-fit:cover; }
+.locked-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1em; color:#FFC107; opacity:0; border-radius:10px; transition: opacity 0.3s;}
+.card.locked:hover .locked-overlay { opacity:1; }
+button.generate, button.prompt-magic { padding:12px 18px; font-weight:bold; border:none; border-radius:6px; cursor:pointer; margin:8px 0; }
+button.generate { background:linear-gradient(45deg,#28a745,#21c25f); color:white; }
+button.prompt-magic { background:linear-gradient(45deg,#ffc107,#ffdd57); color:white; }
+input, select { width:100%; padding:10px; margin:5px 0 12px 0; border-radius:6px; border:1px solid #ccc; }
+footer { text-align:center; margin-top:20px; padding:15px; background:#10203a; font-size:0.85em; color:#ccc; }
+.modal, #checkout-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); justify-content:center; align-items:center; z-index:1000; }
+.modal-content, #checkout-modal-content { background:#1c2a50; padding:20px; border-radius:12px; width:90%; max-width:400px; text-align:center; color:white; }
+.payment-btn { padding:10px 15px; border:none; border-radius:6px; background:#D4AF37; color:#1c2a50; cursor:pointer; }
+#card-form input { margin:5px 0; padding:10px; border-radius:6px; border:none; width:100%; }
+@keyframes fall{0%{transform:translateY(0)}100%{transform:translateY(100vh)}} 
+.confetti{position:fixed; width:8px; height:8px; top:0; background:#FFC107; animation:fall 2s linear forwards; z-index:10000;}
+@media(max-width:700px){ .cards-grid { flex-direction:column; } nav.main-nav button { margin:5px 0; } }
 </style>
 </head>
 <body>
 
 <header>
 <h1>Kairah Studio + Fame</h1>
-<p>AI Video & Audio Generator + Viral Fame Booster</p>
-<nav class="main-nav">
-<button class="active" data-tab="dashboard">Dashboard</button>
-<button data-tab="text-video">Text-to-Video</button>
-<button data-tab="photo-video">Photo-to-Video</button>
-<button data-tab="audio-gen">Audio Generator</button>
-<button data-tab="fame-booster">Fame Booster</button>
-<button data-tab="about">About</button>
-<button data-tab="settings">Settings</button>
-<button data-tab="affiliate">Affiliate</button>
-</nav>
+<p>AI Video & Audio Generator + Viral Fame Booster | Explore Endless Possibilities</p>
 </header>
 
-<div class="container" id="tab-content">
+<nav class="main-nav">
+<button class="active" data-tab="dashboard-tab">Dashboard</button>
+<button data-tab="text-video-tab">Text-to-Video</button>
+<button data-tab="photo-video-tab">Photo-to-Video</button>
+<button data-tab="audio-gen-tab">Audio Generator</button>
+<button data-tab="fame-booster-tab">Fame Booster</button>
+<button data-tab="about-tab">About</button>
+<button data-tab="settings-tab">Settings</button>
+</nav>
 
-<!-- Dashboard -->
-<div class="tab-panel active" id="dashboard">
-<h3>Dashboard Preview</h3>
-<p>Total Videos Generated: 12</p>
-<p>Total Photos Generated: 7</p>
-<p>Total Audio Generated: 5</p>
-<p>Total Fame Boosts: 3</p>
-<p>Total Downloads: 25</p>
+<div class="container">
 
-<h4>Pricing Plans</h4>
-<div class="history">
-<div class="card" data-plan="Trial"><h3>Trial $1</h3><p>7 days, 1 video</p><button class="payment-btn">Pay $1</button></div>
-<div class="card" data-plan="Free"><h3>Free</h3><p>1 video</p></div>
-<div class="card" data-plan="Pro"><h3>Pro $19</h3><p>10 videos</p><button class="payment-btn">Stripe / PayPal $19</button></div>
-<div class="card" data-plan="Diamond"><h3>Diamond $49</h3><p>Unlimited videos + Fame</p><button class="payment-btn">Stripe / PayPal $49</button></div>
-<div class="card" data-plan="Lifetime"><h3>Lifetime $249</h3><p>All features</p><button class="payment-btn">Stripe / PayPal $249</button></div>
-<div class="card" data-plan="Upsale"><h3>Fame Booster $9</h3><p>Boost content</p><button class="payment-btn">Stripe / PayPal $9</button></div>
-</div>
+<div class="tab-panel active" id="dashboard-tab">
+<h3>Welcome to Kairah Studio</h3>
+<p>Preview AI categories below. All generation is locked until subscription.</p>
+<div class="cards-grid" id="dashboard-cards"></div>
 </div>
 
-<!-- Text-to-Video -->
-<div class="tab-panel" id="text-video">
-<h3>Text-to-Video</h3>
-<select><option>Viral</option><option>Royal</option><option>Fantasy</option></select>
-<input type="text" placeholder="Enter your prompt">
-<button class="prompt-magic locked" onclick="showModal('Subscribe to generate videos!')">Prompt Magic</button>
-<button class="generate locked" onclick="showModal('Subscribe to generate videos!')">Generate Video</button>
-<div class="media-box shimmer">🎬 Sample 6-second Diamond Surreal Video</div>
-<div class="history">
-<div class="card"><img src="https://i.ibb.co/s9rM7D0/surreal-video.jpg" style="width:100%; border-radius:10px;"><p>Diamond Surreal Video</p></div>
-</div>
+<div class="tab-panel" id="text-video-tab">
+<h3>Text-to-Video Templates</h3>
+<div class="cards-grid" id="text-video-cards"></div>
+<button class="generate" onclick="mockGenerate('text-video')">Generate Video</button>
+<div class="cards-grid" id="text-video-history"></div>
 </div>
 
-<!-- Photo-to-Video -->
-<div class="tab-panel" id="photo-video">
-<h3>Photo-to-Video</h3>
-<input type="file" disabled>
-<button class="generate locked" onclick="showModal('Subscribe to convert photos!')">Generate Video</button>
-<div class="media-box shimmer">🎬 Photo-to-Video Preview</div>
-<div class="history">
-<div class="card"><img src="https://i.ibb.co/0G0VZ5G/photo-video.jpg" style="width:100%; border-radius:10px;"><p>Photo-to-Video</p></div>
-</div>
+<div class="tab-panel" id="photo-video-tab">
+<h3>Photo-to-Video Templates</h3>
+<div class="cards-grid" id="photo-video-cards"></div>
+<input type="file" id="photo-upload">
+<button class="generate" onclick="mockGenerate('photo-video')">Generate Video</button>
+<div class="cards-grid" id="photo-video-history"></div>
 </div>
 
-<!-- Audio Generator -->
-<div class="tab-panel" id="audio-gen">
-<h3>Audio Generator</h3>
-<input type="text" placeholder="Enter text for audio">
-<button class="generate locked" onclick="showModal('Subscribe to generate audio!')">Generate Audio</button>
-<div class="media-box shimmer">🔊 Sample Audio Waveform</div>
-<div class="history">
-<div class="card"><img src="https://i.ibb.co/v3DKsH0/audio-wave.jpg" style="width:100%; border-radius:10px;"><p>Audio Sample</p></div>
-</div>
+<div class="tab-panel" id="audio-gen-tab">
+<h3>Audio Generator Templates</h3>
+<div class="cards-grid" id="audio-cards"></div>
+<input type="text" id="audio-prompt" placeholder="Enter text for audio">
+<button class="generate" onclick="mockGenerate('audio')">Generate Audio</button>
+<div class="cards-grid" id="audio-history"></div>
 </div>
 
-<!-- Fame Booster -->
-<div class="tab-panel" id="fame-booster">
+<div class="tab-panel" id="fame-booster-tab">
 <h3>Kairah Fame Booster</h3>
-<button class="generate locked" onclick="showModal('Subscribe to boost content!')">Boost My Content</button>
-<div class="fame-list">
-<div class="card">🚀 Mock Fame Boost Applied!</div>
-<div class="card">🔥 Mock Fame Boost Applied!</div>
-</div>
+<div class="cards-grid" id="fame-cards"></div>
+<button class="generate" onclick="mockGenerate('fame')">Boost My Content</button>
+<div class="cards-grid" id="fame-history"></div>
 </div>
 
-<!-- About Page -->
-<div class="tab-panel" id="about">
-<h3>About Kairah Studio</h3>
-<p>Kairah Studio + Fame is your ultimate AI video, photo, and audio generation platform with viral boosting. Preview the features here, subscribe to create content, and watch your ideas come to life!</p>
+<div class="tab-panel" id="about-tab">
+<h3>About Kairah Studio + Fame</h3>
+<p>Our AI platform allows you to generate stunning videos, photos, audio, and viral content using advanced AI templates. Explore concept art, character design, logos, fashion, architecture, and much more!</p>
 </div>
 
-<!-- Settings Page -->
-<div class="tab-panel" id="settings">
-<h3>User Settings (Preview)</h3>
-<p>Email: demo@kairahstudio.com</p>
-<p>Plan: Free (Subscribe to unlock)</p>
-<p>Change password and personal settings are disabled in demo.</p>
-</div>
-
-<!-- Affiliate Page -->
-<div class="tab-panel" id="affiliate">
-<h3>Affiliate Panel Preview</h3>
-<p>Your referral link: <input type="text" value="https://kairahstudio.com/ref=ABCDE" readonly></p>
-<p>Total Earnings: $125</p>
-<p>Affiliate features locked until subscription.</p>
+<div class="tab-panel" id="settings-tab">
+<h3>Settings & Account</h3>
+<p>Plan: <strong>Free (Mock)</strong></p>
+<p>Preferences and mock account settings will appear here.</p>
 </div>
 
 </div>
 
-<!-- Feature Modal -->
-<div class="modal-bg" id="modal">
-<div class="modal">
-<p id="modal-text">Subscribe to unlock this feature!</p>
-<button class="close-modal" onclick="closeModal()">Close</button>
+<!-- Modal -->
+<div class="modal" id="modal">
+<div class="modal-content">
+<p id="modal-text"></p>
+<button onclick="closeModal()">Close</button>
 </div>
 </div>
 
-<!-- Checkout Modal -->
-<div class="modal-bg" id="checkout-modal">
-  <div class="modal">
-    <h3 id="checkout-title">Subscribe</h3>
-    <p id="checkout-plan">Plan: Diamond $49</p>
-    <div style="margin:15px 0;">
-      <strong>Select Payment Method:</strong>
-      <div style="display:flex; gap:10px; margin-top:8px;">
-        <button class="payment-btn" onclick="paySuccess('PayPal')">PayPal</button>
-        <button class="payment-btn" onclick="paySuccess('Card')">Card</button>
-      </div>
-    </div>
-    <div id="card-form" style="display:none; margin-top:10px;">
-      <input type="text" placeholder="Card Number" style="width:100%; padding:10px; margin:5px 0; border-radius:6px;">
-      <input type="text" placeholder="MM/YY" style="width:48%; padding:10px; margin:5px 1%; border-radius:6px;">
-      <input type="text" placeholder="CVC" style="width:48%; padding:10px; margin:5px 1%; border-radius:6px;">
-    </div>
-    <div style="margin-top:10px;">
-      <input type="checkbox" id="non-refundable"> <label for="non-refundable">I understand this payment is non-refundable</label>
-    </div>
-    <button class="generate" style="width:100%; margin-top:15px;" onclick="submitPayment()">Submit Payment</button>
-    <button class="close-modal" style="width:100%; margin-top:10px;" onclick="closeCheckout()">Cancel</button>
-    <div id="checkout-msg" style="margin-top:10px;"></div>
-  </div>
+<!-- Checkout Mock -->
+<div id="checkout-modal" class="modal">
+<div id="checkout-modal-content">
+<h3 id="checkout-title">Subscribe</h3>
+<p id="checkout-plan">Plan: Diamond $49</p>
+<div style="margin:15px 0;">
+<strong>Select Payment Method:</strong>
+<div style="display:flex; gap:10px; margin-top:8px;">
+<button class="payment-btn" onclick="paySuccess('PayPal')">PayPal</button>
+<button class="payment-btn" onclick="paySuccess('Card')">Card</button>
+</div>
+</div>
+<div id="card-form" style="display:none; margin-top:10px;">
+<input type="text" placeholder="Card Number">
+<input type="text" placeholder="MM/YY">
+<input type="text" placeholder="CVC">
+</div>
+<div style="margin-top:10px;">
+<input type="checkbox" id="non-refundable"> <label for="non-refundable">I understand this payment is non-refundable</label>
+</div>
+<button class="generate" style="width:100%; margin-top:15px;" onclick="submitPayment()">Submit Payment</button>
+<button class="close-modal" style="margin-top:10px;" onclick="closeCheckout()">Cancel</button>
+<p id="checkout-msg" style="margin-top:10px;"></p>
+</div>
 </div>
 
 <footer>
-<p>© 2025 Kairah Studio. All rights reserved. | Non-refundable payments | Affiliate program mock enabled</p>
+<p>© 2025 Kairah Studio. Mock Affiliate setup enabled. All rights reserved. Non-refundable payments.</p>
 </footer>
 
 <script>
@@ -190,68 +150,79 @@ tabs.forEach(tab=>{
   tab.addEventListener('click', ()=>{
     tabs.forEach(t=>t.classList.remove('active'));
     tab.classList.add('active');
-    panels.forEach(p=>p.style.display='none');
-    document.getElementById(tab.dataset.tab).style.display='block';
+    panels.forEach(p=>p.classList.remove('active'));
+    document.getElementById(tab.dataset.tab).classList.add('active');
   });
 });
 
-// Feature modal
-function showModal(text){
-  document.getElementById('modal-text').innerText=text;
-  document.getElementById('modal').style.display='flex';
-}
-function closeModal(){document.getElementById('modal').style.display='none';}
+// Categories mock data
+const categories = [
+{name:'Concept Art', src:'https://i.gifer.com/5z5L.gif'},
+{name:'Character Design', src:'https://i.gifer.com/5z5L.gif'},
+{name:'Logo Design', src:'https://i.gifer.com/3w3A.gif'},
+{name:'Fashion Design', src:'https://i.gifer.com/2U4.gif'},
+{name:'Product Images', src:'https://i.gifer.com/4s5P.gif'},
+{name:'Architecture', src:'https://i.gifer.com/1r1R.gif'},
+{name:'Book Illustrations', src:'https://i.gifer.com/6y7K.gif'},
+{name:'Game Assets', src:'https://i.gifer.com/8x8H.gif'},
+{name:'Indoor Design', src:'https://i.gifer.com/9k9L.gif'},
+{name:'Posters & Flyers', src:'https://i.gifer.com/0l0N.gif'},
+{name:'E-Commerce', src:'https://i.gifer.com/1m1B.gif'},
+{name:'Diamond Surreal', src:'https://i.gifer.com/2t2T.gif'}
+];
 
-// Checkout modal
-function openCheckout(plan){
-  document.getElementById('checkout-title').innerText='Subscribe';
-  document.getElementById('checkout-plan').innerText='Plan: '+plan;
-  document.getElementById('card-form').style.display='none';
-  document.getElementById('checkout-msg').innerText='';
-  document.getElementById('checkout-modal').style.display='flex';
-  window.currentCheckoutPlan=plan;
+// Populate cards
+function populateCards(gridId){
+  const grid=document.getElementById(gridId);
+  categories.forEach(cat=>{
+    const div=document.createElement('div');
+    div.className='card locked';
+    div.innerHTML=`<div class="media-box"><img src="${cat.src}"><div class="locked-overlay">Locked - Subscribe</div></div><p>${cat.name}</p>`;
+    div.onclick=()=>showModal('Subscribe to unlock '+cat.name+'!');
+    grid.appendChild(div);
+  });
 }
-function paySuccess(method){
-  if(method==='Card'){document.getElementById('card-form').style.display='block';}
-  else{document.getElementById('card-form').style.display='none';}
-  document.getElementById('checkout-msg').innerText='Selected '+method+'. Fill details if needed.';
-}
-function submitPayment(){
-  if(!document.getElementById('non-refundable').checked){
-    document.getElementById('checkout-msg').innerText='You must accept non-refundable terms!'; return;
-  }
-  document.getElementById('checkout-msg').innerText='Processing...';
+['dashboard-cards','text-video-cards','photo-video-cards','audio-cards','fame-cards'].forEach(populateCards);
+
+// Modal functions
+function showModal(msg){ document.getElementById('modal-text').textContent=msg; document.getElementById('modal').style.display='flex'; }
+function closeModal(){ document.getElementById('modal').style.display='none'; }
+
+// Mock generate function
+function mockGenerate(type){
+  showModal('Generating '+type+'... (Mock)');
   setTimeout(()=>{
-    document.getElementById('checkout-msg').innerHTML='<span style="color:#28a745;font-weight:bold;">Payment Successful! 🎉</span>';
-    confettiEffect();
-    setTimeout(closeCheckout,2500);
+    closeModal();
+    let historyId = type==='text-video'?'text-video-history': type==='photo-video'?'photo-video-history': type==='audio'?'audio-history':'fame-history';
+    const div=document.createElement('div');
+    div.className='card';
+    div.innerHTML=`<div class="media-box"><video autoplay loop muted src="https://i.gifer.com/2t2T.gif"></video></div><p>Mock ${type} generated!</p>`;
+    document.getElementById(historyId).appendChild(div);
+    launchConfetti();
   },1500);
 }
-function closeCheckout(){document.getElementById('checkout-modal').style.display='none';}
 
-// Confetti
-function confettiEffect(){
-  const confettiContainer=document.createElement('div');
-  confettiContainer.style.position='fixed'; confettiContainer.style.top='0'; confettiContainer.style.left='0';
-  confettiContainer.style.width='100%'; confettiContainer.style.height='100%'; confettiContainer.style.pointerEvents='none';
-  for(let i=0;i<80;i++){
-    const div=document.createElement('div'); div.style.position='absolute'; div.style.width='8px'; div.style.height='8px';
-    div.style.background=['#FFC107','#D4AF37','#28a745','#21c25f'][Math.floor(Math.random()*4)];
-    div.style.top='0px'; div.style.left=Math.random()*100+'%';
-    div.style.opacity=Math.random(); div.style.transform='rotate('+Math.random()*360+'deg)';
-    div.style.animation='fall 2s linear forwards'; confettiContainer.appendChild(div);
-  }
-  document.body.appendChild(confettiContainer);
-  setTimeout(()=>{document.body.removeChild(confettiContainer);},2000);
+// Checkout mock
+function submitPayment(){
+  const cb = document.getElementById('non-refundable');
+  if(!cb.checked){ alert('Please accept non-refundable payment'); return; }
+  document.getElementById('checkout-msg').textContent='Processing payment...';
+  setTimeout(()=>paySuccess('Mock Payment'),1500);
 }
-const style = document.createElement('style');
-style.innerHTML='@keyframes fall{0%{transform:translateY(0)}100%{transform:translateY(100vh)}}';
-document.head.appendChild(style);
+function paySuccess(method){
+  document.getElementById('checkout-msg').textContent='Payment successful via '+method+'! Unlocking content...';
+  closeCheckout();
+  launchConfetti();
+}
+function closeCheckout(){ document.getElementById('checkout-modal').style.display='none'; }
 
-// Hook mock pay buttons
-document.querySelectorAll('.payment-btn').forEach(btn=>{
-  btn.addEventListener('click', ()=>openCheckout(btn.parentElement.querySelector('h3')?.innerText||'Diamond $49'));
-});
+// Confetti animation
+function launchConfetti(){
+  for(let i=0;i<50;i++){
+    const conf = document.createElement('div'); conf.className='confetti'; conf.style.left=Math.random()*100+'vw'; conf.style.background=['#FFC107','#28a745','#21c25f','#D4AF37'][Math.floor(Math.random()*4)]; document.body.appendChild(conf);
+    setTimeout(()=>conf.remove(),2000+Math.random()*1000);
+  }
+}
 </script>
 
 </body>
