@@ -3,48 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kairah Studio + Surreal AI</title>
+<title>Kairah Studio + Cinematic AI</title>
 <style>
-body {margin:0; font-family:Arial,sans-serif; background:#0b1d3a; color:white;}
-header {background:#D4AF37; color:white; padding:25px; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.3);}
-header h1 {margin:0;font-size:2em;}
-header p {margin:5px 0 0;font-size:1em;}
-.container {max-width:1200px; margin:20px auto; padding:20px;}
-#auth-container, #main-container {background:#1c2a50; padding:25px; border-radius:12px; box-shadow:0 0 15px rgba(0,0,0,0.4);}
-input, select {width:100%; padding:12px; margin:8px 0 15px 0; border-radius:6px; border:1px solid #ccc;}
-button {cursor:pointer; border:none; border-radius:6px; transition: transform 0.2s, box-shadow 0.2s;}
-button:hover {transform: translateY(-2px); box-shadow:0 5px 15px rgba(212,175,55,0.6);}
-nav {text-align:center; margin-top:25px;}
-nav button {margin:0 6px; padding:12px 22px; border-radius:6px; background:#3D2C41; color:white; font-weight:bold;}
-nav button.active {background:#D4AF37;}
-.tab-panel {margin-top:25px; display:none;}
-.tab-panel.active {display:block;}
-.card {background:#3D2C41; border-radius:12px; padding:18px; margin:12px 0; box-shadow:0 0 10px rgba(0,0,0,0.3); position:relative; transition: transform 0.3s, box-shadow 0.3s;}
-.card:hover {transform: translateY(-6px); box-shadow:0 10px 25px rgba(212,175,55,0.6);}
-.card::before {content: attr(data-plan); position: absolute; top:0; left:0; background: #D4AF37; color:white; padding:6px 12px; border-top-left-radius:12px; border-bottom-right-radius:12px; font-size:0.85em; font-weight:bold;}
-.card button {background: linear-gradient(45deg,#D4AF37,#FFC107); color:white; border:none; padding:10px 18px; border-radius:6px; margin-top:10px; font-weight:bold;}
-.media-box {margin-top:18px; padding:18px; border-radius:12px; background:#10203a; position:relative; text-align:center;}
-.media-box video {width:100%; border-radius:12px;}
-.locked-overlay {position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFC107; font-size:1em; opacity:0; transition:0.3s; border-radius:12px;}
-.card.locked:hover .locked-overlay {opacity:1; cursor:pointer;}
-.history, .fame-list, .template-grid {display:flex; flex-wrap:wrap;}
-.history .card, .fame-list .card, .template-grid .card {flex:1 1 220px; margin:10px;}
-.pricing-cards {display:flex; justify-content:space-around; flex-wrap:wrap; margin-top:25px;}
-.pricing-cards .card {flex:1 1 200px; text-align:center;}
-.generate {background: linear-gradient(45deg,#28a745,#21c25f); color:white; padding:12px 18px; margin-top:8px; font-weight:bold;}
-.prompt-magic {background: linear-gradient(45deg,#ffc107,#ffdd57); color:white; padding:12px 18px; margin-top:8px; font-weight:bold;}
-.modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:1000;}
-.modal-content {background:#1c2a50; padding:20px; border-radius:12px; width:90%; max-width:400px; text-align:center; color:white;}
-.audio-wave {width:100%; height:50px; background:linear-gradient(90deg,#21c25f,#28a745); margin-top:15px; border-radius:6px; animation:wave 1s infinite;}
-@keyframes wave {0%{transform:scaleX(1);}50%{transform:scaleX(0.7);}100%{transform:scaleX(1);}}
-footer {background:#10203a; padding:20px; text-align:center; font-size:0.85em;}
-.template-grid .card video {width:100%; border-radius:12px; margin-bottom:8px;}
+body{margin:0;font-family:Arial,sans-serif;background:#0b1d3a;color:white;}
+header{background:#D4AF37;color:white;padding:25px;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,0.3);}
+header h1{margin:0;font-size:2em;} header p{margin:5px 0 0;font-size:1em;}
+.container{max-width:1200px;margin:20px auto;padding:20px;}
+input,select{width:100%;padding:12px;margin:8px 0 15px 0;border-radius:6px;border:1px solid #ccc;}
+button{cursor:pointer;border:none;border-radius:6px;transition:transform 0.2s,box-shadow 0.2s;}
+button:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(212,175,55,0.6);}
+nav{text-align:center;margin-top:25px;}
+nav button{margin:0 6px;padding:12px 22px;border-radius:6px;background:#3D2C41;color:white;font-weight:bold;}
+nav button.active{background:#D4AF37;}
+.tab-panel{margin-top:25px;display:none;}
+.tab-panel.active{display:block;}
+.card{background:#3D2C41;border-radius:12px;padding:18px;margin:12px 0;box-shadow:0 0 10px rgba(0,0,0,0.3);position:relative;transition: transform 0.3s, box-shadow 0.3s;overflow:hidden;}
+.card:hover{transform: translateY(-6px);box-shadow:0 10px 25px rgba(212,175,55,0.6);}
+.card::before{content:attr(data-plan);position:absolute;top:0;left:0;background:#D4AF37;color:white;padding:6px 12px;border-top-left-radius:12px;border-bottom-right-radius:12px;font-size:0.85em;font-weight:bold;}
+.card button{background:linear-gradient(45deg,#D4AF37,#FFC107);color:white;border:none;padding:10px 18px;border-radius:6px;margin-top:10px;font-weight:bold;}
+.media-box{margin-top:18px;padding:18px;border-radius:12px;background:#10203a;position:relative;text-align:center;}
+.media-box video{width:100%;border-radius:12px;}
+.locked-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFC107;font-size:1em;opacity:1;transition:0.3s;border-radius:12px;}
+.card.unlocked .locked-overlay{opacity:0;pointer-events:none;}
+.history,.fame-list,.template-grid{display:flex;flex-wrap:wrap;}
+.history .card,.fame-list .card,.template-grid .card{flex:1 1 220px;margin:10px;}
+.pricing-cards{display:flex;justify-content:space-around;flex-wrap:wrap;margin-top:25px;}
+.pricing-cards .card{text-align:center;flex:1 1 200px;}
+.generate{background:linear-gradient(45deg,#28a745,#21c25f);color:white;padding:12px 18px;margin-top:8px;font-weight:bold;}
+.prompt-magic{background:linear-gradient(45deg,#ffc107,#ffdd57);color:white;padding:12px 18px;margin-top:8px;font-weight:bold;}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);justify-content:center;align-items:center;z-index:1000;}
+.modal-content{background:#1c2a50;padding:20px;border-radius:12px;width:90%;max-width:400px;text-align:center;color:white;}
+.audio-wave{width:100%;height:50px;background:linear-gradient(90deg,#21c25f,#28a745);margin-top:15px;border-radius:6px;animation:wave 1s infinite;}
+@keyframes wave{0%{transform:scaleX(1);}50%{transform:scaleX(0.7);}100%{transform:scaleX(1);}}
+footer{background:#10203a;padding:20px;text-align:center;font-size:0.85em;}
+.template-grid .card video{width:100%;border-radius:12px;margin-bottom:8px;}
 </style>
 </head>
 <body>
 
 <header>
-<h1>Kairah Studio + Surreal AI</h1>
+<h1>Kairah Studio + Cinematic AI</h1>
 <p>AI Video, Photo & Audio Generator + Viral Fame Booster</p>
 </header>
 
@@ -59,11 +57,11 @@ footer {background:#10203a; padding:20px; text-align:center; font-size:0.85em;}
 
 <div class="container" id="main-container" style="display:none;">
 <div>
-Logged in as: <span id="user-email"></span> | Plan: <span id="user-plan">Free</span>
+Logged in as: <span id="user-email">Guest</span> | Plan: <span id="user-plan">Free</span>
 <button id="logout-btn" style="background:#D4AF37;color:white;padding:5px 10px;margin-left:10px;">Logout</button>
 </div>
 
-<div id="dashboard" style="margin-top:20px; padding:15px; background:#10203a; border-radius:10px;">
+<div id="dashboard" style="margin-top:20px;padding:15px;background:#10203a;border-radius:10px;">
 <h3>Dashboard (Mock Stats)</h3>
 <p>Total Videos Generated: <span id="stat-videos">0</span></p>
 <p>Total Photos Generated: <span id="stat-photos">0</span></p>
@@ -82,38 +80,33 @@ Logged in as: <span id="user-email"></span> | Plan: <span id="user-plan">Free</s
 </nav>
 
 <div id="tab-content">
-
 <div class="tab-panel active" id="text-video">
 <h3>Text-to-Video Templates</h3>
 <div class="template-grid" id="text-templates"></div>
 </div>
-
 <div class="tab-panel" id="photo-video">
 <h3>Photo-to-Video Templates</h3>
 <div class="template-grid" id="photo-templates"></div>
 </div>
-
 <div class="tab-panel" id="audio-gen">
 <h3>Audio Generator Templates</h3>
 <div class="template-grid" id="audio-templates"></div>
 </div>
-
 <div class="tab-panel" id="fame-booster">
 <h3>Kairah Fame Booster</h3>
 <div class="template-grid" id="fame-templates"></div>
 </div>
-
 <div class="tab-panel" id="pricing">
 <h3>Pricing Plans</h3>
 <div class="pricing-cards" id="pricing-cards"></div>
 </div>
-
 <div class="tab-panel" id="affiliate">
 <h3>Affiliate Program (Mock)</h3>
 <p>Your referral link:</p>
 <input type="text" value="https://kairah.studio/referral/USER123" readonly>
 <p>Referrals: <span id="affiliate-referrals">0</span> | Clicks: <span id="affiliate-clicks">0</span> | Earnings: $<span id="affiliate-earnings">0.00</span></p>
 <button class="generate" onclick="openAffiliateModal()">Join Affiliate (Mock Signup)</button>
+</div>
 </div>
 
 <!-- Modals -->
@@ -133,28 +126,23 @@ Logged in as: <span id="user-email"></span> | Plan: <span id="user-plan">Free</s
 <div class="modal" id="affiliate-modal">
 <div class="modal-content">
 <h3>Affiliate Signup (Mock)</h3>
-<button onclick="mockAffiliateSignup()">Create Affiliate Account</button>
+<button onclick="mockAffiliateSignup()">Create Account</button>
 <p id="affiliate-msg"></p>
 <button onclick="closeAffiliateModal()">Close</button>
 </div>
 </div>
 
 <footer>
-<p>&copy; 2025 Kairah Studio. All rights reserved. | Non-refundable payments | Affiliate Program Mock</p>
+<p>&copy; 2025 Kairah Studio | Non-refundable payments | Affiliate system mock included</p>
 </footer>
 
 <script>
-// Tabs
+// Tab switching
 const tabs=document.querySelectorAll('nav button');
 const panels=document.querySelectorAll('.tab-panel');
-tabs.forEach(tab=>{tab.addEventListener('click',()=>{
-tabs.forEach(t=>t.classList.remove('active'));
-tab.classList.add('active');
-panels.forEach(p=>p.classList.remove('active'));
-document.getElementById(tab.dataset.tab).classList.add('active');
-});});
+tabs.forEach(tab=>{tab.addEventListener('click',()=>{tabs.forEach(t=>t.classList.remove('active'));tab.classList.add('active');panels.forEach(p=>p.classList.remove('active'));document.getElementById(tab.dataset.tab).classList.add('active');});});
 
-// Auth
+// Mock Auth
 const authContainer=document.getElementById('auth-container');
 const mainContainer=document.getElementById('main-container');
 const signinBtn=document.getElementById('signin-btn');
@@ -164,89 +152,55 @@ const userEmailSpan=document.getElementById('user-email');
 let currentUser=null;
 let currentPlan='Free';
 
-signinBtn.onclick=signupBtn.onclick=()=>{
-  const email=document.getElementById('email').value;
-  const pass=document.getElementById('password').value;
-  if(!email||!pass){document.getElementById('auth-error').textContent='Enter email & password'; return;}
-  currentUser=email; currentPlan='Free';
-  authContainer.style.display='none';
-  mainContainer.style.display='block';
-  userEmailSpan.textContent=currentUser;
-  document.getElementById('user-plan').textContent=currentPlan;
-  populateCinematicTemplates();
-  populatePricing();
-};
+signinBtn.onclick=signupBtn.onclick=()=>{const email=document.getElementById('email').value;const pass=document.getElementById('password').value;if(!email||!pass){document.getElementById('auth-error').textContent='Enter email & password';return;}currentUser=email;currentPlan='Free';authContainer.style.display='none';mainContainer.style.display='block';userEmailSpan.textContent=currentUser;document.getElementById('user-plan').textContent=currentPlan;populateCinematicTemplates();populatePricing();};
 
-// Logout
-logoutBtn.onclick=()=>{authContainer.style.display='block'; mainContainer.style.display='none'; currentUser=null;}
-
-// Dashboard stats
+// Dashboard Mock
 let stats={videos:0,photos:0,audio:0,fame:0,downloads:0};
 
-// Cinematic templates
+// Cinematic mock videos
 const cinematicVideos={
-  viral:["https://www.w3schools.com/html/mov_bbb.mp4","https://www.w3schools.com/html/movie.mp4"],
-  royal:["https://www.w3schools.com/html/mov_bbb.mp4","https://www.w3schools.com/html/movie.mp4"],
-  fantasy:["https://www.w3schools.com/html/mov_bbb.mp4","https://www.w3schools.com/html/movie.mp4"]
+viral:["https://www.w3schools.com/html/mov_bbb.mp4","https://www.w3schools.com/html/movie.mp4"],
+royal:["https://www.w3schools.com/html/mov_bbb.mp4","https://www.w3schools.com/html/movie.mp4"],
+fantasy:["https://www.w3schools.com/html/mov_bbb.mp4","https://www.w3schools.com/html/movie.mp4"],
+surreal:["https://www.w3schools.com/html/mov_bbb.mp4","https://www.w3schools.com/html/movie.mp4"]
 };
 
 function populateCinematicTemplates(){
-  const textTemplates=document.getElementById('text-templates');
-  const photoTemplates=document.getElementById('photo-templates');
-  const audioTemplates=document.getElementById('audio-templates');
-  const fameTemplates=document.getElementById('fame-templates');
-  [textTemplates,photoTemplates,audioTemplates,fameTemplates].forEach(t=>t.innerHTML='');
-  Object.keys(cinematicVideos).forEach(category=>{
-    cinematicVideos[category].forEach((videoSrc,index)=>{
-      const card=document.createElement('div');
-      card.className='card locked';
-      card.innerHTML=`<video src="${videoSrc}" loop muted></video>
-      <div class="locked-overlay">Subscribe to Unlock</div>
-      <h4 style="margin-top:8px; text-align:center;">${category.toUpperCase()} Template ${index+1}</h4>`;
-      textTemplates.appendChild(card.cloneNode(true));
-      photoTemplates.appendChild(card.cloneNode(true));
-      audioTemplates.appendChild(card.cloneNode(true));
-      fameTemplates.appendChild(card.cloneNode(true));
-    });
-  });
+const grids=['text-templates','photo-templates','audio-templates','fame-templates'];
+grids.forEach(gridId=>{
+const grid=document.getElementById(gridId);grid.innerHTML='';
+Object.keys(cinematicVideos).forEach(category=>{
+cinematicVideos[category].forEach((src,i)=>{
+const card=document.createElement('div');card.className='card locked';
+card.innerHTML=`<video src="${src}" loop muted autoplay></video>
+<div class="locked-overlay">Subscribe to Unlock</div>
+<h4 style="margin-top:8px;text-align:center;">${category.toUpperCase()} Template ${i+1}</h4>`;
+grid.appendChild(card);
+});
+});
+});
 }
 
 // Pricing
 function populatePricing(){
-  const cards=document.getElementById('pricing-cards');
-  const plans=[
-    {name:'Trial',price:'$1',desc:'7 days, 1 six-second video'},
-    {name:'Free',price:'Free',desc:'1 six-second video'},
-    {name:'Pro',price:'$19',desc:'10 videos included'},
-    {name:'Diamond',price:'$49',desc:'Unlimited videos + Fame Booster'},
-    {name:'Lifetime',price:'$249',desc:'All features permanently'},
-    {name:'Upsale',price:'$9',desc:'Fame Booster only'}
-  ];
-  cards.innerHTML='';
-  plans.forEach(p=>{
-    const div=document.createElement('div'); div.className='card'; div.setAttribute('data-plan',p.name);
-    div.innerHTML=`<h3>${p.name} ${p.price}</h3><p>${p.desc}</p>
-    <button onclick="openCheckout('${p.name}')">Subscribe / Mock Pay</button>`;
-    cards.appendChild(div);
-  });
+const cards=document.getElementById('pricing-cards');
+const plans=[{name:'Trial',price:'$1',desc:'7 days, 1 six-second video'},{name:'Free',price:'Free',desc:'1 six-second video'},{name:'Pro',price:'$19',desc:'10 videos included'},{name:'Diamond',price:'$49',desc:'Unlimited videos + Fame Booster'},{name:'Lifetime',price:'$249',desc:'All features permanently'},{name:'Upsale',price:'$9',desc:'Fame Booster only'}];
+cards.innerHTML='';
+plans.forEach(p=>{const div=document.createElement('div');div.className='card';div.setAttribute('data-plan',p.name);div.innerHTML=`<h3>${p.name} ${p.price}</h3><p>${p.desc}</p><button onclick="openCheckout('${p.name}')">Subscribe / Mock Pay</button>`;cards.appendChild(div);});
 }
 
 // Checkout modal
 function openCheckout(plan){document.getElementById('checkout-modal').style.display='flex';document.getElementById('checkout-title').textContent='Subscribe '+plan;}
 function closeCheckout(){document.getElementById('checkout-modal').style.display='none';document.getElementById('checkout-msg').textContent='';}
-function paySuccess(method){document.getElementById('checkout-msg').textContent='Payment successful via '+method+'! Content unlocked!';setTimeout(closeCheckout,1500);}
+function paySuccess(method){document.getElementById('checkout-msg').textContent='Payment successful via '+method+'! Content unlocked!';document.querySelectorAll('.card.locked').forEach(c=>c.classList.add('unlocked'));setTimeout(closeCheckout,1500);}
 
 // Affiliate
 function openAffiliateModal(){document.getElementById('affiliate-modal').style.display='flex';}
 function closeAffiliateModal(){document.getElementById('affiliate-modal').style.display='none';}
-function mockAffiliateSignup(){
-  document.getElementById('affiliate-msg').textContent='Affiliate account created! Share your referral link (mock).';
-  document.getElementById('affiliate-clicks').textContent=Math.floor(Math.random()*50);
-  document.getElementById('affiliate-referrals').textContent=Math.floor(Math.random()*10);
-  document.getElementById('affiliate-earnings').textContent=(Math.floor(Math.random()*10)*5).toFixed(2);
-  setTimeout(closeAffiliateModal,2000);
-}
-</script>
+function mockAffiliateSignup(){document.getElementById('affiliate-msg').textContent='Affiliate account created! Share your referral link (mock).';document.getElementById('affiliate-clicks').textContent=Math.floor(Math.random()*50);document.getElementById('affiliate-referrals').textContent=Math.floor(Math.random()*10);document.getElementById('affiliate-earnings').textContent=(Math.floor(Math.random()*10)*5).toFixed(2);setTimeout(closeAffiliateModal,2000);}
 
+// Logout
+logoutBtn.onclick=()=>{authContainer.style.display='block';mainContainer.style.display='none';currentUser=null;};
+</script>
 </body>
 </html>
