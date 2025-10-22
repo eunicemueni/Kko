@@ -5,18 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kairah Studio + Fame Mock</title>
 <style>
-/* --------- General --------- */
-body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9; overflow-x:hidden; }
-.container { max-width:1000px; margin:20px auto; background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1); position:relative; z-index:1; }
-
-/* --------- Header & Wave --------- */
-header { position: relative; z-index:1; text-align:center; padding:40px 20px 20px 20px; color:white; background:transparent; overflow:hidden; }
-#wave-bg { position:absolute; top:0; left:0; width:100%; height:150px; z-index:0; overflow:hidden; }
-.wave { position:absolute; width:200%; height:100%; background:linear-gradient(120deg, rgba(212,175,55,0.3), rgba(255,215,0,0.2), rgba(212,175,55,0.3)); border-radius:50%; animation: waveAnim 8s ease-in-out infinite; }
-@keyframes waveAnim { 0% { transform: translateX(-50%) scaleY(1); } 50% { transform: translateX(0%) scaleY(1.2); } 100% { transform: translateX(-50%) scaleY(1); } }
-
-/* --------- Inputs & Buttons --------- */
-input, select { width:100%; padding:10px; margin:5px 0 15px 0; border-radius:5px; border:1px solid #ccc; }
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#1b1f3b; color:white; }
+header { background:#D4AF37; color:white; padding:20px; text-align:center; }
+.container { max-width:1000px; margin:20px auto; background:#2a2e4a; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); }
+input, select { width:100%; padding:10px; margin:5px 0 15px 0; border-radius:5px; border:none; }
 button { cursor:pointer; border:none; border-radius:5px; transition: transform 0.2s, box-shadow 0.2s; }
 #auth-container button { background:#3D2C41; color:white; padding:10px 15px; margin-right:5px; }
 nav { text-align:center; margin-top:20px; }
@@ -24,41 +16,26 @@ nav button { margin:0 5px; padding:10px 20px; border-radius:5px; background:#3D2
 nav button.active { background:#D4AF37; color:white; }
 .tab-panel { margin-top:20px; display:none; }
 .tab-panel.active { display:block; }
-
-/* --------- Cards --------- */
-.card { background:#E7D2CB; border-radius:10px; padding:15px; margin:10px 0; box-shadow:0 0 5px rgba(0,0,0,0.1); position:relative; transition: transform 0.3s, box-shadow 0.3s, background 0.5s; }
-.card:hover { transform: translateY(-5px); box-shadow:0 8px 20px rgba(0,0,0,0.2); background: linear-gradient(135deg,#fff1e6,#ffe6b3); }
+.card { background:#3D2C41; border-radius:10px; padding:15px; margin:10px 0; box-shadow:0 0 5px rgba(0,0,0,0.2); position:relative; transition: transform 0.3s, box-shadow 0.3s; }
+.card:hover { transform: translateY(-5px); box-shadow:0 8px 20px rgba(212,175,55,0.8); }
 .card::before { content: attr(data-plan); position: absolute; top:0; left:0; background: #D4AF37; color:white; padding:5px 10px; border-top-left-radius:10px; border-bottom-right-radius:10px; font-size:0.8em; font-weight:bold; }
 .card button { background: linear-gradient(45deg,#D4AF37,#FFC107); color:white; border:none; padding:8px 15px; border-radius:5px; margin-top:5px; }
-.card button:hover { transform: translateY(-2px); box-shadow:0 5px 15px rgba(0,0,0,0.2); }
-
-/* --------- Media Boxes & Shimmer --------- */
-.media-box { margin-top:15px; padding:15px; border-radius:10px; background:#f1f1f1; position:relative; }
-.shimmer { background: linear-gradient(to right, #f1f1f1 8%, #e0d3d3 18%, #f1f1f1 33%); background-size: 1200px 104px; animation: shimmer 1.5s infinite linear; }
+.card button:hover { transform: translateY(-2px); box-shadow:0 5px 15px rgba(212,175,55,0.8); }
+.media-box { margin-top:15px; padding:15px; border-radius:10px; background:#1b1f3b; position:relative; text-align:center; }
+.shimmer { background: linear-gradient(to right, #1b1f3b 8%, #2a2e4a 18%, #1b1f3b 33%); background-size: 1200px 104px; animation: shimmer 1.5s infinite linear; }
 @keyframes shimmer { 0%{background-position:-1200px 0} 100%{background-position:1200px 0} }
-
-/* --------- Layouts --------- */
 .history, .fame-list { display:flex; flex-wrap:wrap; }
 .history .card, .fame-list .card { flex:1 1 200px; margin:10px; }
 .pricing-cards { display:flex; justify-content:space-around; flex-wrap:wrap; margin-top:20px; }
 .pricing-cards .card { flex:1 1 200px; text-align:center; }
 .generate { background: linear-gradient(45deg,#28a745,#21c25f); color:white; padding:10px 15px; margin-top:5px; }
 .prompt-magic { background: linear-gradient(45deg,#ffc107,#ffdd57); color:white; padding:10px 15px; margin-top:5px; }
-
-/* --------- Particle Canvas --------- */
-#particle-canvas { position: fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
-
-/* --------- Responsive --------- */
 @media(max-width:700px){ .pricing-cards, .history, .fame-list { flex-direction:column; } nav button { margin:5px 0; } }
 </style>
 </head>
 <body>
 
-<!-- ---------- Particle Background ---------- -->
-<canvas id="particle-canvas"></canvas>
-
 <header>
-  <div id="wave-bg"><div class="wave"></div></div>
   <h1>Kairah Studio + Fame</h1>
   <p>AI Video & Audio Generator + Fame Booster</p>
 </header>
@@ -78,21 +55,22 @@ nav button.active { background:#D4AF37; color:white; }
     <button id="logout-btn" style="background:#D4AF37;color:white;padding:5px 10px;margin-left:10px;">Logout</button>
   </div>
 
-  <div id="dashboard" style="margin-top:20px; padding:15px; background:#f1f1f1; border-radius:10px;">
+  <!-- Dashboard -->
+  <div id="dashboard" style="margin-top:20px; padding:15px; background:#1b1f3b; border-radius:10px;">
     <h3>Dashboard (Mock Stats)</h3>
     <p>Total Videos Generated: <span id="stat-videos">0</span></p>
-    <p>Total Photos Generated: <span id="stat-photos">0</span></p>
-    <p>Total Audio Generated: <span id="stat-audio">0</span></p>
     <p>Total Fame Boosts: <span id="stat-fame">0</span></p>
     <p>Total Downloads: <span id="stat-downloads">0</span></p>
+    <p>Total Commission Earned: $<span id="stat-commission">0</span></p>
   </div>
 
   <h2>Select Plan (Mock)</h2>
   <div class="pricing-cards">
     <div class="card" data-plan="Free"><h3>Free</h3><p>1 text-to-video & download per day</p><button onclick="upgradePlan('Free')">Select</button></div>
-    <div class="card" data-plan="Pro"><h3>Pro - $19/mo</h3><p>Unlimited text/video/audio<br>Prompt Magic</p><button onclick="upgradePlan('Pro')">Select</button></div>
-    <div class="card" data-plan="Diamond"><h3>Diamond - $49/mo</h3><p>All Pro features + Fame Booster</p><button onclick="upgradePlan('Diamond')">Select</button></div>
-    <div class="card" data-plan="Lifetime"><h3>Lifetime - $299</h3><p>All Diamond features permanently</p><button onclick="upgradePlan('Lifetime')">Select</button></div>
+    <div class="card" data-plan="Pro"><h3>Pro - $19/mo</h3><p>10 videos included + Prompt Magic</p><button onclick="upgradePlan('Pro')">Select</button></div>
+    <div class="card" data-plan="Diamond"><h3>Diamond - $49/mo</h3><p>Unlimited videos + Fame Booster</p><button onclick="upgradePlan('Diamond')">Select</button></div>
+    <div class="card" data-plan="Lifetime"><h3>Lifetime - $249</h3><p>All Diamond features permanently</p><button onclick="upgradePlan('Lifetime')">Select</button></div>
+    <div class="card" data-plan="Fame Booster"><h3>Fame Booster Only - $9</h3><p>Boost viral content alone</p><button onclick="upgradePlan('Fame Booster')">Select</button></div>
   </div>
 
   <nav>
@@ -140,7 +118,7 @@ nav button.active { background:#D4AF37; color:white; }
   </div>
 </div>
 
-<canvas id="confetti-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>
+<canvas id="confetti-canvas"></canvas>
 
 <script>
 // ---------- Auth ----------
@@ -157,6 +135,7 @@ function login(isSignUp){
   user=email;
   if(email.includes('pro')) plan='Pro';
   else if(email.includes('diamond')) plan='Diamond';
+  else if(email.includes('lifetime')) plan='Lifetime';
   else plan='Free';
   document.getElementById('user-email').textContent=user;
   document.getElementById('user-plan').textContent=plan;
@@ -181,82 +160,66 @@ const panels=document.querySelectorAll('.tab-panel');
 tabs.forEach(tab=>{ tab.onclick=()=>{ tabs.forEach(t=>t.classList.remove('active')); tab.classList.add('active'); panels.forEach(p=>p.classList.remove('active')); document.getElementById(tab.dataset.tab).classList.add('active'); } });
 
 // ---------- Dashboard Stats ----------
-const statVideos = document.getElementById('stat-videos');
-const statPhotos = document.getElementById('stat-photos');
-const statAudio = document.getElementById('stat-audio');
-const statFame = document.getElementById('stat-fame');
-const statDownloads = document.getElementById('stat-downloads');
-let countVideos = 0, countPhotos = 0, countAudio = 0, countFame = 0, countDownloads = 0;
-function updateDashboard(){ statVideos.textContent=countVideos; statPhotos.textContent=countPhotos; statAudio.textContent=countAudio; statFame.textContent=countFame; statDownloads.textContent=countDownloads; }
-
-// ---------- Prompts ----------
-const defaultPrompts={viral:["Funny cat","Epic fail","Dance"],royal:["Queen portrait","Crown reveal"],fantasy:["Dragon flying","Magic forest"]};
-const categorySelect=document.getElementById('category');
-const promptInput=document.getElementById('prompt');
-categorySelect.onchange=()=> promptInput.value=defaultPrompts[categorySelect.value][0];
-document.getElementById('prompt-magic-btn').onclick=()=> promptInput.value+=" 🔥✨";
-
-// ---------- Histories ----------
-const videoHistory=document.getElementById('video-history');
-const photoHistory=document.getElementById('photo-history');
-const audioHistory=document.getElementById('audio-history');
-const fameList=document.getElementById('fame-list');
-
-function addCard(container,text){ 
-  const card=document.createElement('div'); card.className='card'; card.textContent=text; 
-  const btn=document.createElement('button'); btn.textContent='Download'; btn.onclick=()=>downloadItem(btn); 
-  const fameBtn=document.createElement('button'); fameBtn.textContent='Boost Fame'; fameBtn.onclick=()=>boostFame(fameBtn); 
-  card.appendChild(btn); card.appendChild(fameBtn); container.appendChild(card); 
+let statVideos = 0, statPhotos = 0, statAudio = 0, statFame = 0, statDownloads = 0, statCommission = 0;
+function updateDashboard(){ 
+  animateNumber('stat-videos', statVideos);
+  animateNumber('stat-fame', statFame);
+  animateNumber('stat-downloads', statDownloads);
+  animateNumber('stat-commission', statCommission);
 }
-function addFameItem(text){ const card=document.createElement('div'); card.className='card'; card.textContent=text+" (Fame!)"; const btn=document.createElement('button'); btn.textContent='Boost Fame'; btn.onclick=()=>boostFame(btn); fameList.appendChild(card); }
+function animateNumber(id, value){
+  const el = document.getElementById(id);
+  let start = parseInt(el.textContent) || 0;
+  const step = Math.ceil((value - start) / 10);
+  const interval = setInterval(() => {
+    start += step;
+    if(start >= value) { start = value; clearInterval(interval); }
+    el.textContent = start;
+  }, 50);
+}
+
+// ---------- Fame Booster ----------
+function boostFame(title){
+  statFame++; statCommission += 1.5; updateDashboard();
+  const fameList = document.getElementById('fame-list');
+  const card = document.createElement('div');
+  card.className='card';
+  card.textContent=title+" 🔥 Fame!";
+  card.style.background="linear-gradient(45deg,#D4AF37,#FFC107)";
+  fameList.appendChild(card);
+  triggerConfetti();
+}
 
 // ---------- Generate Buttons ----------
-document.getElementById('generate-btn').onclick=()=>{ if(plan==='Free' && videoHistory.children.length>=1){ alert("Free plan: 1 video only"); return; } addCard(videoHistory,promptInput.value); addFameItem(promptInput.value); triggerConfetti(); countVideos++; updateDashboard(); };
-document.getElementById('generate-photo-btn').onclick=()=>{ if(plan==='Free'){ alert("Free plan cannot generate photo-to-video"); return; } const file=document.getElementById('photo-upload').files[0]; if(!file){ alert("Upload photo"); return; } addCard(photoHistory,file.name); addFameItem(file.name); triggerConfetti(); countPhotos++; updateDashboard(); };
-document.getElementById('generate-audio-btn').onclick=()=>{ if(plan==='Free'){ alert("Free plan cannot generate audio"); return; } const text=document.getElementById('audio-prompt').value.trim(); if(!text){ alert("Enter text"); return; } addCard(audioHistory,text); triggerConfetti(); countAudio++; updateDashboard(); };
-
-// ---------- Fame Boost ----------
-function boostFame(btn){ countFame++; updateDashboard(); triggerConfetti(); }
-
-// ---------- Download ----------
-function downloadItem(btn){ 
-  const downloadsUsed=Number(localStorage.getItem(`downloads_${user}`)||0);
-  if(plan==='Free' && downloadsUsed>=1){ alert("Free plan allows only 1 download/day."); return; }
-  if(plan==='Free') localStorage.setItem(`downloads_${user}`, downloadsUsed+1);
-  countDownloads++; updateDashboard();
-  alert('Download simulated!');
-}
-
-// ---------- Load histories/fame ----------
-function loadHistories(){ videoHistory.innerHTML=''; photoHistory.innerHTML=''; audioHistory.innerHTML=''; }
-function loadFame(){ fameList.innerHTML=''; }
+document.getElementById('generate-btn').onclick=()=>{
+  if(plan==='Free' && document.getElementById('video-history').children.length>=1){ alert("Free plan: 1 video only"); return; }
+  const prompt=document.getElementById('prompt').value.trim();
+  if(!prompt){ alert("Enter prompt"); return; }
+  statVideos++; updateDashboard(); boostFame(prompt);
+};
+document.getElementById('generate-photo-btn').onclick=()=>{
+  if(plan==='Free'){ alert("Free plan cannot generate photo-to-video"); return; }
+  const file=document.getElementById('photo-upload').files[0]; if(!file){ alert("Upload photo"); return; }
+  statPhotos++; updateDashboard(); boostFame(file.name);
+};
+document.getElementById('generate-audio-btn').onclick=()=>{
+  if(plan==='Free'){ alert("Free plan cannot generate audio"); return; }
+  const text=document.getElementById('audio-prompt').value.trim(); if(!text){ alert("Enter text"); return; }
+  statAudio++; updateDashboard(); boostFame(text);
+};
 
 // ---------- Confetti ----------
 const canvas=document.getElementById('confetti-canvas'); const ctx=canvas.getContext('2d'); let confettiParticles=[];
 function resizeCanvas(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; } window.addEventListener('resize',resizeCanvas); resizeCanvas();
-function createConfetti(x,y){ for(let i=0;i<50;i++){ confettiParticles.push({x:x,y:y,r:Math.random()*6+2,dx:(Math.random()-0.5)*6,dy:(Math.random()-1.5)*6,color:`hsl(${Math.random()*60+30},70%,60%)`}); } }
+function createConfetti(x,y){ for(let i=0;i<50;i++){ confettiParticles.push({x:x,y:y,r:Math.random()*6+2,dx:(Math.random()-0.5)*6,dy:(Math.random()-1.5)*6,color:`hsl(${Math.random()*360},70%,60%)`}); } }
 function drawConfetti(){ ctx.clearRect(0,0,canvas.width,canvas.height); confettiParticles.forEach((p,index)=>{ ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=p.color; ctx.fill(); p.x+=p.dx; p.y+=p.dy; p.dy+=0.05; if(p.y>canvas.height){ confettiParticles.splice(index,1); } }); requestAnimationFrame(drawConfetti); }
 drawConfetti();
 function triggerConfetti(){ createConfetti(window.innerWidth/2,window.innerHeight/2); }
 
-// ---------- Particle Background ----------
-const pCanvas = document.getElementById('particle-canvas');
-const pCtx = pCanvas.getContext('2d');
-let particles = [];
-function resizeParticles(){ pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight; }
-window.addEventListener('resize',resizeParticles); resizeParticles();
-for(let i=0;i<100;i++){ particles.push({x:Math.random()*pCanvas.width, y:Math.random()*pCanvas.height, r:Math.random()*2+1, dx:(Math.random()-0.5)*1, dy:(Math.random()-0.5)*1}); }
-function drawParticles(){
-  pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
-  particles.forEach(p=>{
-    pCtx.beginPath(); pCtx.arc(p.x,p.y,p.r,0,Math.PI*2); pCtx.fillStyle='rgba(212,175,55,0.3)'; pCtx.fill();
-    p.x+=p.dx; p.y+=p.dy;
-    if(p.x>pCanvas.width) p.x=0; if(p.x<0) p.x=pCanvas.width;
-    if(p.y>pCanvas.height) p.y=0; if(p.y<0) p.y=pCanvas.height;
-  });
-  requestAnimationFrame(drawParticles);
-}
-drawParticles();
+// ---------- Load histories/fame ----------
+function loadHistories(){ document.getElementById('video-history').innerHTML=''; document.getElementById('photo-history').innerHTML=''; document.getElementById('audio-history').innerHTML=''; }
+function loadFame(){ document.getElementById('fame-list').innerHTML=''; }
+
 </script>
 
 </body>
