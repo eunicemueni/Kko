@@ -3,33 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kairah Studio + Fame Mock</title>
+<title>Kairah Studio + Fame</title>
 <style>
-body { font-family: Arial, sans-serif; margin:0; padding:0; background:#1b1f3b; color:white; }
-header { background:#D4AF37; color:white; padding:20px; text-align:center; }
-.container { max-width:1000px; margin:20px auto; background:#2a2e4a; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); }
-input, select { width:100%; padding:10px; margin:5px 0 15px 0; border-radius:5px; border:none; }
-button { cursor:pointer; border:none; border-radius:5px; transition: transform 0.2s, box-shadow 0.2s; }
-#auth-container button { background:#3D2C41; color:white; padding:10px 15px; margin-right:5px; }
-nav { text-align:center; margin-top:20px; }
-nav button { margin:0 5px; padding:10px 20px; border-radius:5px; background:#3D2C41; color:white; }
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#0b1d3a; color:white; }
+header { background:#D4AF37; color:white; padding:25px; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.3);}
+header h1 { margin:0; font-size:2em; }
+header p { margin:5px 0 0; font-size:1em; }
+.container { max-width:1000px; margin:20px auto; background:#1c2a50; padding:25px; border-radius:12px; box-shadow:0 0 15px rgba(0,0,0,0.4); }
+input, select { width:100%; padding:12px; margin:8px 0 15px 0; border-radius:6px; border:1px solid #ccc; }
+button { cursor:pointer; border:none; border-radius:6px; transition: transform 0.2s, box-shadow 0.2s; }
+#auth-container button { background:#3D2C41; color:white; padding:12px 18px; margin-right:8px; }
+#auth-container button:hover { transform: translateY(-2px); box-shadow:0 5px 15px rgba(212,175,55,0.6);}
+nav { text-align:center; margin-top:25px; }
+nav button { margin:0 6px; padding:12px 22px; border-radius:6px; background:#3D2C41; color:white; font-weight:bold; }
 nav button.active { background:#D4AF37; color:white; }
-.tab-panel { margin-top:20px; display:none; }
+.tab-panel { margin-top:25px; display:none; }
 .tab-panel.active { display:block; }
-.card { background:#3D2C41; border-radius:10px; padding:15px; margin:10px 0; box-shadow:0 0 5px rgba(0,0,0,0.2); position:relative; transition: transform 0.3s, box-shadow 0.3s; }
-.card:hover { transform: translateY(-5px); box-shadow:0 8px 20px rgba(212,175,55,0.8); }
-.card::before { content: attr(data-plan); position: absolute; top:0; left:0; background: #D4AF37; color:white; padding:5px 10px; border-top-left-radius:10px; border-bottom-right-radius:10px; font-size:0.8em; font-weight:bold; }
-.card button { background: linear-gradient(45deg,#D4AF37,#FFC107); color:white; border:none; padding:8px 15px; border-radius:5px; margin-top:5px; }
-.card button:hover { transform: translateY(-2px); box-shadow:0 5px 15px rgba(212,175,55,0.8); }
-.media-box { margin-top:15px; padding:15px; border-radius:10px; background:#1b1f3b; position:relative; text-align:center; }
-.shimmer { background: linear-gradient(to right, #1b1f3b 8%, #2a2e4a 18%, #1b1f3b 33%); background-size: 1200px 104px; animation: shimmer 1.5s infinite linear; }
+.card { background:#3D2C41; border-radius:12px; padding:18px; margin:12px 0; box-shadow:0 0 10px rgba(0,0,0,0.3); position:relative; transition: transform 0.3s, box-shadow 0.3s; }
+.card:hover { transform: translateY(-6px); box-shadow:0 10px 25px rgba(212,175,55,0.6); }
+.card::before { content: attr(data-plan); position: absolute; top:0; left:0; background: #D4AF37; color:white; padding:6px 12px; border-top-left-radius:12px; border-bottom-right-radius:12px; font-size:0.85em; font-weight:bold; }
+.card button { background: linear-gradient(45deg,#D4AF37,#FFC107); color:white; border:none; padding:10px 18px; border-radius:6px; margin-top:10px; font-weight:bold; }
+.card button:hover { transform: translateY(-3px); box-shadow:0 6px 18px rgba(212,175,55,0.5); }
+.media-box { margin-top:18px; padding:18px; border-radius:12px; background:#10203a; position:relative; text-align:center; }
+.shimmer { background: linear-gradient(to right, #10203a 8%, #1c2a50 18%, #10203a 33%); background-size: 1200px 104px; animation: shimmer 1.5s infinite linear; }
 @keyframes shimmer { 0%{background-position:-1200px 0} 100%{background-position:1200px 0} }
 .history, .fame-list { display:flex; flex-wrap:wrap; }
 .history .card, .fame-list .card { flex:1 1 200px; margin:10px; }
-.pricing-cards { display:flex; justify-content:space-around; flex-wrap:wrap; margin-top:20px; }
+.pricing-cards { display:flex; justify-content:space-around; flex-wrap:wrap; margin-top:25px; }
 .pricing-cards .card { flex:1 1 200px; text-align:center; }
-.generate { background: linear-gradient(45deg,#28a745,#21c25f); color:white; padding:10px 15px; margin-top:5px; }
-.prompt-magic { background: linear-gradient(45deg,#ffc107,#ffdd57); color:white; padding:10px 15px; margin-top:5px; }
+.generate { background: linear-gradient(45deg,#28a745,#21c25f); color:white; padding:12px 18px; margin-top:8px; font-weight:bold; }
+.prompt-magic { background: linear-gradient(45deg,#ffc107,#ffdd57); color:white; padding:12px 18px; margin-top:8px; font-weight:bold; }
+.sample-video { margin-top:15px; background:#10203a; padding:15px; border-radius:10px; text-align:center; }
 @media(max-width:700px){ .pricing-cards, .history, .fame-list { flex-direction:column; } nav button { margin:5px 0; } }
 </style>
 </head>
@@ -37,7 +41,7 @@ nav button.active { background:#D4AF37; color:white; }
 
 <header>
   <h1>Kairah Studio + Fame</h1>
-  <p>AI Video & Audio Generator + Fame Booster</p>
+  <p>AI Video & Audio Generator + Viral Fame Booster</p>
 </header>
 
 <div class="container" id="auth-container">
@@ -46,7 +50,22 @@ nav button.active { background:#D4AF37; color:white; }
   <input type="password" id="password" placeholder="Password">
   <button id="signin-btn">Sign In</button>
   <button id="signup-btn">Sign Up</button>
-  <p id="auth-error" style="color:red;"></p>
+  <p id="auth-error" style="color:#ff4d4d;"></p>
+
+  <h3>Pricing Plans & Trial</h3>
+  <div class="pricing-cards">
+    <div class="card" data-plan="Trial"><h3>Trial $1</h3><p>7 days, 1 six-second video</p></div>
+    <div class="card" data-plan="Free"><h3>Free</h3><p>1 six-second video</p></div>
+    <div class="card" data-plan="Pro"><h3>Pro $19</h3><p>10 videos included</p></div>
+    <div class="card" data-plan="Diamond"><h3>Diamond $49</h3><p>Unlimited videos + Fame Booster</p></div>
+    <div class="card" data-plan="Lifetime"><h3>Lifetime $249</h3><p>All features permanently</p></div>
+    <div class="card" data-plan="Upsale"><h3>Fame Booster $9</h3><p>Viral boosting only</p></div>
+  </div>
+
+  <div class="sample-video">
+    <h4>Sample 6-second Preview</h4>
+    <p>🎬 This is how your first free video looks!</p>
+  </div>
 </div>
 
 <div class="container" id="main-container" style="display:none;">
@@ -56,21 +75,13 @@ nav button.active { background:#D4AF37; color:white; }
   </div>
 
   <!-- Dashboard -->
-  <div id="dashboard" style="margin-top:20px; padding:15px; background:#1b1f3b; border-radius:10px;">
+  <div id="dashboard" style="margin-top:20px; padding:15px; background:#10203a; border-radius:10px;">
     <h3>Dashboard (Mock Stats)</h3>
     <p>Total Videos Generated: <span id="stat-videos">0</span></p>
+    <p>Total Photos Generated: <span id="stat-photos">0</span></p>
+    <p>Total Audio Generated: <span id="stat-audio">0</span></p>
     <p>Total Fame Boosts: <span id="stat-fame">0</span></p>
     <p>Total Downloads: <span id="stat-downloads">0</span></p>
-    <p>Total Commission Earned: $<span id="stat-commission">0</span></p>
-  </div>
-
-  <h2>Select Plan (Mock)</h2>
-  <div class="pricing-cards">
-    <div class="card" data-plan="Free"><h3>Free</h3><p>1 text-to-video & download per day</p><button onclick="upgradePlan('Free')">Select</button></div>
-    <div class="card" data-plan="Pro"><h3>Pro - $19/mo</h3><p>10 videos included + Prompt Magic</p><button onclick="upgradePlan('Pro')">Select</button></div>
-    <div class="card" data-plan="Diamond"><h3>Diamond - $49/mo</h3><p>Unlimited videos + Fame Booster</p><button onclick="upgradePlan('Diamond')">Select</button></div>
-    <div class="card" data-plan="Lifetime"><h3>Lifetime - $249</h3><p>All Diamond features permanently</p><button onclick="upgradePlan('Lifetime')">Select</button></div>
-    <div class="card" data-plan="Fame Booster"><h3>Fame Booster Only - $9</h3><p>Boost viral content alone</p><button onclick="upgradePlan('Fame Booster')">Select</button></div>
   </div>
 
   <nav>
@@ -107,119 +118,74 @@ nav button.active { background:#D4AF37; color:white; }
       <h3>Audio Generator</h3>
       <input type="text" id="audio-prompt" placeholder="Enter text for audio">
       <button class="generate" id="generate-audio-btn">Generate Audio</button>
-      <div class="media-box" id="audio-box" style="display:none;">🎵 Generating...</div>
+      <div class="media-box" id="audio-box" style="display:none;">🔊 Generating...</div>
       <div class="history" id="audio-history"></div>
     </div>
 
     <div class="tab-panel" id="fame-booster">
       <h3>Kairah Fame Booster</h3>
-      <div class="fame-list" id="fame-list"></div>
+      <button class="generate" id="boost-btn">Boost My Content</button>
+      <div class="fame-list" id="fame-history"></div>
     </div>
   </div>
 </div>
 
-<canvas id="confetti-canvas"></canvas>
-
 <script>
-// ---------- Auth ----------
-const authContainer=document.getElementById('auth-container');
-const mainContainer=document.getElementById('main-container');
-const authError=document.getElementById('auth-error');
-let user=null, plan='Free';
-document.getElementById('signin-btn').onclick=()=>login(false);
-document.getElementById('signup-btn').onclick=()=>login(true);
-document.getElementById('logout-btn').onclick=()=>logout();
-function login(isSignUp){
-  const email=document.getElementById('email').value.trim();
-  if(!email){ authError.textContent="Email required"; return; }
-  user=email;
-  if(email.includes('pro')) plan='Pro';
-  else if(email.includes('diamond')) plan='Diamond';
-  else if(email.includes('lifetime')) plan='Lifetime';
-  else plan='Free';
-  document.getElementById('user-email').textContent=user;
-  document.getElementById('user-plan').textContent=plan;
+// Tab switching
+const tabs = document.querySelectorAll('nav button');
+const panels = document.querySelectorAll('.tab-panel');
+tabs.forEach(tab => {
+  tab.addEventListener('click', ()=> {
+    tabs.forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    panels.forEach(p=>p.classList.remove('active'));
+    document.getElementById(tab.dataset.tab).classList.add('active');
+  });
+});
 
-  // Daily download reset
-  const today = new Date().toDateString();
-  if(localStorage.getItem('download_day') !== today){
-    localStorage.setItem('download_day', today);
-    localStorage.setItem(`downloads_${user}`, 0);
-  }
+// Mock Auth
+const authContainer = document.getElementById('auth-container');
+const mainContainer = document.getElementById('main-container');
+const signinBtn = document.getElementById('signin-btn');
+const signupBtn = document.getElementById('signup-btn');
+const logoutBtn = document.getElementById('logout-btn');
+const userEmailSpan = document.getElementById('user-email');
+let currentUser = null;
+let currentPlan = 'Free';
 
+signinBtn.onclick = signupBtn.onclick = () => {
+  const email = document.getElementById('email').value;
+  const pass = document.getElementById('password').value;
+  if(!email||!pass){ document.getElementById('auth-error').textContent='Enter email & password'; return; }
+  currentUser = email; // Mock login
+  currentPlan = 'Free'; // default
   authContainer.style.display='none';
   mainContainer.style.display='block';
-  loadHistories(); loadFame(); updateDashboard();
-}
-function logout(){ user=null; plan='Free'; authContainer.style.display='block'; mainContainer.style.display='none'; }
-function upgradePlan(newPlan){ plan=newPlan; document.getElementById('user-plan').textContent=plan; alert("Plan upgraded to "+plan); }
-
-// ---------- Tabs ----------
-const tabs=document.querySelectorAll('nav button');
-const panels=document.querySelectorAll('.tab-panel');
-tabs.forEach(tab=>{ tab.onclick=()=>{ tabs.forEach(t=>t.classList.remove('active')); tab.classList.add('active'); panels.forEach(p=>p.classList.remove('active')); document.getElementById(tab.dataset.tab).classList.add('active'); } });
-
-// ---------- Dashboard Stats ----------
-let statVideos = 0, statPhotos = 0, statAudio = 0, statFame = 0, statDownloads = 0, statCommission = 0;
-function updateDashboard(){ 
-  animateNumber('stat-videos', statVideos);
-  animateNumber('stat-fame', statFame);
-  animateNumber('stat-downloads', statDownloads);
-  animateNumber('stat-commission', statCommission);
-}
-function animateNumber(id, value){
-  const el = document.getElementById(id);
-  let start = parseInt(el.textContent) || 0;
-  const step = Math.ceil((value - start) / 10);
-  const interval = setInterval(() => {
-    start += step;
-    if(start >= value) { start = value; clearInterval(interval); }
-    el.textContent = start;
-  }, 50);
+  userEmailSpan.textContent=currentUser;
+  document.getElementById('user-plan').textContent=currentPlan;
 }
 
-// ---------- Fame Booster ----------
-function boostFame(title){
-  statFame++; statCommission += 1.5; updateDashboard();
-  const fameList = document.getElementById('fame-list');
-  const card = document.createElement('div');
-  card.className='card';
-  card.textContent=title+" 🔥 Fame!";
-  card.style.background="linear-gradient(45deg,#D4AF37,#FFC107)";
-  fameList.appendChild(card);
-  triggerConfetti();
+// Mock Dashboard Updates
+let stats = {videos:0,photos:0,audio:0,fame:0,downloads:0};
+document.getElementById('generate-btn').onclick = ()=>{
+  stats.videos++;
+  stats.downloads++;
+  document.getElementById('stat-videos').textContent=stats.videos;
+  document.getElementById('stat-downloads').textContent=stats.downloads;
+  document.getElementById('video-box').style.display='block';
+  setTimeout(()=>{document.getElementById('video-box').style.display='none';},1500);
+}
+document.getElementById('boost-btn').onclick = ()=>{
+  stats.fame++;
+  document.getElementById('stat-fame').textContent=stats.fame;
+  const div=document.createElement('div'); div.className='card'; div.textContent='Mock Fame Boost Applied!'; document.getElementById('fame-history').appendChild(div);
 }
 
-// ---------- Generate Buttons ----------
-document.getElementById('generate-btn').onclick=()=>{
-  if(plan==='Free' && document.getElementById('video-history').children.length>=1){ alert("Free plan: 1 video only"); return; }
-  const prompt=document.getElementById('prompt').value.trim();
-  if(!prompt){ alert("Enter prompt"); return; }
-  statVideos++; updateDashboard(); boostFame(prompt);
-};
-document.getElementById('generate-photo-btn').onclick=()=>{
-  if(plan==='Free'){ alert("Free plan cannot generate photo-to-video"); return; }
-  const file=document.getElementById('photo-upload').files[0]; if(!file){ alert("Upload photo"); return; }
-  statPhotos++; updateDashboard(); boostFame(file.name);
-};
-document.getElementById('generate-audio-btn').onclick=()=>{
-  if(plan==='Free'){ alert("Free plan cannot generate audio"); return; }
-  const text=document.getElementById('audio-prompt').value.trim(); if(!text){ alert("Enter text"); return; }
-  statAudio++; updateDashboard(); boostFame(text);
-};
+logoutBtn.onclick = ()=>{authContainer.style.display='block'; mainContainer.style.display='none'; currentUser=null;}
 
-// ---------- Confetti ----------
-const canvas=document.getElementById('confetti-canvas'); const ctx=canvas.getContext('2d'); let confettiParticles=[];
-function resizeCanvas(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; } window.addEventListener('resize',resizeCanvas); resizeCanvas();
-function createConfetti(x,y){ for(let i=0;i<50;i++){ confettiParticles.push({x:x,y:y,r:Math.random()*6+2,dx:(Math.random()-0.5)*6,dy:(Math.random()-1.5)*6,color:`hsl(${Math.random()*360},70%,60%)`}); } }
-function drawConfetti(){ ctx.clearRect(0,0,canvas.width,canvas.height); confettiParticles.forEach((p,index)=>{ ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=p.color; ctx.fill(); p.x+=p.dx; p.y+=p.dy; p.dy+=0.05; if(p.y>canvas.height){ confettiParticles.splice(index,1); } }); requestAnimationFrame(drawConfetti); }
-drawConfetti();
-function triggerConfetti(){ createConfetti(window.innerWidth/2,window.innerHeight/2); }
-
-// ---------- Load histories/fame ----------
-function loadHistories(){ document.getElementById('video-history').innerHTML=''; document.getElementById('photo-history').innerHTML=''; document.getElementById('audio-history').innerHTML=''; }
-function loadFame(){ document.getElementById('fame-list').innerHTML=''; }
-
+// Shimmer effect demo
+const shimmerElements = document.querySelectorAll('.shimmer');
+shimmerElements.forEach(el=>el.style.display='block');
 </script>
 
 </body>
