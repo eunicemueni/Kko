@@ -12,31 +12,29 @@ header video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:co
 header .hero-text{position:relative;z-index:2;}
 header h1{font-size:3em;margin:0;}
 header p{font-size:1.2em;margin-top:10px;}
+header a.hero-btn{background:#D4AF37;padding:10px 20px;border-radius:6px;color:white;display:inline-block;margin-top:15px;}
 nav{background:#1c2a50;text-align:center;padding:10px;}
 nav a{margin:0 10px;padding:8px 15px;border-radius:6px;background:#3D2C41;color:white;font-weight:bold;display:inline-block;transition:0.2s;}
 nav a:hover{background:#D4AF37;color:white;}
 .container{max-width:1000px;margin:20px auto;background:#1c2a50;padding:25px;border-radius:12px;box-shadow:0 0 20px rgba(0,0,0,0.5);}
 .pricing-cards{display:flex;justify-content:space-around;flex-wrap:wrap;margin-top:25px;}
-.pricing-cards .card{flex:1 1 200px;text-align:center;background:#3D2C41;border-radius:12px;padding:18px;margin:10px;position:relative;transition:0.3s;}
-.pricing-cards .card video{width:100%;border-radius:12px;}
-.pricing-cards .card button{margin-top:10px;background:linear-gradient(45deg,#D4AF37,#FFC107);color:white;padding:10px 18px;border:none;border-radius:6px;font-weight:bold;cursor:pointer;}
+.pricing-cards .card,.features .feature-card{flex:1 1 200px;text-align:center;background:#3D2C41;border-radius:12px;padding:18px;margin:10px;position:relative;transition:0.3s;cursor:pointer;}
+.pricing-cards .card video,.features .feature-card video{width:100%;border-radius:12px;opacity:0.8;}
+.pricing-cards .card button,.mock-paypal,.mock-stripe{margin-top:10px;background:linear-gradient(45deg,#D4AF37,#FFC107);color:white;padding:10px 18px;border:none;border-radius:6px;font-weight:bold;cursor:pointer;display:inline-block;transition:0.2s;}
+.mock-paypal:hover,.mock-stripe:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(212,175,55,0.6);}
 .features{display:flex;flex-wrap:wrap;justify-content:space-around;margin-top:25px;}
-.features .feature-card{flex:1 1 220px;background:#3D2C41;padding:15px;border-radius:12px;margin:10px;text-align:center;position:relative;}
-.features .feature-card video{width:100%;border-radius:12px;opacity:0.7;}
 .features .feature-card .locked-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);color:#FFC107;display:flex;justify-content:center;align-items:center;font-size:1em;font-weight:bold;border-radius:12px;}
 footer{background:#1c2a50;text-align:center;padding:20px;margin-top:30px;font-size:0.9em;color:#ccc;}
-button{cursor:pointer;}
-.tab-panel{display:none;margin-top:20px;}
-.tab-panel.active{display:block;}
 .tabs button{margin:0 6px;padding:10px 15px;border-radius:6px;background:#3D2C41;color:white;font-weight:bold;border:none;transition:0.2s;}
 .tabs button.active{background:#D4AF37;color:white;}
-.card{margin:10px;padding:15px;background:#3D2C41;border-radius:12px;position:relative;box-shadow:0 0 10px rgba(0,0,0,0.3);}
-.card video{width:100%;border-radius:12px;}
+.tab-panel{display:none;margin-top:20px;}
+.tab-panel.active{display:block;}
 .card .locked-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);color:#FFC107;display:flex;justify-content:center;align-items:center;font-size:1em;font-weight:bold;border-radius:12px;}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:10;}
-.modal-content{background:#1c2a50;padding:20px;border-radius:12px;max-width:400px;text-align:center;}
-.modal-content button{margin-top:10px;}
-input,select{width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ccc;color:#000;}
+/* Modal */
+.modal{display:none;position:fixed;z-index:999;left:0;top:0;width:100%;height:100%;overflow:auto;background:rgba(0,0,0,0.85);}
+.modal-content{position:relative;margin:10% auto;padding:0;width:80%;max-width:800px;}
+.modal video{width:100%;border-radius:12px;}
+.close-modal{position:absolute;top:10px;right:15px;color:#FFF;font-size:30px;font-weight:bold;cursor:pointer;}
 @media(max-width:768px){.pricing-cards,.features{flex-direction:column;}}
 </style>
 </head>
@@ -47,127 +45,95 @@ input,select{width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px s
   <div class="hero-text">
     <h1>Kairah Studio + Fame</h1>
     <p>Create Cinematic AI Videos & Boost Your Fame</p>
-    <a href="#pricing" style="background:#D4AF37;padding:10px 20px;border-radius:6px;color:white;">Sign Up to Unlock</a>
+    <a href="#pricing" class="hero-btn">See Pricing & Subscribe</a>
   </div>
 </header>
 
 <nav>
   <a href="#home">Home</a>
   <a href="#about">About</a>
+  <a href="#pricing">Pricing</a>
   <a href="#dashboard">Dashboard</a>
 </nav>
 
 <div class="container" id="home">
-  <h2>Our Features</h2>
+  <h2>Explore Cinematic AI Templates</h2>
   <div class="features">
-    <div class="feature-card">
+    <div class="feature-card" data-video="https://cdn.pixabay.com/vimeo/451534/beautiful_fantasy_woman.mp4">
       <video src="https://cdn.pixabay.com/vimeo/451534/beautiful_fantasy_woman.mp4" loop muted autoplay></video>
       <div class="locked-overlay">Subscribe to Unlock</div>
-      <h4>Text-to-Video</h4>
+      <h4>Fantasy Woman</h4>
     </div>
-    <div class="feature-card">
+    <div class="feature-card" data-video="https://cdn.pixabay.com/vimeo/451536/fantasy_landscape_loop.mp4">
       <video src="https://cdn.pixabay.com/vimeo/451536/fantasy_landscape_loop.mp4" loop muted autoplay></video>
       <div class="locked-overlay">Subscribe to Unlock</div>
-      <h4>Photo-to-Video</h4>
+      <h4>Fantasy Landscape</h4>
     </div>
-    <div class="feature-card">
+    <div class="feature-card" data-video="https://cdn.pixabay.com/vimeo/451538/royal_queen_loop.mp4">
       <video src="https://cdn.pixabay.com/vimeo/451538/royal_queen_loop.mp4" loop muted autoplay></video>
       <div class="locked-overlay">Subscribe to Unlock</div>
-      <h4>Audio Generator</h4>
-    </div>
-    <div class="feature-card">
-      <video src="https://cdn.pixabay.com/vimeo/451540/cinematic_viral_loop.mp4" loop muted autoplay></video>
-      <div class="locked-overlay">Subscribe to Unlock</div>
-      <h4>Fame Booster</h4>
+      <h4>Royal Queen</h4>
     </div>
   </div>
+</div>
 
-  <h2 id="pricing">Pricing Plans</h2>
-  <div class="pricing-cards"></div>
+<div class="container" id="pricing">
+  <h2>Pricing Plans</h2>
+  <div class="pricing-cards">
+    <div class="card" data-video="https://cdn.pixabay.com/vimeo/451534/beautiful_fantasy_woman.mp4">
+      <video src="https://cdn.pixabay.com/vimeo/451534/beautiful_fantasy_woman.mp4" loop muted autoplay></video>
+      <h3>Trial - $1</h3>
+      <p>7 days, 1 six-second video</p>
+      <span class="mock-paypal">PayPal</span> <span class="mock-stripe">Stripe</span>
+    </div>
+    <div class="card" data-video="https://cdn.pixabay.com/vimeo/451536/fantasy_landscape_loop.mp4">
+      <video src="https://cdn.pixabay.com/vimeo/451536/fantasy_landscape_loop.mp4" loop muted autoplay></video>
+      <h3>Pro - $19</h3>
+      <p>10 videos included</p>
+      <span class="mock-paypal">PayPal</span> <span class="mock-stripe">Stripe</span>
+    </div>
+    <div class="card" data-video="https://cdn.pixabay.com/vimeo/451540/cinematic_viral_loop.mp4">
+      <video src="https://cdn.pixabay.com/vimeo/451540/cinematic_viral_loop.mp4" loop muted autoplay></video>
+      <h3>Diamond - $49</h3>
+      <p>Unlimited videos + Fame Booster</p>
+      <span class="mock-paypal">PayPal</span> <span class="mock-stripe">Stripe</span>
+    </div>
+  </div>
 </div>
 
 <div class="container" id="about">
   <h2>About Kairah Studio + Fame</h2>
   <video src="https://cdn.pixabay.com/vimeo/451536/fantasy_landscape_loop.mp4" autoplay muted loop style="width:100%;border-radius:12px;"></video>
   <p>We provide cinematic AI-generated videos and tools to make your content viral. Explore stunning visuals, surreal AI imagery, and bring your ideas to life.</p>
-  <p>Our vision: Empower creators with the most advanced AI video, audio, and fame boosting tools. Join now and transform your content.</p>
 </div>
 
-<div class="container" id="dashboard" style="display:none;">
-  <h2>Dashboard</h2>
-  <div>Logged in as: <span id="user-email"></span> | Plan: <span id="user-plan">Free</span> <button id="logout-btn" style="background:#D4AF37;color:white;padding:5px 10px;margin-left:10px;">Logout</button></div>
-
-  <div class="tabs">
-    <button class="active" data-tab="text-video">Text-to-Video</button>
-    <button data-tab="photo-video">Photo-to-Video</button>
-    <button data-tab="audio-gen">Audio Generator</button>
-    <button data-tab="fame-booster">Fame Booster</button>
-  </div>
-
-  <div class="tab-panel active" id="text-video">
-    <h3>Text-to-Video</h3>
-    <div class="card locked">
-      <video src="https://cdn.pixabay.com/vimeo/451534/beautiful_fantasy_woman.mp4" loop muted autoplay></video>
-      <div class="locked-overlay">Subscribe to Unlock</div>
-      <h4>Viral Template 1</h4>
-    </div>
-  </div>
-
-  <div class="tab-panel" id="photo-video">
-    <h3>Photo-to-Video</h3>
-    <div class="card locked">
-      <video src="https://cdn.pixabay.com/vimeo/451536/fantasy_landscape_loop.mp4" loop muted autoplay></video>
-      <div class="locked-overlay">Subscribe to Unlock</div>
-      <h4>Photo Template 1</h4>
-    </div>
-  </div>
-
-  <div class="tab-panel" id="audio-gen">
-    <h3>Audio Generator</h3>
-    <div class="card locked">
-      <video src="https://cdn.pixabay.com/vimeo/451538/royal_queen_loop.mp4" loop muted autoplay></video>
-      <div class="locked-overlay">Subscribe to Unlock</div>
-      <h4>Royal Audio Template</h4>
-    </div>
-  </div>
-
-  <div class="tab-panel" id="fame-booster">
-    <h3>Fame Booster</h3>
-    <div class="card locked">
-      <video src="https://cdn.pixabay.com/vimeo/451540/cinematic_viral_loop.mp4" loop muted autoplay></video>
-      <div class="locked-overlay">Subscribe to Unlock</div>
-      <h4>Boost Template</h4>
-    </div>
+<!-- Modal for cinematic preview -->
+<div id="videoModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <video id="modalVideo" controls autoplay loop></video>
   </div>
 </div>
 
 <footer>
   <p>© 2025 Kairah Studio. All rights reserved.</p>
-  <p><a href="#">Affiliate Program</a> | <a href="#">Non-refundable Policy</a></p>
+  <p><a href="#">Affiliate Program</a> | <a href="#">Non-refundable Agreement</a></p>
 </footer>
 
 <script>
-// Tab switching
-const tabs = document.querySelectorAll('.tabs button');
-const panels = document.querySelectorAll('.tab-panel');
-tabs.forEach(tab => {
-  tab.addEventListener('click', ()=> {
-    tabs.forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
-    panels.forEach(p=>p.classList.remove('active'));
-    document.getElementById(tab.dataset.tab).classList.add('active');
+// Modal logic
+const modal = document.getElementById('videoModal');
+const modalVideo = document.getElementById('modalVideo');
+const closeModal = document.querySelector('.close-modal');
+document.querySelectorAll('.feature-card, .pricing-cards .card').forEach(card=>{
+  card.addEventListener('click', ()=>{
+    const vid = card.dataset.video;
+    modalVideo.src = vid;
+    modal.style.display = 'block';
   });
 });
-
-// Mock Auth & Dashboard
-let currentUser = null;
-let currentPlan = 'Free';
-const dashboard = document.getElementById('dashboard');
-document.getElementById('logout-btn').onclick = () => {
-  currentUser=null;
-  dashboard.style.display='none';
-  document.getElementById('home').scrollIntoView();
-};
+closeModal.onclick = ()=>{modal.style.display='none'; modalVideo.pause(); modalVideo.src='';}
+window.onclick = e=>{if(e.target==modal){modal.style.display='none'; modalVideo.pause(); modalVideo.src='';}}
 </script>
 
 </body>
