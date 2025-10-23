@@ -3,218 +3,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kairah Studio + Fame - Full Cinematic Mock</title>
+<title>Kairah Studio + Fame - Full Mock Final</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-html {scroll-behavior: smooth;}
-body {font-family: 'Inter', sans-serif; background: linear-gradient(to right, #3d2c41, #d4af37); color: #f5f5f5;}
-.nav-link:hover {color: #ffe082;}
-.video-placeholder, .audio-placeholder, .template-preview {cursor: pointer; display:flex; align-items:center; justify-content:center; font-weight:bold; border-radius:8px; transition: transform 0.3s, box-shadow 0.3s, background 0.3s;}
-.video-placeholder:hover, .template-preview:hover {transform: scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.3); background: #5c4033;}
-.video-placeholder {height:180px; background:#6d4c41; margin-bottom:8px; color:#fff;}
-.audio-placeholder {height:50px; background:#8d6e63; margin-bottom:8px; color:#fff;}
-.template-preview {height:150px; background:#795548; margin-bottom:8px; color:#fff;}
+body {font-family:'Inter',sans-serif; background: linear-gradient(to right, #3d2c41, #d4af37); color: #f5f5f5; margin:0; padding:0;}
+.nav-link:hover {color:#ffe082;}
 .button-mock {transition: all 0.2s ease-in-out;}
-.button-mock:hover {opacity:0.85; transform:scale(1.03);}
-.section-title {text-4xl font-bold mb-4}
-.section-subtitle {text-xl mb-6}
+.button-mock:hover {opacity:0.85; transform:scale(1.05);}
+.section {padding:5rem 0; width:100%;}
+.container {width:10000px; max-width:none; padding:0 5rem; margin:0 auto;}
+input, select, button {padding:0.5rem; margin:0.3rem; border-radius:0.3rem; border:none;}
+input {width:300px;}
+button {cursor:pointer;}
+.video-placeholder, .template-preview {cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:bold; border-radius:8px; transition: transform 0.3s, box-shadow 0.3s, background 0.3s; margin-bottom:12px; background:#6d4c41; color:#fff; position: relative; overflow: hidden; height:150px;}
+.video-placeholder::after, .template-preview::after {content:'▶'; font-size:1.5rem; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); opacity:0.6;}
+@media(max-width:768px){.container{padding:0 1rem;width:100%;}}
 </style>
 </head>
 <body>
+<div id="root"></div>
+<script type="module">
+import React, { useState, useEffect, createContext, useContext } from 'https://cdn.skypack.dev/react';
+import ReactDOM from 'https://cdn.skypack.dev/react-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'https://cdn.skypack.dev/react-router-dom';
 
-<!-- Navbar -->
-<nav class="bg-[#3d2c41] shadow p-4 flex justify-between items-center fixed w-full z-50">
-  <div class="text-xl font-bold text-[#d4af37]">Kairah Studio + Fame</div>
-  <div class="space-x-4">
-    <a href="#hero" class="nav-link">Home</a>
-    <a href="#prompt" class="nav-link">Prompt Magic</a>
-    <a href="#templates" class="nav-link">Templates</a>
-    <a href="#generated" class="nav-link">Generated Media</a>
-    <a href="#pricing" class="nav-link">Pricing</a>
-    <a href="#fame" class="nav-link">Fame Booster</a>
-    <a href="#about" class="nav-link">About</a>
-    <a href="#support" class="nav-link">Support</a>
-    <a href="#affiliate" class="nav-link">Affiliate</a>
-    <a href="#agreement" class="nav-link">Agreement</a>
-  </div>
-</nav>
+const AuthContext = createContext();
+const useAuth = () => useContext(AuthContext);
 
-<!-- Hero -->
-<section id="hero" class="pt-24 text-center p-12">
-  <h1 class="section-title">Create Viral AI Videos, Photos & Audio</h1>
-  <p class="section-subtitle">More advanced than Leonardo, Geo, and Sora — fully cinematic interactive mock</p>
-  <a href="#prompt" class="bg-[#d4af37] text-[#3d2c41] px-6 py-3 rounded button-mock">Get Started</a>
-</section>
+function AuthProvider({children}) {
+  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('kairah_user')) || null);
+  useEffect(() => {if(user)localStorage.setItem('kairah_user', JSON.stringify(user)); else localStorage.removeItem('kairah_user');}, [user]);
+  const signIn = (email, name) => setUser({email, name:name||email.split('@')[0], isPaid:false, plan:null, freeVideosLeft:1, favorites:[]});
+  const signOut = () => setUser(null);
+  const upgrade = plan => setUser(prev => ({...prev,isPaid:true,plan}));
+  const decrementFree = () => setUser(prev => ({...prev,freeVideosLeft:Math.max(0,(prev.freeVideosLeft||1)-1)}));
+  return <AuthContext.Provider value={{user, signIn, signOut, upgrade, decrementFree}}>{children}</AuthContext.Provider>;
+}
 
-<!-- Prompt Magic -->
-<section id="prompt" class="p-8">
-  <h2 class="section-title">Prompt Magic (Mock)</h2>
-  <div class="grid md:grid-cols-2 gap-4 mb-4">
-    <div>
-      <label class="font-semibold">Category</label>
-      <select class="border p-2 w-full rounded mb-2 bg-[#6d4c41] text-white">
-        <option>Viral</option>
-        <option>Cinematic</option>
-        <option>Fashion</option>
-        <option>Surreal</option>
-        <option>Fantasy</option>
-        <option>Story</option>
-      </select>
-      <label class="font-semibold">Example Prompts</label>
-      <ul class="list-disc list-inside">
-        <li>Ethereal portrait, cinematic lighting</li>
-        <li>Regal queen, golden accents, film grain</li>
-        <li>Dreamscape landscape, pastel glow</li>
-      </ul>
+const TEMPLATES=[
+{name:"Talking Monkey",category:"Animal",isPaid:true,captions:["Look at this talking monkey! 🐒"],hashtags:["monkey","funny"]},
+{name:"Cute Kitten",category:"Animal",isPaid:false,captions:["Adorable kitten vibes 🐱"],hashtags:["kitten","cute"]},
+{name:"ASMR Glass Cutting",category:"ASMR",isPaid:true,captions:["Relaxing ASMR sounds ✨"],hashtags:["asmr","relax"]},
+{name:"Modern Love Story",category:"Romance",isPaid:true,captions:["Romantic AI cinematic scene 💖"],hashtags:["love","romance"]},
+{name:"Epic Action Scene",category:"Action",isPaid:true,captions:["Thrilling moment!"],hashtags:["action","movie"]}
+];
+
+function Header(){
+  const {user, signOut} = useAuth();
+  return (
+    <header className="p-4 border-b border-gray-400 mb-4 bg-[#3d2c41] text-[#d4af37] flex justify-between">
+      <div><Link to='/'>Kairah Studio</Link> | <Link to='/studio'>Studio</Link> | <Link to='/pricing'>Pricing</Link> | <Link to='/affiliate'>Affiliate</Link> | <Link to='/faq'>FAQ</Link> | <Link to='/terms'>Terms</Link></div>
+      <div>{user?<span>{user.name} <button onClick={signOut}>Logout</button></span>:<Link to='/signin'>Login</Link>}</div>
+    </header>
+  );
+}
+
+function Landing(){
+  return <div className='container'>
+    <h1>Kairah Studio + Fame Booster</h1>
+    <p>Generate stunning AI videos, cinematic templates, and viral boosters.</p>
+    <Link to='/studio'><button className='button-mock bg-[#d4af37] text-[#3d2c41]'>Try Studio</button></Link>
+    <div className='section'>
+      <h2>Testimonials</h2>
+      <div>"Amazing AI videos! Boosted my content." - User A</div>
+      <div>"Studio + Fame is incredible." - User B</div>
     </div>
-    <div>
-      <label class="font-semibold">Your Prompt</label>
-      <input type="text" placeholder="Write your prompt here" class="border p-2 w-full mb-2 rounded bg-[#8d6e63] text-white">
-      <div class="flex space-x-2">
-        <button class="bg-purple-600 text-white px-4 py-2 rounded button-mock">AI-Refine (Mock)</button>
-        <button class="bg-green-600 text-white px-4 py-2 rounded button-mock">Generate (Mock)</button>
-      </div>
+  </div>;
+}
+
+function SignIn(){
+  const {signIn}=useAuth();
+  const navigate = useNavigate();
+  const [email,setEmail]=useState('');
+  const [name,setName]=useState('');
+  const submit=e=>{e.preventDefault(); if(!email)return alert('Enter email'); signIn(email,name); navigate('/studio');};
+  return <div className='container'>
+    <h2>Sign In</h2>
+    <form onSubmit={submit}>
+      <input value={email} onChange={e=>setEmail(e.target.value)} placeholder='Email' />
+      <input value={name} onChange={e=>setName(e.target.value)} placeholder='Display name (optional)' />
+      <button type='submit' className='button-mock bg-[#d4af37] text-[#3d2c41]'>Sign In</button>
+    </form>
+  </div>;
+}
+
+function Studio(){
+  const {user,decrementFree} = useAuth();
+  const [prompt,setPrompt]=useState('');
+  const [selected,setSelected]=useState(null);
+  const [myVideos,setMyVideos]=useState(()=>JSON.parse(localStorage.getItem('kairah_my_videos')||'[]'));
+  const [playingVideo,setPlayingVideo]=useState(null);
+  const promptMagic=()=>{if(!prompt)return alert('Enter prompt'); setPrompt('Viral-enhanced: '+prompt+' 🚀');};
+  const handleGenerate=()=>{
+    if(!user)return alert('Sign in first');
+    if(!selected)return alert('Select template');
+    if(!user.isPaid && (user.freeVideosLeft||0)<=0)return alert('Free video limit reached');
+    const newVideo={id:Date.now(),template:selected.name,status:'ready',createdAt:new Date().toISOString(),loop:'loop'};
+    const updated=[newVideo,...myVideos];
+    setMyVideos(updated); localStorage.setItem('kairah_my_videos',JSON.stringify(updated));
+    if(!user.isPaid) decrementFree();
+    setPlayingVideo(newVideo.id); setTimeout(()=>setPlayingVideo(null),6000);
+    alert('Video generated (mock)');
+  };
+
+  return <div className='container'>
+    <h2>Studio</h2>
+    <input value={prompt} onChange={e=>setPrompt(e.target.value)} placeholder='Type your idea...' />
+    <button onClick={promptMagic} className='button-mock bg-[#d4af37] text-[#3d2c41]'>Prompt Magic</button>
+    <button onClick={handleGenerate} className='button-mock bg-[#d4af37] text-[#3d2c41]'>Generate Video</button>
+    <h3>Templates</h3>
+    {TEMPLATES.map(t=>(<div key={t.name} className='template-preview'>
+      <strong>{t.name}</strong> ({t.category}) {t.isPaid&&!user?.isPaid?'[LOCKED]':''}
+      <div><button onClick={()=>{if(t.isPaid&&!user?.isPaid)return alert('Upgrade to access'); setSelected(t);}}>Select</button></div>
+      <div>{t.captions.map(c=><span key={c} style={{margin:'0.2rem', cursor:'pointer'}} onClick={()=>navigator.clipboard.writeText(c)}> {c} </span>)}</div>
+      <div>{t.hashtags.map(h=><span key={h} style={{margin:'0.2rem', cursor:'pointer'}} onClick={()=>navigator.clipboard.writeText('#'+h)}> #{h} </span>)}</div>
+    </div>))}
+    {playingVideo && <div>
+      🎬 Playing {myVideos.find(v=>v.id===playingVideo)?.template} (mock 6s preview)
+      <video src='' autoPlay loop muted style={{width:'100%', maxWidth:'600px', marginTop:'1rem'}}></video>
+    </div>}
+    <div className='section'>
+      <h2>Testimonials</h2>
+      <div>"Studio makes AI video creation so easy." - User C</div>
+      <div>"Fame Booster helped my clips go viral!" - User D</div>
     </div>
-  </div>
-</section>
+  </div>;
+}
 
-<!-- Templates & Features -->
-<section id="templates" class="p-8">
-  <h2 class="section-title">Templates & Features</h2>
-  <div class="grid md:grid-cols-3 gap-4">
-    <div class="template-preview">Royal Glow — Luxury Portrait</div>
-    <div class="template-preview">Surreal Fantasy — Dream</div>
-    <div class="template-preview">Luxury Woman — Editorial</div>
-    <div class="template-preview">Dream Reality — Soft</div>
-    <div class="template-preview">Anime Motion — Stylized</div>
-    <div class="template-preview">Product Ad — Clean</div>
-    <div class="template-preview">Cinematic Story — Hook</div>
-    <div class="template-preview">Kairah Fame Mode — Viral</div>
-    <div class="template-preview">Galaxy Woman — Surreal</div>
-    <div class="template-preview">Vintage Film — Grain</div>
-    <div class="template-preview">Castle Fantasy — Epic</div>
-    <div class="template-preview">Viral Short — Punch Hook</div>
-  </div>
-  <p class="mt-4 italic">Click any template to preview. Previews are cinematic loops (mock). Subscribe to unlock full generation.</p>
-</section>
+function Pricing(){
+  return <div className='container'>
+    <h2>Pricing</h2>
+    <p>Free: 1 video</p>
+    <p>Pro: Unlimited videos</p>
+    <p>Diamond: Unlimited + premium templates</p>
+    <p>Lifetime: One-time, permanent access</p>
+  </div>;
+}
 
-<!-- Generated Media -->
-<section id="generated" class="p-8">
-  <h2 class="section-title">Generated Media (Mock Gallery)</h2>
-  <div class="grid md:grid-cols-3 gap-4">
-    <div class="video-placeholder">Mock Output 1 • 6s HD</div>
-    <div class="video-placeholder">Mock Output 2 • 6s HD</div>
-    <div class="video-placeholder">Mock Output 3 • 6s HD</div>
-  </div>
-</section>
+function Affiliate(){
+  return <div className='container'>
+    <h2>Affiliate Dashboard (Mock)</h2>
+    <p>Share your unique link and earn 30% commission per referred subscription.</p>
+    <input value='https://kairahstudio.com/referral/ABC123' readOnly className='w-96'/>
+    <button className='button-mock bg-[#d4af37] text-[#3d2c41]' onClick={()=>navigator.clipboard.writeText('https://kairahstudio.com/referral/ABC123')}>Copy Link</button>
+  </div>;
+}
 
-<!-- Pricing -->
-<section id="pricing" class="p-8">
-  <h2 class="section-title">Pricing & Plans</h2>
-  <div class="grid md:grid-cols-4 gap-4">
-    <div class="text-center p-4">
-      <h3 class="font-bold">Free</h3>
-      <p>1 six-second HD preview • Demo access</p>
-      <div class="flex justify-center space-x-2 my-2">
-        <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" class="w-8">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Mastercard-logo.png/320px-Mastercard-logo.png" class="w-8">
-      </div>
-      <button class="bg-gray-600 text-white px-4 py-2 rounded button-mock">Pay (Mock)</button>
-    </div>
-    <div class="text-center p-4 border-2 border-[#d4af37]">
-      <h3 class="font-bold">Pro $19 / mo</h3>
-      <p>Unlimited AI videos • HD export • Music & voices</p>
-      <div class="flex justify-center space-x-2 my-2">
-        <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" class="w-8">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Mastercard-logo.png/320px-Mastercard-logo.png" class="w-8">
-      </div>
-      <button class="bg-blue-700 text-white px-4 py-2 rounded button-mock">Subscribe (Mock)</button>
-    </div>
-    <div class="text-center p-4">
-      <h3 class="font-bold">Diamond $49 / mo</h3>
-      <p>All Pro features + 4K, priority, viral templates, Fame Booster</p>
-      <div class="flex justify-center space-x-2 my-2">
-        <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" class="w-8">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Mastercard-logo.png/320px-Mastercard-logo.png" class="w-8">
-      </div>
-      <button class="bg-green-700 text-white px-4 py-2 rounded button-mock">Subscribe (Mock)</button>
-    </div>
-    <div class="text-center p-4">
-      <h3 class="font-bold">Lifetime $249</h3>
-      <p>Permanent access to all features • VIP</p>
-      <div class="flex justify-center space-x-2 my-2">
-        <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" class="w-8">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Mastercard-logo.png/320px-Mastercard-logo.png" class="w-8">
-      </div>
-      <button class="bg-purple-700 text-white px-4 py-2 rounded button-mock">Subscribe (Mock)</button>
-    </div>
-  </div>
-</section>
+function FAQ(){
+  return <div className='container'>
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>Q:</strong> How many free videos do I get? <strong>A:</strong> 1 video on free plan.</p>
+    <p><strong>Q:</strong> Can I upgrade? <strong>A:</strong> Yes, to Pro, Diamond, or Lifetime.</p>
+    <p><strong>Q:</strong> Are templates locked? <strong>A:</strong> Some premium templates require a paid plan.</p>
+    <p><strong>Q:</strong> How does Fame Booster work? <strong>A:</strong> It simulates viral engagement (mock).</p>
+  </div>;
+}
 
-<!-- Fame Booster -->
-<section id="fame" class="p-8">
-  <h2 class="section-title">Kairah Fame Booster (Mock)</h2>
-  <p class="mb-4">Boost Your Video: Simulated viral boosts, trending sounds, captions, and posting suggestions.</p>
-  <div class="grid md:grid-cols-3 gap-4">
-    <div class="video-placeholder">Before Boost (Mock)</div>
-    <div class="video-placeholder">After Boost (Mock)</div>
-    <div class="video-placeholder">Projected Reach & Engagement (Mock)</div>
-  </div>
-  <div class="flex space-x-2 mt-4">
-    <button class="bg-yellow-500 text-white px-4 py-2 rounded button-mock">Standard Boost $9 (Mock)</button>
-    <button class="bg-yellow-700 text-white px-4 py-2 rounded button-mock">Apply Boost (Mock)</button>
-  </div>
-</section>
+function Terms(){
+  return <div className='container'>
+    <h2>Terms & Conditions (Mock)</h2>
+    <p>By using Kairah Studio, you agree to our simulated terms for demonstration purposes. All generated content is mock and for preview only.</p>
+  </div>;
+}
 
-<!-- About -->
-<section id="about" class="p-8">
-  <h2 class="section-title">About Kairah Studio + Fame</h2>
-  <p class="mb-2">Kairah Studio + Fame is a cinematic AI mock frontend created to showcase our product before signup.</p>
-  <ul class="list-disc list-inside mb-2">
-    <li>AI cinematic templates: surreal, royal, dreamy, viral</li>
-    <li>Audio generator and waveform previews</li>
-    <li>Fame Booster mock to simulate viral push</li>
-    <li>Affiliate mock dashboard for referrals</li>
-    <li>Support: keishapoa@gmail.com</li>
-  </ul>
-  <h3 class="font-semibold mt-4">Frequently Asked Questions (Mock)</h3>
-  <ol class="list-decimal list-inside">
-    <li>How does AI video generation work? - Mock answer here.</li>
-    <li>What is the maximum video length? - Mock answer here.</li>
-    <li>How do I use Fame Booster? - Mock answer here.</li>
-    <li>Can I upgrade my plan later? - Mock answer here.</li>
-    <li>What payment methods are accepted? - Mock answer here.</li>
-  </ol>
-</section>
+export default function App(){
+  return <AuthProvider>
+    <Router>
+      <Header />
+      <Routes>
+        <Route path='/' element={<Landing />} />
+        <Route path='/signin' element={<SignIn />} />
+        <Route path='/studio' element={<Studio />} />
+        <Route path='/pricing' element={<Pricing />} />
+        <Route path='/affiliate' element={<Affiliate />} />
+        <Route path='/faq' element={<FAQ />} />
+        <Route path='/terms' element={<Terms />} />
+      </Routes>
+    </Router>
+  </AuthProvider>;
+}
 
-<!-- Affiliate -->
-<section id="affiliate" class="p-8">
-  <h2 class="section-title">Affiliate Program (Mock)</h2>
-  <p>Earn commission by referring others. Visual dashboard and share links mockup included.</p>
-  <ul class="list-disc list-inside">
-    <li>Commission Rate: 30% per referral (Mock)</li>
-    <li>Affiliate dashboard shows clicks, conversions, earnings (Mock)</li>
-    <li>Share your referral link anywhere</li>
-  </ul>
-</section>
-
-<!-- Agreement -->
-<section id="agreement" class="p-8">
-  <h2 class="section-title">User Agreement & Terms (Mock)</h2>
-  <p>All users must agree to these terms before using the platform. Non-refundable, non-negotiable (Mock).</p>
-  <ul class="list-disc list-inside">
-    <li>Do not redistribute AI content without permission.</li>
-    <li>Respect copyright and community guidelines.</li>
-    <li>Payments are final in the mock demo.</li>
-  </ul>
-</section>
-
-<!-- Support -->
-<section id="support" class="p-8">
-  <h2 class="section-title">Support (Mock)</h2>
-  <p>Contact us at <a href="mailto:keishapoa@gmail.com" class="text-[#d4af37] underline">keishapoa@gmail.com</a> or use the chat mock below:</p>
-  <div class="audio-placeholder">Live Chat / Support Widget (Mock)</div>
-</section>
-
+ReactDOM.render(<App />, document.getElementById('root'));
+</script>
 </body>
 </html>
