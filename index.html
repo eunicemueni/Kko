@@ -3,148 +3,142 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kairah Studio + Fame Mock</title>
-<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-<script src="https://unpkg.com/react-router-dom@6/umd/react-router-dom.development.js"></script>
+<title>Kairah Studio + Fame - Full Mock</title>
+<script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/react-router-dom/umd/react-router-dom.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-body {font-family:'Inter',sans-serif; margin:0; padding:0; background:linear-gradient(to right,#3d2c41,#d4af37); color:#f5f5f5;}
-a {color:#d4af37; text-decoration:none;}
-a:hover {color:#ffe082;}
-button {cursor:pointer; border:none; border-radius:0.3rem; padding:0.5rem 1rem; margin:0.3rem; transition:all 0.2s ease;}
-button:hover {opacity:0.85; transform:scale(1.05);}
-.container {max-width:1200px; margin:0 auto; padding:2rem;}
-.section {padding:5rem 2rem;}
-.header {display:flex; justify-content:space-between; align-items:center; background:#3d2c41; padding:1rem;}
-.video-placeholder, .template-preview {height:150px; background:#6d4c41; margin:0.5rem 0; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:bold; position:relative; cursor:pointer;}
-.video-placeholder::after, .template-preview::after {content:'▶'; position:absolute; font-size:1.5rem; opacity:0.6;}
-.faq-item {margin-bottom:1rem;}
+body { font-family:'Inter',sans-serif; background: linear-gradient(to right, #3d2c41, #d4af37); color:#f5f5f5; margin:0; padding:0; }
+.nav-link:hover { color:#ffe082; }
+.button-mock { transition: all 0.2s ease-in-out; padding:0.5rem 1rem; border-radius:0.3rem; margin:0.2rem; border:none; cursor:pointer; }
+.button-mock:hover { opacity:0.85; transform:scale(1.05); }
+.section { padding:5rem 0; width:100%; }
+.container { max-width:1200px; padding:0 2rem; margin:0 auto; }
+input { padding:0.5rem; margin:0.3rem; border-radius:0.3rem; border:none; width:300px; }
+.video-placeholder, .template-preview { cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:bold; border-radius:8px; transition: transform 0.3s, box-shadow 0.3s, background 0.3s; margin-bottom:12px; background:#6d4c41; color:#fff; height:150px; position:relative; }
+.video-placeholder::after, .template-preview::after { content:'▶'; font-size:1.5rem; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); opacity:0.6; }
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script>
 const { BrowserRouter, Routes, Route, Link, useNavigate } = ReactRouterDOM;
-const { useState, useEffect } = React;
+const { useState, useEffect, createContext, useContext } = React;
 
-// ---------- Auth ----------
-function AuthProvider({children}) {
-  const [user,setUser] = useState(JSON.parse(localStorage.getItem('kairah_user')) || null);
-  useEffect(()=>{if(user)localStorage.setItem('kairah_user',JSON.stringify(user)); else localStorage.removeItem('kairah_user');},[user]);
-  const signIn = (email,name)=>setUser({email,name:name||email.split('@')[0],isPaid:false,plan:null,freeVideos:1});
+// -------- Auth Context --------
+const AuthContext = createContext();
+const useAuth = () => useContext(AuthContext);
+function AuthProvider({ children }) {
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('kairah_user')) || null);
+  useEffect(()=>{ if(user) localStorage.setItem('kairah_user', JSON.stringify(user)); else localStorage.removeItem('kairah_user'); }, [user]);
+  const signIn = (email,name)=>setUser({email, name:name||email.split('@')[0], isPaid:false, plan:null, freeVideosLeft:1, favorites:[]});
   const signOut = ()=>setUser(null);
-  const upgrade = plan=>setUser({...user,isPaid:true,plan});
-  const decrementFree = ()=>setUser({...user,freeVideos:Math.max(0,(user.freeVideos||1)-1)});
+  const upgrade = plan=>setUser(prev=>({...prev,isPaid:true,plan}));
+  const decrementFree = ()=>setUser(prev=>({...prev,freeVideosLeft:Math.max(0,(prev.freeVideosLeft||1)-1)}));
   return React.createElement(AuthContext.Provider,{value:{user,signIn,signOut,upgrade,decrementFree}},children);
 }
-const AuthContext = React.createContext();
-const useAuth = ()=>React.useContext(AuthContext);
 
-// ---------- Templates ----------
+// -------- Templates --------
 const TEMPLATES = [
-  {name:"Talking Monkey",category:"Animal",isPaid:true,captions:["Look at this talking monkey! 🐒"],hashtags:["monkey","funny"]},
-  {name:"Cute Kitten",category:"Animal",isPaid:false,captions:["Adorable kitten vibes 🐱"],hashtags:["kitten","cute"]},
-  {name:"ASMR Glass Cutting",category:"ASMR",isPaid:true,captions:["Relaxing ASMR sounds ✨"],hashtags:["asmr","relax"]},
-  {name:"Modern Love Story",category:"Romance",isPaid:true,captions:["Romantic cinematic scene 💖"],hashtags:["love","romance"]},
-  {name:"Epic Action Scene",category:"Action",isPaid:true,captions:["Thrilling moment!"],hashtags:["action","movie"]}
+  { name:"Talking Monkey", category:"Animal", isPaid:true, captions:["Look at this talking monkey! 🐒"], hashtags:["monkey","funny"] },
+  { name:"Cute Kitten", category:"Animal", isPaid:false, captions:["Adorable kitten vibes 🐱"], hashtags:["kitten","cute"] },
+  { name:"ASMR Glass Cutting", category:"ASMR", isPaid:true, captions:["Relaxing ASMR sounds ✨"], hashtags:["asmr","relax"] },
+  { name:"Modern Love Story", category:"Romance", isPaid:true, captions:["Romantic AI cinematic scene 💖"], hashtags:["love","romance"] },
+  { name:"Epic Action Scene", category:"Action", isPaid:true, captions:["Thrilling moment!"], hashtags:["action","movie"] },
 ];
 
-// ---------- Header ----------
-function Header() {
-  const {user,signOut}=useAuth();
-  return React.createElement('header',{className:'header'},
+// -------- Header --------
+function Header(){
+  const { user, signOut } = useAuth();
+  return React.createElement('header',{className:'p-4 border-b border-gray-400 mb-4 bg-[#3d2c41] text-[#d4af37] flex justify-between'},
     React.createElement('div',null,
       React.createElement(Link,{to:'/'},'Kairah Studio'),' | ',
       React.createElement(Link,{to:'/studio'},'Studio'),' | ',
+      React.createElement(Link,{to:'/fame'},'Fame Booster'),' | ',
       React.createElement(Link,{to:'/pricing'},'Pricing'),' | ',
-      React.createElement(Link,{to:'/affiliate'},'Affiliate'),' | ',
-      React.createElement(Link,{to:'/faq'},'FAQ')
+      React.createElement(Link,{to:'/affiliate'},'Affiliate')
     ),
-    React.createElement('div',null,
-      user ? React.createElement(React.Fragment,null, user.name,' ',React.createElement('button',{onClick:signOut},'Logout')) :
-      React.createElement(Link,{to:'/signin'},'Login')
-    )
+    React.createElement('div',null, user ? React.createElement('span',null, user.name,' ',React.createElement('button',{onClick:signOut,className:'button-mock bg-[#d4af37] text-[#3d2c41]'},'Logout')) : React.createElement(Link,{to:'/signin'},'Login'))
   );
 }
 
-// ---------- Landing ----------
+// -------- Landing --------
 function Landing() {
-  return React.createElement('div',{className:'container section'},
+  return React.createElement('div',{className:'container'},
     React.createElement('h1',null,'Kairah Studio + Fame Booster'),
     React.createElement('p',null,'Generate stunning AI videos, cinematic templates, and viral boosters.'),
-    React.createElement(Link,{to:'/studio'},React.createElement('button',{className:'bg-[#d4af37] text-[#3d2c41] button-mock'},'Try Studio'))
+    React.createElement(Link,{to:'/studio'},React.createElement('button',{className:'button-mock bg-[#d4af37] text-[#3d2c41]'},'Try Studio'))
   );
 }
 
-// ---------- SignIn ----------
-function SignIn() {
-  const {signIn}=useAuth();
-  const navigate=useNavigate();
+// -------- SignIn --------
+function SignIn(){
+  const { signIn } = useAuth();
+  const navigate = useNavigate();
   const [email,setEmail]=useState(''); const [name,setName]=useState('');
   const submit=e=>{e.preventDefault(); if(!email)return alert('Enter email'); signIn(email,name); navigate('/studio');};
-  return React.createElement('div',{className:'container section'},
+  return React.createElement('div',{className:'container'},
     React.createElement('h2',null,'Sign In'),
     React.createElement('form',{onSubmit:submit},
       React.createElement('input',{value:email,onChange:e=>setEmail(e.target.value),placeholder:'Email'}),
       React.createElement('input',{value:name,onChange:e=>setName(e.target.value),placeholder:'Display name (optional)'}),
-      React.createElement('button',{type:'submit',className:'bg-[#d4af37] text-[#3d2c41] button-mock'},'Sign In')
+      React.createElement('button',{type:'submit',className:'button-mock bg-[#d4af37] text-[#3d2c41]'},'Sign In')
     )
   );
 }
 
-// ---------- Studio ----------
-function Studio() {
-  const {user,decrementFree}=useAuth();
+// -------- Studio --------
+function Studio(){
+  const {user,decrementFree} = useAuth();
   const [prompt,setPrompt]=useState('');
   const [selected,setSelected]=useState(null);
   const [myVideos,setMyVideos]=useState(JSON.parse(localStorage.getItem('kairah_my_videos')||'[]'));
   const [playingVideo,setPlayingVideo]=useState(null);
-  const promptMagic=()=>{if(!prompt)return alert('Enter prompt'); setPrompt('Viral-enhanced: '+prompt+' 🚀');};
+
+  const promptMagic = ()=>{ if(!prompt) return alert('Enter prompt'); setPrompt('Viral-enhanced: '+prompt+' 🚀'); };
   const handleGenerate=()=>{
-    if(!user)return alert('Sign in first');
-    if(!selected)return alert('Select template');
-    if(!user.isPaid && (user.freeVideos||0)<=0)return alert('Free video limit reached');
-    const newVid={id:Date.now(),template:selected.name,status:'ready'};
-    const updated=[newVid,...myVideos]; setMyVideos(updated); localStorage.setItem('kairah_my_videos',JSON.stringify(updated));
-    if(!user.isPaid) decrementFree();
-    setPlayingVideo(newVid.id); setTimeout(()=>setPlayingVideo(null),6000);
+    if(!user)return alert('Sign in first'); if(!selected)return alert('Select template');
+    if(!user.isPaid && (user.freeVideosLeft||0)<=0) return alert('Free video limit reached');
+    const newVideo={id:Date.now(),template:selected.name,status:'ready',createdAt:new Date().toISOString()};
+    const updated=[newVideo,...myVideos]; setMyVideos(updated); localStorage.setItem('kairah_my_videos',JSON.stringify(updated));
+    if(!user.isPaid) decrementFree(); setPlayingVideo(newVideo.id); setTimeout(()=>setPlayingVideo(null),6000);
     alert('Video generated (mock)');
   };
-  return React.createElement('div',{className:'container section'},
+
+  return React.createElement('div',{className:'container'},
     React.createElement('h2',null,'Studio'),
     React.createElement('input',{value:prompt,onChange:e=>setPrompt(e.target.value),placeholder:'Type your idea...'}),
-    React.createElement('button',{onClick:promptMagic,className:'bg-[#d4af37] text-[#3d2c41] button-mock'},'Prompt Magic'),
-    React.createElement('button',{onClick:handleGenerate,className:'bg-[#d4af37] text-[#3d2c41] button-mock'},'Generate Video'),
+    React.createElement('button',{onClick:promptMagic,className:'button-mock bg-[#d4af37] text-[#3d2c41]'},'Prompt Magic'),
+    React.createElement('button',{onClick:handleGenerate,className:'button-mock bg-[#d4af37] text-[#3d2c41]'},'Generate Video'),
     React.createElement('h3',null,'Templates'),
     TEMPLATES.map(t=>React.createElement('div',{key:t.name,className:'template-preview'},
       React.createElement('strong',null,t.name),' (',t.category,') ', t.isPaid&&!user?.isPaid?'[LOCKED]':'',
       React.createElement('div',null,React.createElement('button',{onClick:()=>{if(t.isPaid&&!user?.isPaid)return alert('Upgrade to access'); setSelected(t);}},'Select')),
-      React.createElement('div',null,t.captions.map(c=>React.createElement('span',{key:c,onClick:()=>navigator.clipboard.writeText(c),style:{margin:'0.2rem',cursor:'pointer'}},c))),
-      React.createElement('div',null,t.hashtags.map(h=>React.createElement('span',{key:h,onClick:()=>navigator.clipboard.writeText('#'+h),style:{margin:'0.2rem',cursor:'pointer'}},'#'+h)))
+      React.createElement('div',null,t.captions.map(c=>React.createElement('span',{key:c,onClick:()=>navigator.clipboard.writeText(c),style:{margin:'0.2rem', cursor:'pointer'}},c))),
+      React.createElement('div',null,t.hashtags.map(h=>React.createElement('span',{key:h,onClick:()=>navigator.clipboard.writeText('#'+h),style:{margin:'0.2rem', cursor:'pointer'}},'#'+h)))
     )),
-    playingVideo && React.createElement('div',null,'🎬 Playing ',myVideos.find(v=>v.id===playingVideo)?.template,' (mock 6s preview)'),
-    React.createElement('h3',null,'My Videos'),
-    myVideos.length===0?React.createElement('p',null,'No videos yet.') :
-      myVideos.map(v=>React.createElement('div',{key:v.id},v.template,' - ',v.status))
+    playingVideo && React.createElement('div',null,'🎬 Playing ',myVideos.find(v=>v.id===playingVideo)?.template,' (mock 6s preview)')
   );
 }
 
-// ---------- Fame Booster ----------
-function FameBooster() {
+// -------- Fame Booster --------
+function FameBooster(){
   return React.createElement('div',{className:'container section'},
     React.createElement('h2',null,'Fame Booster (Mock)'),
     React.createElement('p',null,'Enhance your videos to go viral!'),
     React.createElement('div',null,'Projected Reach: 50k views'),
     React.createElement('div',null,'Engagement Score: 87%'),
-    React.createElement('div',null,React.createElement('button',{className:'bg-[#d4af37] text-[#3d2c41] button-mock'},'Boost Level 1'),
-                             React.createElement('button',{className:'bg-[#d4af37] text-[#3d2c41] button-mock'},'Boost Level 2')),
+    React.createElement('div',null,
+      React.createElement('button',{className:'button-mock bg-[#d4af37] text-[#3d2c41]'},'Boost Level 1'),
+      React.createElement('button',{className:'button-mock bg-[#d4af37] text-[#3d2c41]'},'Boost Level 2')
+    ),
     React.createElement('div',{className:'video-placeholder'},'Before/After Demo (clickable)')
   );
 }
 
-// ---------- Pricing ----------
-function Pricing() {
+// -------- Pricing --------
+function Pricing(){
   return React.createElement('div',{className:'container section'},
     React.createElement('h2',null,'Pricing'),
     React.createElement('p',null,'Free: 1 video'),
@@ -154,72 +148,47 @@ function Pricing() {
   );
 }
 
-// ---------- Affiliate ----------
-function Affiliate() {
+// -------- Affiliate --------
+function Affiliate(){
   return React.createElement('div',{className:'container section'},
     React.createElement('h2',null,'Affiliate Dashboard (Mock)'),
-    React.createElement('p',null,'Share your link and earn 30% commission per subscription'),
-    React.createElement('input',{value:'https://kairahstudio.com/referral/ABC123',readOnly:true,style:{width:'400px'}}),
-    React.createElement('button',{onClick:()=>navigator.clipboard.writeText('https://kairahstudio.com/referral/ABC123'),className:'bg-[#d4af37] text-[#3d2c41] button-mock'},'Copy Link')
+    React.createElement('p',null,'Share your unique link and earn 30% commission per referred subscription.'),
+    React.createElement('input',{value:'https://kairahstudio.com/referral/ABC123', readOnly:true,className:'w-96'}),
+    React.createElement('button',{className:'button-mock bg-[#d4af37] text-[#3d2c41]',onClick:()=>navigator.clipboard.writeText('https://kairahstudio.com/referral/ABC123')},'Copy Link')
   );
 }
 
-// ---------- FAQ ----------
-function FAQ() {
-  const faqs=[
-    {q:'How many free videos?',a:'1 free video per email.'},
-    {q:'Can I upgrade?',a:'Yes, Pro, Diamond, Lifetime plans available.'},
-    {q:'Do templates expire?',a:'No, once unlocked they are yours.'},
-  ];
-  return React.createElement('div',{className:'container section'},
-    React.createElement('h2',null,'FAQ'),
-    faqs.map((f,i)=>React.createElement('div',{key:i,className:'faq-item'},
-      React.createElement('strong',null,f.q),
-      React.createElement('p',null,f.a)
-    ))
-  );
-}
-
-// ---------- Testimonials ----------
-function Testimonials() {
+// -------- Testimonials & FAQ --------
+function TestimonialsFAQ(){
   return React.createElement('div',{className:'container section'},
     React.createElement('h2',null,'Testimonials'),
-    React.createElement('div',null,
-      React.createElement('blockquote',null,'"Kairah Studio helped me create amazing AI videos!" - User A'),
-      React.createElement('blockquote',null,'"Fame Booster made my content viral instantly!" - User B')
-    )
+    React.createElement('div',null,'"Kairah Studio changed my video game!" - Alex'),
+    React.createElement('div',null,'"The Fame Booster is incredible!" - Mia'),
+    React.createElement('h2',null,'FAQ'),
+    React.createElement('p',null,'Q: Can I use free plan? A: Yes, 1 free video.'),
+    React.createElement('p',null,'Q: How do I upgrade? A: Click Pricing and select plan.')
   );
 }
 
-// ---------- Terms ----------
-function Terms() {
-  return React.createElement('div',{className:'container section'},
-    React.createElement('h2',null,'Terms & Conditions'),
-    React.createElement('p',null,'This is a mock. All content generated is for demonstration purposes only.')
-  );
-}
-
-// ---------- App ----------
-function App() {
+// -------- App --------
+function App(){
   return React.createElement(AuthProvider,null,
     React.createElement(BrowserRouter,null,
       React.createElement(Header,null),
       React.createElement(Routes,null,
-        React.createElement(Route,{path:'/',element:React.createElement(Landing,null)}),
-        React.createElement(Route,{path:'/signin',element:React.createElement(SignIn,null)}),
-        React.createElement(Route,{path:'/studio',element:React.createElement(Studio,null)}),
-        React.createElement(Route,{path:'/fame',element:React.createElement(FameBooster,null)}),
-        React.createElement(Route,{path:'/pricing',element:React.createElement(Pricing,null)}),
-        React.createElement(Route,{path:'/affiliate',element:React.createElement(Affiliate,null)}),
-        React.createElement(Route,{path:'/faq',element:React.createElement(FAQ,null)}),
-        React.createElement(Route,{path:'/testimonials',element:React.createElement(Testimonials,null)}),
-        React.createElement(Route,{path:'/terms',element:React.createElement(Terms,null)})
+        React.createElement(Route,{path:'/', element:React.createElement(Landing,null)}),
+        React.createElement(Route,{path:'/signin', element:React.createElement(SignIn,null)}),
+        React.createElement(Route,{path:'/studio', element:React.createElement(Studio,null)}),
+        React.createElement(Route,{path:'/fame', element:React.createElement(FameBooster,null)}),
+        React.createElement(Route,{path:'/pricing', element:React.createElement(Pricing,null)}),
+        React.createElement(Route,{path:'/affiliate', element:React.createElement(Affiliate,null)}),
+        React.createElement(Route,{path:'/testimonials', element:React.createElement(TestimonialsFAQ,null)})
       )
     )
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App,null));
+ReactDOM.render(React.createElement(App,null),document.getElementById('root'));
 </script>
 </body>
 </html>
