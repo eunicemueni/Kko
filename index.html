@@ -7,13 +7,13 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 html {scroll-behavior: smooth;}
-body {font-family: 'Inter', sans-serif; background: linear-gradient(to right, #e0f7fa, #ffe082);}
-.nav-link:hover {color: #1d4ed8;}
-.video-placeholder, .audio-placeholder, .template-preview {cursor: pointer; display:flex; align-items:center; justify-content:center; color:#555; font-weight:bold; border-radius:8px; transition: transform 0.3s, box-shadow 0.3s;}
-.video-placeholder:hover, .template-preview:hover {transform: scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.2);}
-.video-placeholder {height:180px; background:#ccc; margin-bottom:8px;}
-.audio-placeholder {height:50px; background:#eee; margin-bottom:8px;}
-.template-preview {height:150px; background:#ddd; margin-bottom:8px;}
+body {font-family: 'Inter', sans-serif; background: linear-gradient(to right, #3d2c41, #d4af37); color: #f5f5f5;}
+.nav-link:hover {color: #ffe082;}
+.video-placeholder, .audio-placeholder, .template-preview {cursor: pointer; display:flex; align-items:center; justify-content:center; font-weight:bold; border-radius:8px; transition: transform 0.3s, box-shadow 0.3s;}
+.video-placeholder:hover, .template-preview:hover {transform: scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.3);}
+.video-placeholder {height:180px; background:#6d4c41; margin-bottom:8px; color:#fff;}
+.audio-placeholder {height:50px; background:#8d6e63; margin-bottom:8px; color:#fff;}
+.template-preview {height:150px; background:#795548; margin-bottom:8px; color:#fff;}
 .button-mock {transition: all 0.2s ease-in-out;}
 .button-mock:hover {opacity:0.85; transform:scale(1.03);}
 .section-title {text-4xl font-bold mb-4}
@@ -23,8 +23,8 @@ body {font-family: 'Inter', sans-serif; background: linear-gradient(to right, #e
 <body>
 
 <!-- Navbar -->
-<nav class="bg-white shadow p-4 flex justify-between items-center fixed w-full z-50">
-  <div class="text-xl font-bold">Kairah Studio + Fame</div>
+<nav class="bg-[#3d2c41] shadow p-4 flex justify-between items-center fixed w-full z-50">
+  <div class="text-xl font-bold text-[#d4af37]">Kairah Studio + Fame</div>
   <div class="space-x-4">
     <a href="#hero" class="nav-link">Home</a>
     <a href="#prompt" class="nav-link">Prompt Magic</a>
@@ -43,7 +43,7 @@ body {font-family: 'Inter', sans-serif; background: linear-gradient(to right, #e
 <section id="hero" class="pt-24 text-center p-12">
   <h1 class="section-title">Create Viral AI Videos, Photos & Audio</h1>
   <p class="section-subtitle">More advanced than Leonardo, Geo, and Sora — fully cinematic interactive mock</p>
-  <a href="#prompt" class="bg-blue-600 text-white px-6 py-3 rounded button-mock">Get Started</a>
+  <a href="#prompt" class="bg-[#d4af37] text-[#3d2c41] px-6 py-3 rounded button-mock">Get Started</a>
 </section>
 
 <!-- Prompt Magic -->
@@ -52,7 +52,7 @@ body {font-family: 'Inter', sans-serif; background: linear-gradient(to right, #e
   <div class="grid md:grid-cols-2 gap-4 mb-4">
     <div>
       <label class="font-semibold">Category</label>
-      <select class="border p-2 w-full rounded mb-2">
+      <select class="border p-2 w-full rounded mb-2 bg-[#6d4c41] text-white">
         <option>Viral</option>
         <option>Cinematic</option>
         <option>Fashion</option>
@@ -69,7 +69,7 @@ body {font-family: 'Inter', sans-serif; background: linear-gradient(to right, #e
     </div>
     <div>
       <label class="font-semibold">Your Prompt</label>
-      <input type="text" placeholder="Write your prompt here" class="border p-2 w-full mb-2 rounded">
+      <input type="text" placeholder="Write your prompt here" class="border p-2 w-full mb-2 rounded bg-[#8d6e63] text-white">
       <div class="flex space-x-2">
         <button class="bg-purple-600 text-white px-4 py-2 rounded button-mock">AI-Refine (Mock)</button>
         <button class="bg-green-600 text-white px-4 py-2 rounded button-mock">Generate (Mock)</button>
@@ -119,16 +119,16 @@ body {font-family: 'Inter', sans-serif; background: linear-gradient(to right, #e
         <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" class="w-8">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Mastercard-logo.png/320px-Mastercard-logo.png" class="w-8">
       </div>
-      <button class="bg-gray-400 text-white px-4 py-2 rounded button-mock">Pay (Mock)</button>
+      <button class="bg-gray-600 text-white px-4 py-2 rounded button-mock">Pay (Mock)</button>
     </div>
-    <div class="text-center p-4 border-2 border-blue-500">
+    <div class="text-center p-4 border-2 border-[#d4af37]">
       <h3 class="font-bold">Pro $19 / mo</h3>
       <p>Unlimited AI videos • HD export • Music & voices</p>
       <div class="flex justify-center space-x-2 my-2">
         <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" class="w-8">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Mastercard-logo.png/320px-Mastercard-logo.png" class="w-8">
       </div>
-      <button class="bg-blue-600 text-white px-4 py-2 rounded button-mock">Subscribe (Mock)</button>
+      <button class="bg-blue-700 text-white px-4 py-2 rounded button-mock">Subscribe (Mock)</button>
     </div>
     <div class="text-center p-4">
       <h3 class="font-bold">Diamond $49 / mo</h3>
@@ -137,7 +137,7 @@ body {font-family: 'Inter', sans-serif; background: linear-gradient(to right, #e
         <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" class="w-8">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Mastercard-logo.png/320px-Mastercard-logo.png" class="w-8">
       </div>
-      <button class="bg-green-600 text-white px-4 py-2 rounded button-mock">Subscribe (Mock)</button>
+      <button class="bg-green-700 text-white px-4 py-2 rounded button-mock">Subscribe (Mock)</button>
     </div>
     <div class="text-center p-4">
       <h3 class="font-bold">Lifetime $249</h3>
@@ -146,74 +146,7 @@ body {font-family: 'Inter', sans-serif; background: linear-gradient(to right, #e
         <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" class="w-8">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Mastercard-logo.png/320px-Mastercard-logo.png" class="w-8">
       </div>
-      <button class="bg-purple-600 text-white px-4 py-2 rounded button-mock">Subscribe (Mock)</button>
+      <button class="bg-purple-700 text-white px-4 py-2 rounded button-mock">Subscribe (Mock)</button>
     </div>
   </div>
 </section>
-
-<!-- Fame Booster -->
-<section id="fame" class="p-8">
-  <h2 class="section-title">Kairah Fame Booster (Mock)</h2>
-  <p class="mb-4">Boost Your Video: Simulated viral boosts, trending sounds, captions, and posting suggestions.</p>
-  <div class="grid md:grid-cols-3 gap-4">
-    <div class="video-placeholder">Before Boost (Mock)</div>
-    <div class="video-placeholder">After Boost (Mock)</div>
-    <div class="video-placeholder">Projected Reach & Engagement (Mock)</div>
-  </div>
-  <div class="flex space-x-2 mt-4">
-    <button class="bg-yellow-500 text-white px-4 py-2 rounded button-mock">Standard Boost $9 (Mock)</button>
-    <button class="bg-yellow-700 text-white px-4 py-2 rounded button-mock">Apply Boost (Mock)</button>
-  </div>
-</section>
-
-<!-- About -->
-<section id="about" class="p-8">
-  <h2 class="section-title">About Kairah Studio + Fame</h2>
-  <p class="mb-2">Kairah Studio + Fame is a cinematic AI mock frontend created to showcase our product before signup.</p>
-  <ul class="list-disc list-inside mb-2">
-    <li>AI cinematic templates: surreal, royal, dreamy, viral</li>
-    <li>Audio generator and waveform previews</li>
-    <li>Fame Booster mock to simulate viral push</li>
-    <li>Affiliate mock dashboard for referrals</li>
-    <li>Support: keishapoa@gmail.com</li>
-  </ul>
-  <h3 class="font-semibold mt-4">Frequently Asked Questions (Mock)</h3>
-  <ol class="list-decimal list-inside">
-    <li>How does AI video generation work? - Mock answer here.</li>
-    <li>What is the maximum video length? - Mock answer here.</li>
-    <li>Can I use generated media for commercial purposes? - Mock answer here.</li>
-    <li>How does Fame Booster work? - Mock answer here.</li>
-    <li>Are there refund policies? - Mock answer here.</li>
-  </ol>
-</section>
-
-<!-- Support -->
-<section id="support" class="p-8">
-  <h2 class="section-title">Support</h2>
-  <form class="grid md:grid-cols-2 gap-4">
-    <input type="text" placeholder="Your Name" class="border p-2 rounded w-full">
-    <input type="email" placeholder="Your Email" class="border p-2 rounded w-full">
-    <textarea placeholder="Your Message" class="border p-2 rounded w-full col-span-2"></textarea>
-    <button class="bg-blue-600 text-white px-4 py-2 rounded button-mock col-span-2">Send Message (Mock)</button>
-  </form>
-</section>
-
-<!-- Affiliate -->
-<section id="affiliate" class="p-8">
-  <h2 class="section-title">Affiliate Dashboard (Mock)</h2>
-  <p>Earn commissions by referring others. Mock dashboard shows referrals, earnings, and payout options.</p>
-  <div class="grid md:grid-cols-3 gap-4 mt-4">
-    <div class="p-4 border rounded">Total Referrals: 0 (Mock)</div>
-    <div class="p-4 border rounded">Total Earnings: $0 (Mock)</div>
-    <div class="p-4 border rounded">Payout Options: PayPal / Bank (Mock)</div>
-  </div>
-</section>
-
-<!-- Agreement -->
-<section id="agreement" class="p-8">
-  <h2 class="section-title">User Agreement & Terms (Mock)</h2>
-  <p>By using Kairah Studio + Fame, you agree to our non-negotiable terms and conditions. All content generated is for demonstration only. Payment simulation does not charge any real money.</p>
-</section>
-
-</body>
-</html>
