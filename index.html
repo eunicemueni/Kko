@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kairah Studio + Fame - Full Mock SPA</title>
+<title>Kairah Studio + Fame - Full Visual Mock</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   html {scroll-behavior: smooth;}
+  .video-placeholder {width: 100%; height: 180px; background: #ccc; display:flex; align-items:center; justify-content:center; color:#555; font-weight:bold; cursor:pointer;}
+  .audio-placeholder {width: 100%; height: 50px; background: #eee; display:flex; align-items:center; justify-content:center; color:#333; font-weight:bold; cursor:pointer;}
 </style>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -18,6 +20,7 @@
     <a href="#hero" class="hover:text-blue-600">Home</a>
     <a href="#pricing" class="hover:text-blue-600">Pricing</a>
     <a href="#dashboard" class="hover:text-blue-600">Dashboard</a>
+    <a href="#templates" class="hover:text-blue-600">Templates</a>
     <a href="#about" class="hover:text-blue-600">About</a>
     <a href="#support" class="hover:text-blue-600">Support</a>
     <a href="#affiliate" class="hover:text-blue-600">Affiliate</a>
@@ -25,14 +28,14 @@
   </div>
 </nav>
 
-<!-- Hero -->
+<!-- Hero Section -->
 <section id="hero" class="pt-24 text-center p-12 bg-gradient-to-r from-teal-400 via-teal-300 to-yellow-300">
   <h1 class="text-4xl font-bold mb-4">Create Viral AI Videos, Photos & Audio</h1>
   <p class="mb-6">Better than Veo 3 & Leonardo AI — fully interactive mock</p>
   <a href="#dashboard" class="bg-blue-600 text-white px-6 py-3 rounded">Get Started</a>
 </section>
 
-<!-- Pricing -->
+<!-- Pricing Section -->
 <section id="pricing" class="p-8 bg-gray-100">
   <h2 class="text-3xl font-bold mb-6 text-center">Pricing Plans</h2>
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -57,6 +60,10 @@
         <li>Fame Booster access</li>
         <li>Email Support</li>
       </ul>
+      <div class="flex justify-center space-x-2 mb-2">
+        <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal" class="w-8">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Mastercard-logo.png/320px-Mastercard-logo.png" alt="MasterCard" class="w-8">
+      </div>
       <button onclick="mockPay('Pro')" class="bg-blue-600 text-white px-4 py-2 rounded">Subscribe</button>
     </div>
     <div class="bg-white p-6 rounded shadow text-center">
@@ -68,6 +75,10 @@
         <li>Priority Support</li>
         <li>Extra AI Credits</li>
       </ul>
+      <div class="flex justify-center space-x-2 mb-2">
+        <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal" class="w-8">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Mastercard-logo.png/320px-Mastercard-logo.png" alt="MasterCard" class="w-8">
+      </div>
       <button onclick="mockPay('Diamond')" class="bg-green-600 text-white px-4 py-2 rounded">Subscribe</button>
     </div>
     <div class="bg-white p-6 rounded shadow text-center">
@@ -79,6 +90,10 @@
         <li>Exclusive AI Updates</li>
         <li>Full Support</li>
       </ul>
+      <div class="flex justify-center space-x-2 mb-2">
+        <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal" class="w-8">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Mastercard-logo.png/320px-Mastercard-logo.png" alt="MasterCard" class="w-8">
+      </div>
       <button onclick="mockPay('Lifetime')" class="bg-purple-600 text-white px-4 py-2 rounded">Subscribe</button>
     </div>
   </div>
@@ -115,30 +130,16 @@
   </div>
 </section>
 
-<!-- About / FAQ -->
-<section id="about" class="p-8 bg-white">
-  <h2 class="text-3xl font-bold mb-6">About & FAQs</h2>
-  <div class="space-y-4">
-    <div><strong>Q1:</strong> What is Kairah Studio + Fame?</div>
-    <div><strong>A:</strong> It's an AI-powered platform for video, photo, and audio creation.</div>
-    <div><strong>Q2:</strong> How do I start?</div>
-    <div><strong>A:</strong> Choose a plan, enter prompts, and generate content instantly.</div>
-    <div><strong>Q3:</strong> Can I try for free?</div>
-    <div><strong>A:</strong> Yes, Free plan allows 1 video per day.</div>
-    <div><strong>Q4:</strong> What payment methods are accepted?</div>
-    <div><strong>A:</strong> PayPal and major cards (mocked in this demo).</div>
-    <div><strong>Q5:</strong> Can I earn with affiliates?</div>
-    <div><strong>A:</strong> Yes, see Affiliate section.</div>
-    <div><strong>Q6:</strong> How many videos can I create?</div>
-    <div><strong>A:</strong> Depends on plan. Free=1, Pro/Diamond unlimited, Lifetime=full access.</div>
-    <div><strong>Q7:</strong> Is the platform global?</div>
-    <div><strong>A:</strong> Yes, fully online and accessible worldwide.</div>
-    <div><strong>Q8:</strong> What is Fame Booster?</div>
-    <div><strong>A:</strong> Tool to optimize content for virality.</div>
-    <div><strong>Q9:</strong> Do I get support?</div>
-    <div><strong>A:</strong> Yes, via the Support section.</div>
-    <div><strong>Q10:</strong> Is the mock interactive?</div>
-    <div><strong>A:</strong> Yes, all buttons and generators are fully mocked.</div>
+<!-- Templates Library -->
+<section id="templates" class="p-8 bg-gray-100">
+  <h2 class="text-3xl font-bold mb-4">Video Templates</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="video-placeholder" onclick="selectTemplate('Template 1')">Template 1</div>
+    <div class="video-placeholder" onclick="selectTemplate('Template 2')">Template 2</div>
+    <div class="video-placeholder" onclick="selectTemplate('Template 3')">Template 3</div>
+    <div class="video-placeholder" onclick="selectTemplate('Template 4')">Template 4</div>
+    <div class="video-placeholder" onclick="selectTemplate('Template 5')">Template 5</div>
+    <div class="video-placeholder" onclick="selectTemplate('Template 6')">Template 6</div>
   </div>
 </section>
 
@@ -169,4 +170,31 @@
 
 <script>
 let videoCount=0, photoCount=0, audioCount=0, affiliateEarnings=0;
-function generateVideo(previewId){videoCount++; document
+
+function mockPay(plan){
+  alert(`Mock payment successful for ${plan} plan!`);
+  affiliateEarnings += plan==='Pro'?5:plan==='Diamond'?10:plan==='Lifetime'?50:0;
+  document.getElementById('affiliate-earnings').innerText=affiliateEarnings;
+}
+
+function generateVideo(previewId){
+  videoCount++;
+  let container=document.getElementById(previewId);
+  let div=document.createElement('div');
+  div.className='video-placeholder';
+  div.innerText='Video '+videoCount;
+  container.appendChild(div);
+  document.getElementById('video-count').innerText=videoCount;
+}
+
+function generatePhotoVideo(previewId){
+  photoCount++;
+  let container=document.getElementById(previewId);
+  let div=document.createElement('div');
+  div.className='video-placeholder';
+  div.innerText='Photo Video '+photoCount;
+  container.appendChild(div);
+  document.getElementById('photo-count').innerText=photoCount;
+}
+
+function generate
