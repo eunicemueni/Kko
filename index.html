@@ -3,240 +3,170 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kairah Studio + Fame</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<title>Kairah Studio + Fame - Full Mock SPA</title>
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
-/* Global */
-body { font-family: Arial, sans-serif; margin:0; padding:0; background:#0b1d3a; color:white; }
-header { background:#D4AF37; color:white; padding:25px; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.3);}
-header h1 { margin:0; font-size:2em; }
-header p { margin:5px 0 0; font-size:1em; }
-.container { max-width:1000px; margin:20px auto; background:#1c2a50; padding:25px; border-radius:12px; box-shadow:0 0 15px rgba(0,0,0,0.4); }
-input, select { width:100%; padding:12px; margin:8px 0 15px 0; border-radius:6px; border:1px solid #ccc; }
-button { cursor:pointer; border:none; border-radius:6px; transition: transform 0.2s, box-shadow 0.2s; }
-#auth-container button { background:#3D2C41; color:white; padding:12px 18px; margin-right:8px; }
-#auth-container button:hover { transform: translateY(-2px); box-shadow:0 5px 15px rgba(212,175,55,0.6);}
-nav { text-align:center; margin-top:25px; }
-nav button { margin:0 6px; padding:12px 22px; border-radius:6px; background:#3D2C41; color:white; font-weight:bold; }
-nav button.active { background:#D4AF37; color:white; }
-.tab-panel { margin-top:25px; display:none; }
-.tab-panel.active { display:block; }
-.card { background:#3D2C41; border-radius:12px; padding:18px; margin:12px 0; box-shadow:0 0 10px rgba(0,0,0,0.3); position:relative; transition: transform 0.3s, box-shadow 0.3s; }
-.card:hover { transform: translateY(-6px); box-shadow:0 10px 25px rgba(212,175,55,0.6); }
-.card::before { content: attr(data-plan); position: absolute; top:0; left:0; background: #D4AF37; color:white; padding:6px 12px; border-top-left-radius:12px; border-bottom-right-radius:12px; font-size:0.85em; font-weight:bold; }
-.card button { background: linear-gradient(45deg,#D4AF37,#FFC107); color:white; border:none; padding:10px 18px; border-radius:6px; margin-top:10px; font-weight:bold; }
-.card button:hover { transform: translateY(-3px); box-shadow:0 6px 18px rgba(212,175,55,0.5); }
-.media-box { margin-top:18px; padding:18px; border-radius:12px; background:#10203a; position:relative; text-align:center; }
-.shimmer { background: linear-gradient(to right, #10203a 8%, #1c2a50 18%, #10203a 33%); background-size: 1200px 104px; animation: shimmer 1.5s infinite linear; }
-@keyframes shimmer { 0%{background-position:-1200px 0} 100%{background-position:1200px 0} }
-.history, .fame-list { display:flex; flex-wrap:wrap; }
-.history .card, .fame-list .card { flex:1 1 200px; margin:10px; }
-.pricing-cards { display:flex; justify-content:space-around; flex-wrap:wrap; margin-top:25px; }
-.pricing-cards .card { flex:1 1 250px; text-align:center; position:relative; }
-.generate { background: linear-gradient(45deg,#28a745,#21c25f); color:white; padding:12px 18px; margin-top:8px; font-weight:bold; }
-.prompt-magic { background: linear-gradient(45deg,#ffc107,#ffdd57); color:white; padding:12px 18px; margin-top:8px; font-weight:bold; }
-.sample-video { margin-top:15px; background:#10203a; padding:15px; border-radius:10px; text-align:center; }
-.payment-buttons { display:flex; flex-direction:column; gap:10px; margin-top:12px; }
-.paypal-btn, .stripe-btn { display:flex; align-items:center; justify-content:center; gap:10px; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer; transition:0.3s; }
-.paypal-btn { background:#003087; color:white; }
-.paypal-btn:hover { background:#001f5b; }
-.stripe-btn { background:#635bff; color:white; }
-.stripe-btn:hover { background:#4e45e6; }
-.card-btn { background: linear-gradient(90deg, #0d9488, #065f46); color:white; font-weight:600; border:none; border-radius:12px; padding:12px 20px; display:flex; align-items:center; justify-content:center; gap:10px; cursor:pointer; box-shadow:0 3px 10px rgba(0,0,0,0.15); transition:0.3s; }
-.card-btn:hover { background: linear-gradient(90deg, #065f46, #064e3b); }
-footer { text-align:center; margin-top:25px; padding:25px; background:#10203a; color:#aaa; font-size:0.85em; }
-footer a { color:#D4AF37; text-decoration:none; margin:0 5px; }
-@media(max-width:700px){ .pricing-cards, .history, .fame-list { flex-direction:column; } nav button { margin:5px 0; } }
+  html {scroll-behavior: smooth;}
 </style>
 </head>
-<body>
+<body class="bg-gray-100 font-sans">
 
-<header>
-  <h1>Kairah Studio + Fame</h1>
-  <p>AI Video & Audio Generator + Viral Fame Booster</p>
-</header>
+<!-- Navbar -->
+<nav class="bg-white shadow p-4 flex justify-between items-center fixed w-full z-50">
+  <div class="text-xl font-bold">Kairah Studio + Fame</div>
+  <div class="space-x-4">
+    <a href="#hero" class="hover:text-blue-600">Home</a>
+    <a href="#pricing" class="hover:text-blue-600">Pricing</a>
+    <a href="#dashboard" class="hover:text-blue-600">Dashboard</a>
+    <a href="#about" class="hover:text-blue-600">About</a>
+    <a href="#support" class="hover:text-blue-600">Support</a>
+    <a href="#affiliate" class="hover:text-blue-600">Affiliate</a>
+    <a href="#agreement" class="hover:text-blue-600">Agreement</a>
+  </div>
+</nav>
 
-<!-- SIGNUP / LOGIN -->
-<div class="container" id="auth-container">
-  <h2>Sign In / Sign Up</h2>
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
-  <button id="signin-btn">Sign In</button>
-  <button id="signup-btn">Sign Up</button>
-  <p id="auth-error" style="color:#ff4d4d;"></p>
+<!-- Hero -->
+<section id="hero" class="pt-24 text-center p-12 bg-gradient-to-r from-teal-400 via-teal-300 to-yellow-300">
+  <h1 class="text-4xl font-bold mb-4">Create Viral AI Videos, Photos & Audio</h1>
+  <p class="mb-6">Better than Veo 3 & Leonardo AI — fully interactive mock</p>
+  <a href="#dashboard" class="bg-blue-600 text-white px-6 py-3 rounded">Get Started</a>
+</section>
 
-  <h3>Pricing Plans</h3>
-  <div class="pricing-cards">
-    <div class="card" data-plan="Pro"><h3>Pro $19</h3><p>10 videos included</p>
-      <div class="payment-buttons">
-        <button class="paypal-btn"><img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" width="20"/> Pay with PayPal</button>
-        <button class="stripe-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Stripe_Logo%2C_revised_2016.svg" width="50"/> Pay with Stripe</button>
-        <button class="card-btn"><i class="fa fa-credit-card"></i> Pay with Card</button>
-      </div>
+<!-- Pricing -->
+<section id="pricing" class="p-8 bg-gray-100">
+  <h2 class="text-3xl font-bold mb-6 text-center">Pricing Plans</h2>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div class="bg-white p-6 rounded shadow text-center">
+      <h3 class="text-xl font-bold mb-2">Free</h3>
+      <p class="text-2xl font-bold mb-4">$0</p>
+      <ul class="text-left mb-4">
+        <li>1 AI Video / day</li>
+        <li>Limited Photo-to-Video</li>
+        <li>Audio Generator access</li>
+        <li>No Fame Booster</li>
+      </ul>
+      <button onclick="mockPay('Free')" class="bg-gray-400 text-white px-4 py-2 rounded">Get Started</button>
     </div>
-    <div class="card" data-plan="Diamond"><h3>Diamond $49</h3><p>Unlimited videos + Fame Booster</p>
-      <div class="payment-buttons">
-        <button class="paypal-btn"><img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" width="20"/> Pay with PayPal</button>
-        <button class="stripe-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Stripe_Logo%2C_revised_2016.svg" width="50"/> Pay with Stripe</button>
-        <button class="card-btn"><i class="fa fa-credit-card"></i> Pay with Card</button>
-      </div>
+    <div class="bg-white p-6 rounded shadow text-center border-4 border-blue-500">
+      <h3 class="text-xl font-bold mb-2">Pro</h3>
+      <p class="text-2xl font-bold mb-4">$19 / mo</p>
+      <ul class="text-left mb-4">
+        <li>Unlimited AI Videos</li>
+        <li>Photo-to-Video Generator</li>
+        <li>Audio Generator</li>
+        <li>Fame Booster access</li>
+        <li>Email Support</li>
+      </ul>
+      <button onclick="mockPay('Pro')" class="bg-blue-600 text-white px-4 py-2 rounded">Subscribe</button>
     </div>
-    <div class="card" data-plan="Lifetime"><h3>Lifetime $249</h3><p>All features permanently</p>
-      <div class="payment-buttons">
-        <button class="paypal-btn"><img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" width="20"/> Pay with PayPal</button>
-        <button class="stripe-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Stripe_Logo%2C_revised_2016.svg" width="50"/> Pay with Stripe</button>
-        <button class="card-btn"><i class="fa fa-credit-card"></i> Pay with Card</button>
-      </div>
+    <div class="bg-white p-6 rounded shadow text-center">
+      <h3 class="text-xl font-bold mb-2">Diamond</h3>
+      <p class="text-2xl font-bold mb-4">$49 / mo</p>
+      <ul class="text-left mb-4">
+        <li>All Pro features</li>
+        <li>Priority Fame Booster</li>
+        <li>Priority Support</li>
+        <li>Extra AI Credits</li>
+      </ul>
+      <button onclick="mockPay('Diamond')" class="bg-green-600 text-white px-4 py-2 rounded">Subscribe</button>
+    </div>
+    <div class="bg-white p-6 rounded shadow text-center">
+      <h3 class="text-xl font-bold mb-2">Lifetime</h3>
+      <p class="text-2xl font-bold mb-4">$299</p>
+      <ul class="text-left mb-4">
+        <li>All Diamond features</li>
+        <li>Lifetime Access</li>
+        <li>Exclusive AI Updates</li>
+        <li>Full Support</li>
+      </ul>
+      <button onclick="mockPay('Lifetime')" class="bg-purple-600 text-white px-4 py-2 rounded">Subscribe</button>
     </div>
   </div>
+</section>
 
-  <div class="sample-video">
-    <h4>Sample 6-second Preview</h4>
-    <p>🎬 Cinematic AI preview of your first video</p>
-    <img src="https://i.ibb.co/ZMdp3yD/sample-video.png" alt="Mock Video Preview" width="300">
-  </div>
-</div>
-
-<!-- MAIN DASHBOARD -->
-<div class="container" id="main-container" style="display:none;">
-  <div class="plan">
-    Logged in as: <span id="user-email"></span> | Plan: <span id="user-plan">Free</span> 
-    <button id="logout-btn" style="background:#D4AF37;color:white;padding:5px 10px;margin-left:10px;">Logout</button>
+<!-- Dashboard -->
+<section id="dashboard" class="p-8">
+  <h2 class="text-3xl font-bold mb-6">Dashboard</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div class="bg-white p-4 rounded shadow">Total Videos: <span id="video-count">0</span></div>
+    <div class="bg-white p-4 rounded shadow">Total Photos: <span id="photo-count">0</span></div>
+    <div class="bg-white p-4 rounded shadow">Total Audio: <span id="audio-count">0</span></div>
   </div>
 
-  <!-- Dashboard Stats -->
-  <div id="dashboard" style="margin-top:20px; padding:15px; background:#10203a; border-radius:10px;">
-    <h3>Dashboard (Mock Stats)</h3>
-    <p>Total Videos Generated: <span id="stat-videos">0</span></p>
-    <p>Total Photos Generated: <span id="stat-photos">0</span></p>
-    <p>Total Audio Generated: <span id="stat-audio">0</span></p>
-    <p>Total Fame Boosts: <span id="stat-fame">0</span></p>
-    <p>Total Downloads: <span id="stat-downloads">0</span></p>
+  <div class="bg-white p-6 rounded shadow mb-6">
+    <h3 class="text-xl font-bold mb-2">Text-to-Video Generator</h3>
+    <input type="text" id="video-prompt" placeholder="Enter your prompt" class="border p-2 w-full mb-2 rounded">
+    <button onclick="generateVideo('video-preview')" class="bg-blue-600 text-white px-4 py-2 rounded">Generate Video</button>
+    <div id="video-preview" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4"></div>
   </div>
 
-  <!-- Navigation Tabs -->
-  <nav>
-    <button class="active" data-tab="text-video">Text-to-Video</button>
-    <button data-tab="photo-video">Photo-to-Video</button>
-    <button data-tab="audio-gen">Audio Generator</button>
-    <button data-tab="fame-booster">Kairah Fame Booster</button>
-    <button data-tab="settings">Settings</button>
-    <button data-tab="about">About</button>
-  </nav>
-
-  <!-- Tabs Content -->
-  <div id="tab-content">
-    <div class="tab-panel active" id="text-video">
-      <h3>Text-to-Video</h3>
-      <select id="category">
-        <option value="viral">Viral</option>
-        <option value="royal">Royal</option>
-        <option value="fantasy">Fantasy</option>
-      </select>
-      <input type="text" id="prompt" placeholder="Enter your prompt">
-      <button class="prompt-magic" id="prompt-magic-btn">Prompt Magic</button>
-      <button class="generate" id="generate-btn">Generate Video</button>
-      <div class="media-box" id="video-box" style="display:none;">🎬 Generating cinematic AI video...</div>
-      <div class="history" id="video-history"></div>
-    </div>
-
-    <div class="tab-panel" id="photo-video">
-      <h3>Photo-to-Video</h3>
-      <input type="file" id="photo-upload" accept="image/*">
-      <button class="generate" id="generate-photo-btn">Generate Video</button>
-      <div class="media-box" id="photo-video-box" style="display:none;">🎬 Generating cinematic AI video from photo...</div>
-      <div class="history" id="photo-history"></div>
-    </div>
-
-    <div class="tab-panel" id="audio-gen">
-      <h3>Audio Generator</h3>
-      <input type="text" id="audio-prompt" placeholder="Enter text for audio">
-      <button class="generate" id="generate-audio-btn">Generate Audio</button>
-      <div class="media-box" id="audio-box" style="display:none;">🔊 Generating AI audio...</div>
-      <div class="history" id="audio-history"></div>
-    </div>
-
-    <div class="tab-panel" id="fame-booster">
-      <h3>Kairah Fame Booster</h3>
-      <button class="generate" id="boost-btn">Boost My Content</button>
-      <div class="fame-list" id="fame-history"></div>
-    </div>
-
-    <div class="tab-panel" id="settings">
-      <h3>Settings</h3>
-      <p>Email: <span id="settings-email"></span></p>
-      <p>Plan: <span id="settings-plan"></span></p>
-      <p><strong>Non-refundable subscription agreement:</strong> All payments are final. No refunds.</p>
-    </div>
-
-    <div class="tab-panel" id="about">
-      <h3>About Kairah Studio + Fame</h3>
-      <p>Kairah Studio + Fame is the ultimate AI platform to create cinematic videos, AI-generated photos, audio, and boost your viral content. Experience surreal, professional-quality visuals and content creation tools before subscribing.</p>
-      <p>Support Email: <a href="mailto:keishapoa@gmail.com">keishapoa@gmail.com</a></p>
-    </div>
+  <div class="bg-white p-6 rounded shadow mb-6">
+    <h3 class="text-xl font-bold mb-2">Photo-to-Video Generator</h3>
+    <input type="file" id="photo-upload" class="mb-2" multiple>
+    <button onclick="generatePhotoVideo('photo-video-preview')" class="bg-green-600 text-white px-4 py-2 rounded">Generate Video</button>
+    <div id="photo-video-preview" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4"></div>
   </div>
-</div>
 
-<footer>
-  &copy; 2025 Kairah Studio | <a href="#">Affiliate Program</a> | <a href="#">Privacy Policy</a>
-</footer>
+  <div class="bg-white p-6 rounded shadow mb-6">
+    <h3 class="text-xl font-bold mb-2">Audio Generator</h3>
+    <input type="text" id="audio-prompt" placeholder="Enter your prompt" class="border p-2 w-full mb-2 rounded">
+    <button onclick="generateAudio('audio-preview')" class="bg-purple-600 text-white px-4 py-2 rounded">Generate Audio</button>
+    <div id="audio-preview" class="mt-4"></div>
+  </div>
+</section>
+
+<!-- About / FAQ -->
+<section id="about" class="p-8 bg-white">
+  <h2 class="text-3xl font-bold mb-6">About & FAQs</h2>
+  <div class="space-y-4">
+    <div><strong>Q1:</strong> What is Kairah Studio + Fame?</div>
+    <div><strong>A:</strong> It's an AI-powered platform for video, photo, and audio creation.</div>
+    <div><strong>Q2:</strong> How do I start?</div>
+    <div><strong>A:</strong> Choose a plan, enter prompts, and generate content instantly.</div>
+    <div><strong>Q3:</strong> Can I try for free?</div>
+    <div><strong>A:</strong> Yes, Free plan allows 1 video per day.</div>
+    <div><strong>Q4:</strong> What payment methods are accepted?</div>
+    <div><strong>A:</strong> PayPal and major cards (mocked in this demo).</div>
+    <div><strong>Q5:</strong> Can I earn with affiliates?</div>
+    <div><strong>A:</strong> Yes, see Affiliate section.</div>
+    <div><strong>Q6:</strong> How many videos can I create?</div>
+    <div><strong>A:</strong> Depends on plan. Free=1, Pro/Diamond unlimited, Lifetime=full access.</div>
+    <div><strong>Q7:</strong> Is the platform global?</div>
+    <div><strong>A:</strong> Yes, fully online and accessible worldwide.</div>
+    <div><strong>Q8:</strong> What is Fame Booster?</div>
+    <div><strong>A:</strong> Tool to optimize content for virality.</div>
+    <div><strong>Q9:</strong> Do I get support?</div>
+    <div><strong>A:</strong> Yes, via the Support section.</div>
+    <div><strong>Q10:</strong> Is the mock interactive?</div>
+    <div><strong>A:</strong> Yes, all buttons and generators are fully mocked.</div>
+  </div>
+</section>
+
+<!-- Support -->
+<section id="support" class="p-8">
+  <h2 class="text-3xl font-bold mb-4">Support</h2>
+  <textarea id="support-message" placeholder="Enter your issue" class="border p-2 w-full mb-2 rounded"></textarea>
+  <button onclick="submitTicket('support-message','ticket-preview')" class="bg-yellow-600 text-white px-4 py-2 rounded">Submit Ticket</button>
+  <div id="ticket-preview" class="mt-4"></div>
+</section>
+
+<!-- Affiliate -->
+<section id="affiliate" class="p-8 bg-white">
+  <h2 class="text-3xl font-bold mb-4">Affiliate Dashboard</h2>
+  <div>Referral Link: <span id="ref-link">https://kairah.com/ref123</span></div>
+  <div>Earnings: $<span id="affiliate-earnings">0</span></div>
+</section>
+
+<!-- Agreement -->
+<section id="agreement" class="p-8 bg-gray-100">
+  <h2 class="text-3xl font-bold mb-4">Non-Negotiable Agreement</h2>
+  <p>By using Kairah Studio + Fame, you agree to all terms. Access is contingent upon acceptance.</p>
+  <label class="mt-2 inline-flex items-center"><input type="checkbox" id="agree-check" class="mr-2"> I Accept the Agreement</label>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white p-4 text-center">© 2025 Kairah Studio + Fame</footer>
 
 <script>
-// Tab switching
-const tabs = document.querySelectorAll('nav button');
-const panels = document.querySelectorAll('.tab-panel');
-tabs.forEach(tab => {
-  tab.addEventListener('click', ()=> {
-    tabs.forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
-    panels.forEach(p=>p.classList.remove('active'));
-    document.getElementById(tab.dataset.tab).classList.add('active');
-    if(tab.dataset.tab==='settings'){ document.getElementById('settings-email').textContent=currentUser; document.getElementById('settings-plan').textContent=currentPlan; }
-  });
-});
-
-// Mock Auth
-const authContainer = document.getElementById('auth-container');
-const mainContainer = document.getElementById('main-container');
-const signinBtn = document.getElementById('signin-btn');
-const signupBtn = document.getElementById('signup-btn');
-const logoutBtn = document.getElementById('logout-btn');
-const userEmailSpan = document.getElementById('user-email');
-let currentUser = null;
-let currentPlan = 'Free';
-
-signinBtn.onclick = signupBtn.onclick = () => {
-  const email = document.getElementById('email').value;
-  const pass = document.getElementById('password').value;
-  if(!email||!pass){ document.getElementById('auth-error').textContent='Enter email & password'; return; }
-  currentUser = email; 
-  currentPlan = 'Free';
-  authContainer.style.display='none';
-  mainContainer.style.display='block';
-  userEmailSpan.textContent=currentUser;
-  document.getElementById('user-plan').textContent=currentPlan;
-}
-
-// Mock Dashboard Updates
-let stats = {videos:0,photos:0,audio:0,fame:0,downloads:0};
-document.getElementById('generate-btn').onclick = ()=>{
-  stats.videos++; stats.downloads++;
-  document.getElementById('stat-videos').textContent=stats.videos;
-  document.getElementById('stat-downloads').textContent=stats.downloads;
-  document.getElementById('video-box').style.display='block';
-  setTimeout(()=>{document.getElementById('video-box').style.display='none';},1500);
-}
-document.getElementById('boost-btn').onclick = ()=>{
-  stats.fame++;
-  document.getElementById('stat-fame').textContent=stats.fame;
-  const div=document.createElement('div'); div.className='card'; div.textContent='Mock Fame Boost Applied!'; document.getElementById('fame-history').appendChild(div);
-}
-logoutBtn.onclick = ()=>{authContainer.style.display='block'; mainContainer.style.display='none'; currentUser=null;}
-
-// Shimmer effect demo
-const shimmerElements = document.querySelectorAll('.shimmer');
-shimmerElements.forEach(el=>el.style.display='block');
-</script>
-
-</body>
-</html>
+let videoCount=0, photoCount=0, audioCount=0, affiliateEarnings=0;
+function generateVideo(previewId){videoCount++; document
