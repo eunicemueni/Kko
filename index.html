@@ -11,14 +11,13 @@ body {font-family:'Inter',sans-serif; background: linear-gradient(to right, #3d2
 .button-mock {transition: all 0.2s ease-in-out;}
 .button-mock:hover {opacity:0.85; transform:scale(1.05);}
 .section {padding:5rem 0; width:100%;}
-.container {width:100%; max-width:none; padding:0 5rem; margin:0 auto;}
+.container {width:10000px; max-width:none; padding:0 5rem; margin:0 auto;}
 input, select, button {padding:0.5rem; margin:0.3rem; border-radius:0.3rem; border:none;}
 input {width:300px;}
 button {cursor:pointer;}
 .video-placeholder, .template-preview {cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:bold; border-radius:8px; transition: transform 0.3s, box-shadow 0.3s, background 0.3s; margin-bottom:12px; background:#6d4c41; color:#fff; position: relative; overflow: hidden; height:150px;}
 .video-placeholder::after, .template-preview::after {content:'▶'; font-size:1.5rem; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); opacity:0.6;}
-.testimonial, .faq-item {margin:1rem 0; padding:1rem; background:rgba(0,0,0,0.2); border-radius:0.5rem;}
-.audio-placeholder {width:100%; height:50px; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; margin:0.5rem 0; border-radius:0.3rem;}
+.audio-preview, .cinematic-loop {margin-top:0.5rem; background:#2c1f2f; border-radius:8px; padding:0.5rem; text-align:center;}
 </style>
 </head>
 <body>
@@ -64,6 +63,11 @@ function Landing(){
     <h1>Kairah Studio + Fame Booster</h1>
     <p>Generate stunning AI videos, cinematic templates, and viral boosters.</p>
     <Link to='/studio'><button className='button-mock bg-[#d4af37] text-[#3d2c41]'>Try Studio</button></Link>
+    <div className='section'>
+      <h2>Testimonials</h2>
+      <p>"Kairah Studio transformed my content!" - User A</p>
+      <p>"The Fame Booster made my videos go viral!" - User B</p>
+    </div>
   </div>;
 }
 
@@ -107,7 +111,6 @@ function Studio(){
     <input value={prompt} onChange={e=>setPrompt(e.target.value)} placeholder='Type your idea...' />
     <button onClick={promptMagic} className='button-mock bg-[#d4af37] text-[#3d2c41]'>Prompt Magic</button>
     <button onClick={handleGenerate} className='button-mock bg-[#d4af37] text-[#3d2c41]'>Generate Video</button>
-
     <h3>Templates</h3>
     {TEMPLATES.map(t=>(<div key={t.name} className='template-preview'>
       <strong>{t.name}</strong> ({t.category}) {t.isPaid&&!user?.isPaid?'[LOCKED]':''}
@@ -115,15 +118,11 @@ function Studio(){
       <div>{t.captions.map(c=><span key={c} style={{margin:'0.2rem', cursor:'pointer'}} onClick={()=>navigator.clipboard.writeText(c)}> {c} </span>)}</div>
       <div>{t.hashtags.map(h=><span key={h} style={{margin:'0.2rem', cursor:'pointer'}} onClick={()=>navigator.clipboard.writeText('#'+h)}> #{h} </span>)}</div>
     </div>))}
-
-    {playingVideo && <div className='video-placeholder'>🎬 Playing {myVideos.find(v=>v.id===playingVideo)?.template} (mock 6s preview)</div>}
-
-    <h3>Audio Preview (Mock)</h3>
-    <div className='audio-placeholder'>Audio Loop Placeholder</div>
-
-    <h3>Testimonials</h3>
-    <div className='testimonial'>“Kairah Studio made my videos go viral instantly!” - User A</div>
-    <div className='testimonial'>“Best AI cinematic templates I’ve ever used.” - User B</div>
+    {playingVideo && <div>
+      🎬 Playing {myVideos.find(v=>v.id===playingVideo)?.template} (mock 6s preview)
+      <div className='cinematic-loop'>Cinematic video loop preview 🎞️</div>
+      <div className='audio-preview'>Audio waveform preview 🔊</div>
+    </div>}
   </div>;
 }
 
@@ -149,15 +148,17 @@ function Affiliate(){
 function FAQ(){
   return <div className='container'>
     <h2>FAQ</h2>
-    <div className='faq-item'><strong>Q:</strong> How many free videos can I generate?<br/><strong>A:</strong> 1 free video for unregistered users.</div>
-    <div className='faq-item'><strong>Q:</strong> How do I upgrade?<br/><strong>A:</strong> Visit Pricing page and select a plan.</div>
+    <p>Q: How many videos can I generate?</p>
+    <p>A: Free: 1, Pro/Diamond: Unlimited</p>
+    <p>Q: Can I upgrade later?</p>
+    <p>A: Yes, anytime via Pricing page.</p>
   </div>;
 }
 
 function Terms(){
   return <div className='container'>
-    <h2>Terms and Conditions</h2>
-    <p>All content is for demonstration only. This mock does not generate real videos. Usage of any generated content is subject to terms.</p>
+    <h2>Terms & Conditions</h2>
+    <p>All mock purchases are non-refundable. This demo does not process real payments.</p>
   </div>;
 }
 
