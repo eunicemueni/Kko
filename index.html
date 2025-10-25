@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kairah Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<!-- Stripe -->
+<script src="https://js.stripe.com/v3/"></script>
+<!-- PayPal -->
+<script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
 <style>
 body { margin:0; font-family:'Poppins', sans-serif; background: linear-gradient(135deg, #0B0A0B, #1C1B1C); color:#fff; }
 header { background:linear-gradient(90deg,#D4AF37,#3D2C41); padding:2rem; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.5);}
@@ -33,7 +41,8 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
 /* Tabs */
 .tabs button { background:#3D2C41; color:#fff; padding:0.5rem 1rem; border-radius:0.5rem; border:none; cursor:pointer; }
 .tabs button:hover { background:#D4AF37; color:#000; }
-.tab-content { margin-top:1rem; }
+.tab-content { margin-top:1rem; display:none; }
+.tab-content.active { display:block; }
 </style>
 </head>
 <body>
@@ -85,94 +94,39 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
 <section id="features">
   <h2>Features</h2>
   <div class="features">
-    <div class="card">
-      <h3>Full-Length AI Videos</h3>
-      <p>Generate 2–3 min cinematic videos — cats, humans, fantasy, products, or stories.</p>
-    </div>
-    <div class="card">
-      <h3>Clip Merging & Editing</h3>
-      <p>Combine up to 10 scenes into one seamless video.</p>
-    </div>
-    <div class="card">
-      <h3>AI Music + Voice</h3>
-      <p>Add background music or voiceovers from Kairah’s sound library.</p>
-    </div>
-    <div class="card">
-      <h3>4K Export & Branding</h3>
-      <p>Download watermark-free HD/4K videos.</p>
-    </div>
-    <div class="card">
-      <h3>Prompt Magic Pro</h3>
-      <p>Enhanced storytelling AI expands short ideas into full scripts.</p>
-    </div>
-    <div class="card">
-      <h3>Bulk Generator</h3>
-      <p>Create multiple videos at once from one theme or script.</p>
-    </div>
-    <div class="card">
-      <h3>Scene Control</h3>
-      <p>Choose lighting, mood, and cinematic camera angles.</p>
-    </div>
-    <div class="card">
-      <h3>Royal Filters</h3>
-      <p>Signature teal-gold glow, fantasy light, dreamy skies.</p>
-    </div>
-    <div class="card">
-      <h3>Series Creator</h3>
-      <p>Build ongoing episodes (YouTube or brand series).</p>
-    </div>
-    <div class="card">
-      <h3>Kairah Fame Boost</h3>
-      <p>Instantly push videos to social media for virality.</p>
-    </div>
+    <div class="card"><h3>Full-Length AI Videos</h3><p>Generate 2–3 min cinematic videos — cats, humans, fantasy, products, or stories.</p></div>
+    <div class="card"><h3>Clip Merging & Editing</h3><p>Combine up to 10 scenes into one seamless video.</p></div>
+    <div class="card"><h3>AI Music + Voice</h3><p>Add background music or voiceovers from Kairah’s sound library.</p></div>
+    <div class="card"><h3>4K Export & Branding</h3><p>Download watermark-free HD/4K videos.</p></div>
+    <div class="card"><h3>Prompt Magic Pro</h3><p>Enhanced storytelling AI expands short ideas into full scripts.</p></div>
+    <div class="card"><h3>Bulk Generator</h3><p>Create multiple videos at once from one theme or script.</p></div>
+    <div class="card"><h3>Scene Control</h3><p>Choose lighting, mood, and cinematic camera angles.</p></div>
+    <div class="card"><h3>Royal Filters</h3><p>Signature teal-gold glow, fantasy light, dreamy skies.</p></div>
+    <div class="card"><h3>Series Creator</h3><p>Build ongoing episodes (YouTube or brand series).</p></div>
+    <div class="card"><h3>Kairah Fame Boost</h3><p>Instantly push videos to social media for virality.</p></div>
   </div>
 </section>
 
 <section id="pricing">
   <h2>Pricing</h2>
   <div class="pricing">
-    <div class="card">
-      <h3>Free</h3>
-      <p>Try 1 free 6s video (watermarked), preview tools, Prompt Magic Lite</p>
-      <button onclick="openAuth()">Start Free</button>
-    </div>
-
-    <div class="card">
-      <h3>Pro</h3>
-      <p>$19/mo or $300/yr — up to 1-min videos, 10 generations, 1080p export, merge 3 clips</p>
-      <div style="display:flex; gap:1rem; margin-top:0.5rem; flex-wrap:wrap;">
-        <button style="background:#6772E5; color:#fff; display:flex; align-items:center; gap:0.5rem; padding:0.6rem 1rem; border-radius:0.5rem;">
-          <img src="https://img.icons8.com/color/24/000000/stripe.png"/> Stripe
-        </button>
-        <button style="background:#003087; color:#fff; display:flex; align-items:center; gap:0.5rem; padding:0.6rem 1rem; border-radius:0.5rem;">
-          <img src="https://img.icons8.com/color/24/000000/paypal.png"/> PayPal
-        </button>
+    <div class="card"><h3>Free</h3><p>1 free 6s video (watermarked), preview tools, Prompt Magic Lite</p><button onclick="openAuth()">Start Free</button></div>
+    <div class="card"><h3>Pro</h3><p>$19/mo or $300/yr — 1-min videos, 10 gens/month, 1080p, merge 3 clips</p>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <button><img src="https://img.icons8.com/color/24/000000/stripe.png"/> Stripe</button>
+        <div id="paypal-pro"></div>
       </div>
     </div>
-
-    <div class="card">
-      <h3>Diamond</h3>
-      <p>$49/mo or $450/yr — up to 3-min videos, 30 generations, 4K export, merge 10 clips, series creator</p>
-      <div style="display:flex; gap:1rem; margin-top:0.5rem; flex-wrap:wrap;">
-        <button style="background:#6772E5; color:#fff; display:flex; align-items:center; gap:0.5rem; padding:0.6rem 1rem; border-radius:0.5rem;">
-          <img src="https://img.icons8.com/color/24/000000/stripe.png"/> Stripe
-        </button>
-        <button style="background:#003087; color:#fff; display:flex; align-items:center; gap:0.5rem; padding:0.6rem 1rem; border-radius:0.5rem;">
-          <img src="https://img.icons8.com/color/24/000000/paypal.png"/> PayPal
-        </button>
+    <div class="card"><h3>Diamond</h3><p>$49/mo or $450/yr — 3-min videos, 30 gens, 4K, merge 10 clips, series creator</p>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <button><img src="https://img.icons8.com/color/24/000000/stripe.png"/> Stripe</button>
+        <div id="paypal-diamond"></div>
       </div>
     </div>
-
-    <div class="card">
-      <h3>Lifetime</h3>
-      <p>One-time $500 — unlimited videos, all features unlocked</p>
-      <div style="display:flex; gap:1rem; margin-top:0.5rem; flex-wrap:wrap;">
-        <button style="background:#6772E5; color:#fff; display:flex; align-items:center; gap:0.5rem; padding:0.6rem 1rem; border-radius:0.5rem;">
-          <img src="https://img.icons8.com/color/24/000000/stripe.png"/> Stripe
-        </button>
-        <button style="background:#003087; color:#fff; display:flex; align-items:center; gap:0.5rem; padding:0.6rem 1rem; border-radius:0.5rem;">
-          <img src="https://img.icons8.com/color/24/000000/paypal.png"/> PayPal
-        </button>
+    <div class="card"><h3>Lifetime</h3><p>$500 one-time — unlimited videos, all features unlocked</p>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <button><img src="https://img.icons8.com/color/24/000000/stripe.png"/> Stripe</button>
+        <div id="paypal-lifetime"></div>
       </div>
     </div>
   </div>
@@ -181,98 +135,44 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
 <section id="affiliate">
   <h2>Affiliate Program</h2>
   <div class="affiliate">
-    <div class="card">
-      <h3>Earn 30% Commission</h3>
-      <p>Every sale you refer gives you 30% straight to your account, 70% to Kairah Empire automatically.</p>
-    </div>
-    <div class="card">
-      <h3>Payouts</h3>
-      <p>Reach $500 after 100 lifetime sales, automatic payout to your account.</p>
-    </div>
-    <div class="card">
-      <h3>How It Works</h3>
-      <p>Share your affiliate link. Every registered signup using your link is tracked. Higher tiers unlock exclusive perks and bonuses.</p>
-    </div>
+    <div class="card"><h3>Earn 30% Commission</h3><p>30% goes straight to your account, 70% to Kairah Empire automatically.</p></div>
+    <div class="card"><h3>Payouts</h3><p>Reach $500 after 100 lifetime sales, automatic payout.</p></div>
+    <div class="card"><h3>How It Works</h3><p>Share your affiliate link, track referrals, exclusive perks for high tiers.</p></div>
   </div>
 </section>
 
 <section id="settings">
   <h2>Settings</h2>
   <div class="settings">
-    <div class="card">
-      <h3>Profile</h3>
-      <p>Update name, email, and password.</p>
-    </div>
-    <div class="card">
-      <h3>Plan Management</h3>
-      <p>Upgrade, downgrade, or cancel subscription.</p>
-    </div>
-    <div class="card">
-      <h3>Payment Methods</h3>
-      <p>Add or remove credit cards, PayPal account, or Stripe details.</p>
-    </div>
-    <div class="card">
-      <h3>Notifications</h3>
-      <p>Set email alerts for videos, Fame Boost, and affiliate updates.</p>
-    </div>
+    <div class="card"><h3>Profile</h3><p>Update name, email, password.</p></div>
+    <div class="card"><h3>Plan Management</h3><p>Upgrade, downgrade, cancel subscription.</p></div>
+    <div class="card"><h3>Payment Methods</h3><p>Add/remove credit cards, PayPal, Stripe.</p></div>
+    <div class="card"><h3>Notifications</h3><p>Email alerts for videos, Fame Boost, affiliate earnings.</p></div>
   </div>
 </section>
 
 <section id="dashboard">
-  <h2>Kairah Studio Dashboard</h2>
-  <div class="tabs" style="display:flex; gap:1rem; margin-bottom:1rem; justify-content:center;">
+  <h2>Dashboard</h2>
+  <div class="tabs">
     <button onclick="openTab('video')">🎬 Video</button>
     <button onclick="openTab('text-video')">📝 Photo/Text-to-Video</button>
     <button onclick="openTab('image')">🖼 Image</button>
     <button onclick="openTab('audio')">🎵 Audio</button>
   </div>
-
-  <div id="video" class="tab-content" style="display:block;">
-    <div class="video-mock">Full-length cinematic video preview (2–3 mins)</div>
-    <button style="margin-top:0.5rem;" onclick="openAuth()">Create Video</button>
-    <p>Merge clips, apply Royal Filters, add music/voice, Fame Boost.</p>
-  </div>
-
-  <div id="text-video" class="tab-content" style="display:none;">
-    <div class="video-mock">Photo/Text-to-Video preview</div>
-    <button style="margin-top:0.5rem;" onclick="openAuth()">Generate Clip</button>
-    <p>Convert your images or text prompts into cinematic short videos.</p>
-  </div>
-
-  <div id="image" class="tab-content" style="display:none;">
-    <div class="video-mock">AI Image preview</div>
-    <button style="margin-top:0.5rem;" onclick="openAuth()">Create Image</button>
-    <p>Generate high-quality AI images with Kairah’s Royal Filters.</p>
-  </div>
-
-  <div id="audio" class="tab-content" style="display:none;">
-    <div class="video-mock">Audio preview</div>
-    <button style="margin-top:0.5rem;" onclick="openAuth()">Create Audio</button>
-    <p>Create background music, affirmations, or voiceovers for your videos.</p>
-  </div>
+  <div id="video" class="tab-content active"><div class="video-mock">Full-length Video Preview</div><button onclick="createVideo('video')">Create Video</button></div>
+  <div id="text-video" class="tab-content"><div class="video-mock">Photo/Text-to-Video Preview</div><button onclick="createVideo('text-video')">Generate Clip</button></div>
+  <div id="image" class="tab-content"><div class="video-mock">Image Preview</div><button onclick="createVideo('image')">Create Image</button></div>
+  <div id="audio" class="tab-content"><div class="video-mock">Audio Preview</div><button onclick="createVideo('audio')">Create Audio</button></div>
 </section>
 
 <section id="about">
   <h2>About Kairah Studio</h2>
-  <p>Kairah Studio is a cinematic AI video generator blending divine beauty, royal aesthetics, and emotional storytelling. Create studio-grade films, viral shorts, and the signature Meow Meow universe — all in one place.</p>
-  <p><strong>FAQ Highlights:</strong></p>
+  <p>Kairah Studio blends divine beauty, royal aesthetics, and emotional storytelling for films, shorts, and Meow Meow universe creations.</p>
   <div class="faq">
-    <div class="faq-item" onclick="toggleFAQ(this)">
-      <h4>How does video generation work?</h4>
-      <p>Type a prompt. AI generates scenes with cinematic lighting, royal filters, and story continuity.</p>
-    </div>
-    <div class="faq-item" onclick="toggleFAQ(this)">
-      <h4>What file formats are supported?</h4>
-      <p>MP4 for videos, JPG/PNG for images, WAV/MP3 for audio.</p>
-    </div>
-    <div class="faq-item" onclick="toggleFAQ(this)">
-      <h4>Can I merge multiple clips?</h4>
-      <p>Yes, up to 10 clips can be combined seamlessly.</p>
-    </div>
-    <div class="faq-item" onclick="toggleFAQ(this)">
-      <h4>How does the affiliate program work?</h4>
-      <p>Share your link, earn 30% commission on referred sales. Automatic payouts after $500.</p>
-    </div>
+    <div class="faq-item" onclick="toggleFAQ(this)"><h4>How does video generation work?</h4><p>Type a prompt. AI generates scenes with cinematic lighting, royal filters, and story continuity.</p></div>
+    <div class="faq-item" onclick="toggleFAQ(this)"><h4>File formats supported?</h4><p>MP4 for videos, JPG/PNG for images, WAV/MP3 for audio.</p></div>
+    <div class="faq-item" onclick="toggleFAQ(this)"><h4>Can I merge multiple clips?</h4><p>Yes, up to 10 clips can be combined seamlessly.</p></div>
+    <div class="faq-item" onclick="toggleFAQ(this)"><h4>Affiliate program?</h4><p>Share your link, earn 30% commission, automatic payouts after $500.</p></div>
   </div>
 </section>
 
@@ -281,25 +181,37 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
 </footer>
 
 <script>
-  function toggleFAQ(el){
-    const p = el.querySelector('p');
-    p.style.display = p.style.display === 'block' ? 'none' : 'block';
-  }
-  function openAuth(){ document.getElementById('auth-overlay').style.display='flex'; }
-  function closeAuth(){ document.getElementById('auth-overlay').style.display='none'; }
-  document.getElementById('auth-form').addEventListener('submit', function(e){
+  // Firebase
+  const firebaseConfig = { apiKey:"YOUR_API_KEY", authDomain:"YOUR_PROJECT.firebaseapp.com", projectId:"YOUR_PROJECT", storageBucket:"YOUR_PROJECT.appspot.com", messagingSenderId:"YOUR_SENDER_ID", appId:"YOUR_APP_ID" };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  document.getElementById('auth-form').addEventListener('submit', async function(e){
     e.preventDefault();
     const email = e.target[0].value;
     const password = e.target[1].value;
     const plan = e.target[2].value;
     const affiliate = e.target[3].value;
-    alert(`✅ ${email} selected ${plan} plan. Affiliate: ${affiliate || 'None'}`);
-    closeAuth();
+    try{
+      let user = await auth.createUserWithEmailAndPassword(email,password);
+      await db.collection('users').doc(user.user.uid).set({email,plan,affiliate,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+      alert(`✅ Welcome ${email}, plan: ${plan}`); closeAuth();
+    }catch(err){ try{ let user = await auth.signInWithEmailAndPassword(email,password); alert(`✅ Welcome back ${email}`); closeAuth(); }catch(err2){ alert(err2.message); } }
   });
-  function openTab(tab) {
-    const tabs = document.querySelectorAll('.tab-content');
-    tabs.forEach(t => t.style.display='none');
-    document.getElementById(tab).style.display='block';
+
+  function toggleFAQ(el){ const p=el.querySelector('p'); p.style.display=p.style.display==='block'?'none':'block'; }
+  function openAuth(){ document.getElementById('auth-overlay').style.display='flex'; }
+  function closeAuth(){ document.getElementById('auth-overlay').style.display='none'; }
+  function openTab(tab){ document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active')); document.getElementById(tab).classList.add('active'); }
+
+  async function createVideo(type){
+    const user = auth.currentUser;
+    if(!user){ openAuth(); return; }
+    const prompt = prompt("Enter prompt/scene:");
+    const res = await fetch(`/generate/${type}`,{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({userId:user.uid,prompt})});
+    const data = await res.json();
+    alert(`✅ Your ${type} is ready! Download: ${data.url}`);
   }
 </script>
 
