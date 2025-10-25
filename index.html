@@ -19,6 +19,7 @@ button{transition:all 0.3s; cursor:pointer;}
 .bg-red-visa{background:#FF5F00; color:#fff;}
 .bg-blue-visa{background:#1A1F71; color:#fff;}
 .card { background:rgba(50,30,60,0.8); border-radius:1rem; padding:1.5rem; box-shadow:0 8px 20px rgba(0,0,0,0.5);}
+.card:hover { transform: translateY(-5px); box-shadow:0 12px 24px rgba(0,0,0,0.6);}
 .accordion { cursor:pointer; padding:1rem; border-radius:0.5rem; background:rgba(50,30,60,0.6); margin-bottom:0.5rem;}
 .accordion-content { max-height:0; overflow:hidden; transition:max-height 0.3s ease; padding-left:0;}
 .locked{opacity:0.6; pointer-events:none;}
@@ -33,11 +34,14 @@ button{transition:all 0.3s; cursor:pointer;}
 @keyframes bounce {0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(-5px);}}
 textarea, input[type="text"], input[type="email"], input[type="password"] { resize:none; width:100%; padding:0.75rem; border-radius:0.5rem; color:black; margin-bottom:0.5rem; }
 .section-card { background:rgba(40,20,60,0.85); padding:1rem; border-radius:0.75rem; margin-bottom:1rem; box-shadow:0 6px 18px rgba(0,0,0,0.5);}
+button:hover { transform: scale(1.05); }
+#affiliate .card:hover { background:linear-gradient(135deg,#D4AF37,#3D2C41); color:#fff;}
+.booster-pulse { animation: pulse 2s infinite; }
+@keyframes pulse {0% { transform:scale(1);} 50%{ transform:scale(1.1);} 100%{transform:scale(1);}}
 </style>
 </head>
 <body>
 
-<!-- Header -->
 <header>
   <h1>Kairah Studio</h1>
   <nav>
@@ -51,7 +55,6 @@ textarea, input[type="text"], input[type="email"], input[type="password"] { resi
   </nav>
 </header>
 
-<!-- Hero -->
 <section class="text-center py-16">
   <h2 class="text-5xl font-bold mb-4">Beyond Reality. Into Royalty.</h2>
   <p class="mb-6 text-lg max-w-xl mx-auto">Kairah Studio is a cinematic AI video generator blending divine beauty, emotional storytelling, and the signature Meow Meow universe.</p>
@@ -61,7 +64,6 @@ textarea, input[type="text"], input[type="email"], input[type="password"] { resi
   </div>
 </section>
 
-<!-- Login / Sign Up -->
 <section id="loginSection" class="max-w-md mx-auto my-8 hidden">
   <h2 class="text-3xl font-bold text-center mb-4">Sign Up / Login</h2>
   <input type="email" id="email" placeholder="Email" class="mb-2 w-full p-2 rounded text-black"/>
@@ -70,7 +72,6 @@ textarea, input[type="text"], input[type="email"], input[type="password"] { resi
   <p id="loginStatus" class="mt-2 text-center text-sm"></p>
 </section>
 
-<!-- Video Preview -->
 <section id="videoSection">
   <h2 class="text-3xl font-bold text-center mb-4">Cinematic Preview</h2>
   <div class="video-container">
@@ -84,12 +85,11 @@ textarea, input[type="text"], input[type="email"], input[type="password"] { resi
   <div class="mt-4 flex justify-center gap-4">
     <button id="freeBtn" class="bg-yellow-400 px-6 py-2 rounded font-semibold hover:bg-yellow-500" onclick="generateVideo('free')">▶ 6-sec Preview</button>
     <button id="proBtn" class="bg-yellow-400 px-6 py-2 rounded font-semibold hover:bg-yellow-500 locked" onclick="generateVideo('pro')">▶ Full Video</button>
-    <button id="boosterBtn" class="bg-purple-500 px-4 py-2 rounded hover:bg-purple-600" onclick="activateBooster()">🔥 Fame Booster $9</button>
+    <button id="boosterBtn" class="bg-purple-500 px-4 py-2 rounded hover:bg-purple-600 booster-pulse" onclick="activateBooster()">🔥 Fame Booster $9</button>
   </div>
   <p id="status" class="mt-2 text-center"></p>
 </section>
 
-<!-- Photo/Text → Video -->
 <section id="photoVideo" class="py-12 max-w-4xl mx-auto">
   <h2 class="text-3xl font-bold text-center mb-4">Photo / Text → Video</h2>
   <div class="section-card">
@@ -100,7 +100,6 @@ textarea, input[type="text"], input[type="email"], input[type="password"] { resi
   </div>
 </section>
 
-<!-- AI Image Creator -->
 <section id="imageCreator" class="py-12 max-w-4xl mx-auto">
   <h2 class="text-3xl font-bold text-center mb-4">AI Image Creator</h2>
   <div class="section-card">
@@ -110,7 +109,6 @@ textarea, input[type="text"], input[type="email"], input[type="password"] { resi
   </div>
 </section>
 
-<!-- Audio/Voice Creator -->
 <section id="audioCreator" class="py-12 max-w-4xl mx-auto">
   <h2 class="text-3xl font-bold text-center mb-4">Audio / Voice Creator</h2>
   <div class="section-card">
@@ -125,7 +123,6 @@ textarea, input[type="text"], input[type="email"], input[type="password"] { resi
   </div>
 </section>
 
-<!-- Features -->
 <section id="features" class="py-16 max-w-4xl mx-auto">
   <h2 class="text-3xl font-bold text-center mb-4">Members Can Do</h2>
   <div class="grid md:grid-cols-2 gap-4">
@@ -142,7 +139,6 @@ textarea, input[type="text"], input[type="email"], input[type="password"] { resi
   </div>
 </section>
 
-<!-- Pricing -->
 <section id="pricing" class="py-16 max-w-5xl mx-auto">
   <h2 class="text-3xl font-bold text-center mb-8">Pricing Plans</h2>
   <div class="grid md:grid-cols-2 gap-4">
@@ -175,22 +171,20 @@ textarea, input[type="text"], input[type="email"], input[type="password"] { resi
   </div>
 </section>
 
-<!-- About -->
 <section id="about" class="py-16 max-w-4xl mx-auto">
   <h2 class="text-3xl font-bold text-center mb-4">About Kairah Studio</h2>
   <div class="accordion">What is Kairah Studio?</div>
   <div class="accordion-content"><p>Kairah Studio is a cinematic AI video generator blending divine beauty, storytelling, and viral-ready content creation tools.</p></div>
   <div class="accordion">How does video generation work?</div>
   <div class="accordion-content"><p>Type a prompt, select filters, and generate videos. Merge clips, add voice/music, and export in HD/4K.</p></div>
-  <div class="accordion">What platforms can I share videos to?</div>
+  <div class="accordion">Platforms for sharing videos?</div>
   <div class="accordion-content"><p>Social media, YouTube, TikTok, Instagram Reels, or download for personal/brand use.</p></div>
-  <div class="accordion">Is it safe for children?</div>
-  <div class="accordion-content"><p>Yes, content is family-friendly. Some features require supervision.</p></div>
-  <div class="accordion">How often can I generate videos?</div>
-  <div class="accordion-content"><p>Depends on your plan: Free = 1x6s, Pro/Diamond = multiple per month, Lifetime = unlimited.</p></div>
+  <div class="accordion">Safe for children?</div>
+  <div class="accordion-content"><p>Yes, family-friendly. Some features require supervision.</p></div>
+  <div class="accordion">Video generation limits?</div>
+  <div class="accordion-content"><p>Depends on your plan: Free=1x6s, Pro/Diamond=multiple per month, Lifetime=unlimited.</p></div>
 </section>
 
-<!-- Affiliate -->
 <section id="affiliate" class="py-16 max-w-4xl mx-auto">
   <h2 class="text-3xl font-bold text-center mb-4">Affiliate Program</h2>
   <p>Earn <strong>30% commission</strong> automatically sent to your account; 70% to Kairah Studio.</p>
@@ -198,7 +192,6 @@ textarea, input[type="text"], input[type="email"], input[type="password"] { resi
   <p>Dashboard: referral links, analytics, viral promotion instructions.</p>
 </section>
 
-<!-- Settings -->
 <section id="settings" class="py-16 max-w-4xl mx-auto">
   <h2 class="text-3xl font-bold text-center mb-4">Settings</h2>
   <p>Profile, email, username, password</p>
@@ -211,17 +204,14 @@ textarea, input[type="text"], input[type="email"], input[type="password"] { resi
   <p>Theme settings (dark/light)</p>
 </section>
 
-<!-- Support -->
 <section id="support" class="py-16 max-w-4xl mx-auto text-center">
   <h2 class="text-3xl font-bold mb-4">Support</h2>
   <p>Contact us at <a href="mailto:keishapoa@gmail.com" class="underline text-yellow-400">keishapoa@gmail.com</a></p>
 </section>
 
-<!-- Footer -->
 <footer class="text-center py-8 text-sm">© 2025 Kairah Empire — Beyond Reality. Into Royalty.</footer>
 
 <script>
-// Accordion
 document.querySelectorAll('.accordion').forEach(a=>{
   a.addEventListener('click',()=>{
     a.classList.toggle('active');
@@ -229,8 +219,6 @@ document.querySelectorAll('.accordion').forEach(a=>{
     if(panel.style.maxHeight){panel.style.maxHeight=null;}else{panel.style.maxHeight=panel.scrollHeight+"px";}
   });
 });
-
-// Mock login & video
 let user={loggedIn:false,plan:null};
 function showLogin(){document.getElementById('loginSection').classList.toggle('hidden');}
 function login(){const email=document.getElementById('email').value; const pass=document.getElementById('password').value;
@@ -243,17 +231,9 @@ function generateVideo(type){
   else{video.src="https://samplelib.com/lib/preview/mp4/sample-10s.mp4"; video.play(); status.textContent="🎬 Playing full video...";}
 }
 function activateBooster(){alert("🔥 Fame Booster activated!");}
-
-// Mock Photo/Text → Video
 function mockPhotoVideo(){document.getElementById('photoVideoStatus').textContent="🎬 Generated video from photo/text preview...";}
-
-// Mock AI Image
 function mockAIImage(){document.getElementById('imageStatus').textContent="🖼️ AI Image generated preview...";}
-
-// Mock Audio
 function mockAudio(){document.getElementById('audioStatus').textContent="🔊 Audio clip generated preview...";}
-
-// Mock payment processing with affiliate split
 function processPayment(plan, amount){
   if(!user.loggedIn){alert("Please login first"); return;}
   const affiliatePercent = 30;
