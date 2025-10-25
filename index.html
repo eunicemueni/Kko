@@ -1,168 +1,488 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kairah Studio + Fame Booster</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-body {font-family:'Inter',sans-serif; background: linear-gradient(to right, #3d2c41, #d4af37); color: #f5f5f5; margin:0; padding:0;}
-.nav-link:hover {color:#ffe082;}
-.button-mock {transition: all 0.2s ease-in-out;}
-.button-mock:hover {opacity:0.85; transform:scale(1.05);}
-.section {padding:5rem 0; width:100%;}
-.container {max-width:1200px; margin:0 auto; padding:0 2rem;}
-.video-placeholder, .template-preview {cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:bold; border-radius:8px; transition: transform 0.3s, box-shadow 0.3s, background 0.3s; margin-bottom:12px; background:#6d4c41; color:#fff; position: relative; overflow: hidden; height:150px;}
-.video-placeholder::after, .template-preview::after {content:'▶'; font-size:1.5rem; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); opacity:0.6;}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kairah Studio — Beyond Reality. Into Royalty.</title>
+
+  <!-- Tailwind CDN (quick mock) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* ===== Colors & base ===== */
+    :root{
+      --k-gold:#D4AF37;
+      --k-plum:#3D2C41;
+      --k-teal:#00c2b8;
+      --glass: rgba(255,255,255,0.06);
+      --muted: rgba(255,255,255,0.75);
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color: #fff;
+      background: linear-gradient(180deg,#071a1b 0%, #14122a 60%);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
+    }
+
+    /* ===== Background video area ===== */
+    .bg-wrap{
+      position:fixed;
+      inset:0;
+      z-index:-10;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      pointer-events:none;
+    }
+    .bg-video{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      min-width:100%;
+      min-height:100%;
+      width:auto;
+      height:auto;
+      filter: blur(12px) saturate(1.05) contrast(1.03) brightness(.95);
+      opacity:.9;
+      object-fit:cover;
+    }
+    /* fallback gradient if video missing */
+    .bg-fallback{
+      position:absolute;
+      inset:0;
+      background: radial-gradient(ellipse at 20% 20%, rgba(0,194,184,0.12), transparent 10%),
+                  radial-gradient(ellipse at 80% 80%, rgba(61,44,65,0.16), transparent 20%),
+                  linear-gradient(135deg,#0b2630 10%, #1a1830 60%);
+      filter: blur(4px);
+      opacity: .95;
+    }
+
+    /* gold shimmer headline */
+    .shimmer {
+      position:relative;
+      display:inline-block;
+      background: linear-gradient(90deg, rgba(212,175,55,0.95), rgba(255,255,255,0.9) 40%, rgba(212,175,55,0.95));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      animation: shimmerSlide 3.2s linear infinite;
+      background-size:200% 100%;
+    }
+    @keyframes shimmerSlide {
+      0% { background-position: -100% 0; }
+      50% { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+
+    /* glass card */
+    .glass {
+      background: var(--glass);
+      border: 1px solid rgba(255,255,255,0.04);
+      backdrop-filter: blur(6px) saturate(1.05);
+    }
+
+    /* particle canvas sits above video */
+    #sparkles{
+      position: fixed;
+      inset: 0;
+      z-index: -5;
+      pointer-events: none;
+    }
+
+    /* subtle parallax transforms triggered by JS (class toggles) */
+    .reveal {
+      opacity:0;
+      transform: translateY(18px);
+      transition: all 700ms cubic-bezier(.2,.9,.2,1);
+    }
+    .reveal.visible {
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    .card-hover {
+      transition: transform .35s cubic-bezier(.2,.9,.2,1), box-shadow .35s;
+    }
+    .card-hover:hover {
+      transform: translateY(-10px) scale(1.01);
+      box-shadow: 0 20px 60px rgba(3,6,23,0.6);
+      border-color: rgba(212,175,55,0.12);
+    }
+
+    /* CTA button */
+    .btn-gold {
+      background: linear-gradient(90deg,var(--k-gold), #F7D88C);
+      color: #2b1b2b;
+      padding: .75rem 1.25rem;
+      border-radius: 999px;
+      font-weight:700;
+      box-shadow: 0 10px 30px rgba(212,175,55,0.12);
+    }
+
+    /* responsive tweaks */
+    @media (max-width:768px){
+      .hero-h { font-size: 2.2rem; }
+      .hero-sub { font-size: .95rem; }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-<header class="flex justify-between p-4 border-b border-gray-400 mb-4">
-  <div>
-    <a href="#landing" class="nav-link">Kairah Studio</a> | 
-    <a href="#studio" class="nav-link">Studio</a> | 
-    <a href="#pricing" class="nav-link">Pricing</a> | 
-    <a href="#faq" class="nav-link">FAQ</a>
+
+  <!-- Background video & sparkles -->
+  <div class="bg-wrap" aria-hidden="true">
+    <!-- Replace assets/teal_plum_mist.mp4 with your real cinematic background -->
+    <video id="bgVideo" class="bg-video" autoplay muted loop playsinline>
+      <source src="assets/teal_plum_mist.mp4" type="video/mp4">
+      <!-- If no video available, fallback gradient is visible -->
+    </video>
+    <div class="bg-fallback"></div>
+    <canvas id="sparkles"></canvas>
   </div>
-  <div id="user-status">
-    <button class="button-mock bg-yellow-500 text-black" onclick="signInPrompt()">Login</button>
+
+  <!-- Page container -->
+  <div class="relative z-30 min-h-screen">
+
+    <!-- Header -->
+    <header class="max-w-7xl mx-auto px-6 pt-6 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg,var(--k-gold), #F7D88C);">
+          <span class="font-bold text-black">K</span>
+        </div>
+        <div>
+          <div class="text-lg font-semibold">Kairah Studio</div>
+          <div class="text-xs text-white/70">Divine Cinematics by AI</div>
+        </div>
+      </div>
+      <nav class="flex items-center gap-3">
+        <a href="#features" class="text-sm text-white/90">Features</a>
+        <a href="#pricing" class="text-sm text-white/90">Pricing</a>
+        <button id="signinBtn" class="text-sm px-4 py-2 rounded-md bg-white/5 hover:bg-white/8">Sign in</button>
+      </nav>
+    </header>
+
+    <!-- Hero -->
+    <main class="max-w-6xl mx-auto px-6">
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center pt-12 pb-8">
+        <div class="space-y-6">
+          <h1 class="hero-h text-5xl md:text-6xl font-extrabold leading-tight reveal">
+            Beyond Reality. <span class="shimmer">Into Royalty.</span>
+          </h1>
+
+          <p class="hero-sub text-lg text-white/85 max-w-xl reveal" style="transition-delay:120ms">
+            <strong class="text-white/95">Kairah Studio</strong> is a cinematic AI video generator that blends divine beauty and emotional storytelling.
+            Create studio-grade films, viral shorts, and the signature Meow Meow universe — all in one place.
+          </p>
+
+          <div class="flex gap-4 reveal" style="transition-delay:220ms">
+            <a href="#pricing" class="btn-gold">Create Your First Royal Video</a>
+            <a href="#features" class="px-5 py-2 rounded-full bg-white/6 hover:bg-white/10">View Features</a>
+          </div>
+
+          <div class="mt-4 text-sm text-white/75 reveal" style="transition-delay:340ms">
+            <strong>Tag:</strong> "Not just AI — Divine Cinematics." • <strong>Special:</strong> Lifetime launch at $500.
+          </div>
+        </div>
+
+        <!-- Mock cinematic preview -->
+        <div class="relative reveal" style="transition-delay:420ms">
+          <div class="glass rounded-2xl overflow-hidden shadow-2xl" style="height:360px;">
+            <div class="h-full w-full flex items-center justify-center bg-gradient-to-tr from-[#0f4760] to-[#2a1b3a]">
+              <div class="text-center">
+                <div class="text-2xl font-semibold">Cinematic Preview</div>
+                <p class="mt-2 text-sm text-white/70">(Mock player) — your Meow Meow episode will render here)</p>
+                <div class="mt-6 flex gap-3 justify-center">
+                  <button class="w-12 h-12 rounded-full glass flex items-center justify-center">▶</button>
+                  <button class="w-12 h-12 rounded-full glass flex items-center justify-center">⏯</button>
+                  <button class="w-12 h-12 rounded-full glass flex items-center justify-center">⤓</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="absolute -bottom-4 left-4 glass px-4 py-2 rounded-xl text-xs">Royal Filters • Prompt Magic • Emotion AI</div>
+        </div>
+      </section>
+
+      <!-- Features -->
+      <section id="features" class="mt-12 grid md:grid-cols-3 gap-6">
+        <div class="glass p-6 reveal card-hover" style="transition-delay:80ms">
+          <h3 class="font-semibold text-lg">Royal Beauty Engine™</h3>
+          <p class="mt-2 text-sm text-white/80">Teal-gold cinematic glow, skin-softening light and lens-style effects tailored for beauty and emotion.</p>
+        </div>
+        <div class="glass p-6 reveal card-hover" style="transition-delay:140ms">
+          <h3 class="font-semibold text-lg">Prompt Magic AI™</h3>
+          <p class="mt-2 text-sm text-white/80">Type a line. Get a script. Story beats, camera direction, and scene templates generated for you.</p>
+        </div>
+        <div class="glass p-6 reveal card-hover" style="transition-delay:200ms">
+          <h3 class="font-semibold text-lg">Kairah Fame Boost</h3>
+          <p class="mt-2 text-sm text-white/80">$9 viral boost add-on — promote top clips through our distribution network for fast traction.</p>
+        </div>
+      </section>
+
+      <!-- Pricing -->
+      <section id="pricing" class="mt-14">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-3xl font-semibold reveal">Pricing</h2>
+            <p class="text-sm text-white/80 mt-1 reveal" style="transition-delay:80ms">Choose your royal plan — yearly subscriptions give generous savings.</p>
+          </div>
+
+          <div class="flex items-center gap-3 glass px-2 py-1 rounded-full reveal" style="transition-delay:140ms">
+            <button id="optMonthly" class="px-4 py-2 rounded-full">Monthly</button>
+            <button id="optYearly" class="px-4 py-2 rounded-full bg-white/8">Yearly</button>
+          </div>
+        </div>
+
+        <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Free -->
+          <div class="glass p-6 reveal card-hover" style="transition-delay:180ms">
+            <div class="flex items-start justify-between">
+              <div>
+                <h4 class="font-bold text-lg">Free</h4>
+                <p class="text-xs text-white/70 mt-1">Try one 6-second cinematic clip</p>
+              </div>
+              <div class="text-right">
+                <div class="text-2xl font-semibold">Free</div>
+              </div>
+            </div>
+            <ul class="mt-4 text-sm text-white/80 space-y-2">
+              <li>• 1 free 6s video (watermarked)</li>
+              <li>• Preview all tools</li>
+              <li>• Prompt Magic (lite)</li>
+            </ul>
+            <div class="mt-6 flex gap-3">
+              <button class="flex-1 btn-gold">Get Free</button>
+              <button class="px-4 py-2 rounded-xl bg-white/6">Demo</button>
+            </div>
+          </div>
+
+          <!-- Pro -->
+          <div class="glass p-6 reveal card-hover" style="transition-delay:240ms">
+            <div class="flex items-start justify-between">
+              <div>
+                <h4 class="font-bold text-lg">Pro</h4>
+                <p class="text-xs text-white/70 mt-1">Start creating HD videos</p>
+              </div>
+              <div class="text-right">
+                <div class="text-2xl font-semibold" data-monthly="$19" data-yearly="$300">$19/mo</div>
+                <div class="text-xs text-white/60">or $300/yr</div>
+              </div>
+            </div>
+            <ul class="mt-4 text-sm text-white/80 space-y-2">
+              <li>• Up to 1-minute videos</li>
+              <li>• 10 generations / month</li>
+              <li>• 1080p export</li>
+              <li>• Merge 3 clips</li>
+            </ul>
+            <div class="mt-6 flex gap-3">
+              <button class="flex-1 btn-gold">Get Pro</button>
+              <button class="px-4 py-2 rounded-xl bg-white/6">Demo</button>
+            </div>
+          </div>
+
+          <!-- Diamond -->
+          <div class="glass p-6 reveal card-hover" style="transition-delay:300ms">
+            <div class="flex items-start justify-between">
+              <div>
+                <h4 class="font-bold text-lg">Diamond <span class="text-xs text-white/70">Most Popular</span></h4>
+                <p class="text-xs text-white/70 mt-1">Full cinematic suite</p>
+              </div>
+              <div class="text-right">
+                <div class="text-2xl font-semibold" data-monthly="$49" data-yearly="$450">$49/mo</div>
+                <div class="text-xs text-white/60">or $450/yr</div>
+              </div>
+            </div>
+            <ul class="mt-4 text-sm text-white/80 space-y-2">
+              <li>• Up to 3-minute cinematic videos</li>
+              <li>• Merge 5+ clips</li>
+              <li>• 4K export</li>
+              <li>• Priority rendering</li>
+            </ul>
+            <div class="mt-6 flex gap-3">
+              <button class="flex-1 btn-gold">Choose Diamond</button>
+              <button class="px-4 py-2 rounded-xl bg-white/6">Demo</button>
+            </div>
+          </div>
+
+          <!-- Cinematic Universe (full-width on small) -->
+          <div class="glass p-6 reveal card-hover lg:col-span-2" style="transition-delay:360ms">
+            <div class="flex items-start justify-between">
+              <div>
+                <h4 class="font-bold text-lg">Cinematic Universe</h4>
+                <p class="text-xs text-white/70 mt-1">Studio-grade storytelling</p>
+              </div>
+              <div class="text-right">
+                <div class="text-2xl font-semibold" data-monthly="$99" data-yearly="$600">$99/mo</div>
+                <div class="text-xs text-white/60">or $600/yr</div>
+              </div>
+            </div>
+            <ul class="mt-4 text-sm text-white/80 space-y-2">
+              <li>• Multi-scene storytelling</li>
+              <li>• Bulk generation (10 videos)</li>
+              <li>• AI voice & dialogue</li>
+              <li>• Royal templates & Magic FX</li>
+            </ul>
+            <div class="mt-6 flex gap-3">
+              <button class="flex-1 btn-gold">Unlock Cinematic</button>
+              <button class="px-4 py-2 rounded-xl bg-white/6">Demo</button>
+            </div>
+          </div>
+
+          <!-- Lifetime & Fame Booster column -->
+          <div class="lg:col-span-1 space-y-6">
+            <div class="glass p-6 reveal card-hover" style="transition-delay:420ms">
+              <h4 class="font-bold">Lifetime — Limited</h4>
+              <p class="text-xs text-white/70 mt-1">One-time, forever Kairah access</p>
+              <div class="mt-4 text-2xl font-semibold">$500</div>
+              <div class="mt-4">
+                <button class="w-full btn-gold">Claim Lifetime</button>
+              </div>
+            </div>
+
+            <div class="glass p-6 reveal card-hover" style="transition-delay:480ms">
+              <h4 class="font-bold">Fame Booster</h4>
+              <p class="text-xs text-white/70 mt-1">Promote your best clip — $9 per boost</p>
+              <div class="mt-4">
+                <button class="w-full px-4 py-3 rounded-xl bg-white/6">Add Boost</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA footer section -->
+      <section class="mt-16 mb-20 p-8 rounded-2xl glass flex items-center justify-between">
+        <div>
+          <h4 class="text-2xl font-semibold">Where imagination wears a crown.</h4>
+          <p class="text-sm text-white/80 mt-2">Create your first royal cinematic video — and let the world remember.</p>
+        </div>
+        <div>
+          <a href="#pricing" class="btn-gold">Get Started</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="text-center p-6 text-xs text-white/60">© 2025 Kairah Empire — Beyond Reality. Into Royalty.</footer>
   </div>
-</header>
 
-<!-- Landing -->
-<section id="landing" class="section">
-<h1 class="text-4xl mb-4">Kairah Studio + Fame Booster</h1>
-<p class="mb-4">Generate stunning AI videos, cinematic templates, and viral boosters.</p>
-<button class="button-mock bg-yellow-500 text-black" onclick="scrollToSection('studio')">Try Studio</button>
-</section>
+  <!-- ===== Lightweight JS: Divine Motion (parallax, reveal, particle sparkles) ===== -->
+  <script>
+    /* smooth scroll for CTA links */
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        e.preventDefault();
+        const id = a.getAttribute('href').slice(1);
+        const el = document.getElementById(id);
+        if(el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
 
-<!-- Studio -->
-<section id="studio" class="section">
-<h2 class="text-3xl mb-4">Studio</h2>
-<input type="text" id="prompt" placeholder="Type your idea..." class="p-2 rounded w-64 mr-2"/>
-<button class="button-mock bg-yellow-500 text-black" onclick="promptMagic()">Prompt Magic</button>
-<button class="button-mock bg-yellow-500 text-black" onclick="generateVideo()">Generate Video</button>
+    /* Reveal on scroll */
+    const reveals = document.querySelectorAll('.reveal');
+    const revealOnScroll = () => {
+      const triggerBottom = window.innerHeight * 0.85;
+      reveals.forEach((el, i) => {
+        const rect = el.getBoundingClientRect();
+        if(rect.top < triggerBottom) el.classList.add('visible');
+      });
+    };
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
 
-<h3 class="mt-6">Templates</h3>
-<div id="templates" class="grid grid-cols-2 gap-4 mt-2"></div>
-<h3 class="mt-6">My Videos</h3>
-<div id="my-videos" class="mt-2"></div>
-</section>
+    /* Simple parallax for hero: move bg-video slightly on mouse move */
+    const bgVideo = document.getElementById('bgVideo');
+    let mouseX=0, mouseY=0;
+    window.addEventListener('mousemove', (e)=>{
+      mouseX = (e.clientX - window.innerWidth/2) / (window.innerWidth/2);
+      mouseY = (e.clientY - window.innerHeight/2) / (window.innerHeight/2);
+      if(bgVideo){
+        bgVideo.style.transform = `translate(calc(-50% + ${mouseX*8}px), calc(-50% + ${mouseY*6}px)) scale(1.05)`;
+      }
+    });
 
-<!-- Pricing -->
-<section id="pricing" class="section">
-<h2 class="text-3xl mb-4">Pricing</h2>
-<ul>
-<li>Free: 1 video</li>
-<li>Pro: Unlimited videos</li>
-<li>Diamond: Unlimited + premium templates</li>
-<li>Lifetime: One-time permanent access</li>
-</ul>
-</section>
+    /* Particle sparkles canvas */
+    (function(){
+      const canvas = document.getElementById('sparkles');
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = innerWidth;
+      let h = canvas.height = innerHeight;
+      const particles = [];
+      const count = Math.floor((w*h)/90000); // density
 
-<!-- Fame Booster -->
-<section id="fame" class="section">
-<h2 class="text-3xl mb-4">Fame Booster (Mock)</h2>
-<p>Boost your video with trending sounds, captions, and posting suggestions.</p>
-<input type="range" id="boost-level" min="1" max="5" value="1"/>
-<button class="button-mock bg-yellow-500 text-black" onclick="applyBoost()">Apply Boost</button>
-</section>
+      function rand(min,max){ return Math.random()*(max-min)+min; }
 
-<!-- Affiliate -->
-<section id="affiliate" class="section">
-<h2 class="text-3xl mb-4">Affiliate Dashboard (Mock)</h2>
-<p>Share your link and earn 30% commission per referral.</p>
-<input type="text" id="affiliate-link" value="https://kairahstudio.com/referral/ABC123" readonly class="p-2 w-96 mb-2"/>
-<button class="button-mock bg-yellow-500 text-black" onclick="copyAffiliateLink()">Copy Link</button>
-</section>
+      function initParticles(){
+        particles.length = 0;
+        for(let i=0;i<count;i++){
+          particles.push({
+            x: rand(0,w),
+            y: rand(0,h),
+            r: rand(0.4,1.6),
+            alpha: rand(0.02,0.22),
+            vx: rand(-0.05,0.05),
+            vy: rand(-0.02,0.02),
+            phase: rand(0,Math.PI*2)
+          });
+        }
+      }
+      initParticles();
 
-<!-- FAQ -->
-<section id="faq" class="section">
-<h2 class="text-3xl mb-4">FAQ</h2>
-<div>
-<p><strong>Q:</strong> How many free videos can I generate? <strong>A:</strong> 1 per account.</p>
-<p><strong>Q:</strong> Can I upgrade my plan later? <strong>A:</strong> Yes, anytime.</p>
-<p><strong>Q:</strong> Are templates locked for free users? <strong>A:</strong> Some premium templates are locked.</p>
-</div>
-</section>
+      function resize(){
+        w = canvas.width = innerWidth;
+        h = canvas.height = innerHeight;
+        initParticles();
+      }
+      window.addEventListener('resize', resize);
 
-<!-- Testimonials -->
-<section id="testimonials" class="section">
-<h2 class="text-3xl mb-4">Testimonials</h2>
-<p>"Amazing AI videos!" – User A</p>
-<p>"Kairah Studio boosted my social content." – User B</p>
-</section>
+      function draw(){
+        ctx.clearRect(0,0,w,h);
+        for(let p of particles){
+          p.x += p.vx;
+          p.y += p.vy + Math.sin((p.phase += 0.01))*0.06;
+          if(p.x < -10) p.x = w+10;
+          if(p.x > w+10) p.x = -10;
+          if(p.y < -10) p.y = h+10;
+          if(p.y > h+10) p.y = -10;
 
-<!-- Terms -->
-<section id="terms" class="section">
-<h2 class="text-3xl mb-4">Terms & Conditions</h2>
-<p>All content is for demo purposes. Subscription rules, refunds, and usage policies apply in production.</p>
-</section>
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(212,175,55,${p.alpha})`;
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+          ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
 
-</div>
+    /* Pricing toggle (monthly/yearly display) */
+    document.getElementById('optMonthly').addEventListener('click', ()=>{
+      toggleBilling('monthly');
+      document.getElementById('optMonthly').classList.add('bg-white/8');
+      document.getElementById('optYearly').classList.remove('bg-white/8');
+    });
+    document.getElementById('optYearly').addEventListener('click', ()=>{
+      toggleBilling('yearly');
+      document.getElementById('optYearly').classList.add('bg-white/8');
+      document.getElementById('optMonthly').classList.remove('bg-white/8');
+    });
 
-<script>
-let user = null;
-const templatesData = [
-  {name:'Talking Monkey', category:'Animal', isPaid:true},
-  {name:'Cute Kitten', category:'Animal', isPaid:false},
-  {name:'ASMR Glass Cutting', category:'ASMR', isPaid:true},
-  {name:'Modern Love Story', category:'Romance', isPaid:true},
-  {name:'Epic Action Scene', category:'Action', isPaid:true}
-];
+    function toggleBilling(mode){
+      document.querySelectorAll('[data-monthly]').forEach(el=>{
+        if(mode==='monthly'){
+          el.textContent = el.getAttribute('data-monthly');
+        } else {
+          el.textContent = el.getAttribute('data-yearly');
+        }
+      });
+    }
 
-function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});}
-
-function signInPrompt(){
-  const email = prompt('Enter your email');
-  if(email){ user={email:email,name:email.split('@')[0],isPaid:false,freeVideosLeft:1,myVideos:[]}; document.getElementById('user-status').innerHTML = `<span>${user.name} <button onclick='signOut()'>Logout</button></span>`; renderTemplates(); renderMyVideos(); }
-}
-function signOut(){user=null; document.getElementById('user-status').innerHTML = `<button class='button-mock bg-yellow-500 text-black' onclick='signInPrompt()'>Login</button>`;}
-
-function promptMagic(){
-  const input = document.getElementById('prompt');
-  if(!input.value) return alert('Enter prompt');
-  input.value = 'Viral-enhanced: '+input.value+' 🚀';
-}
-
-function generateVideo(){
-  if(!user)return alert('Sign in first');
-  if(user.freeVideosLeft<=0 && !user.isPaid)return alert('Free video limit reached');
-  const selected = document.querySelector('.template-preview.selected');
-  if(!selected)return alert('Select a template');
-  const video = {id:Date.now(), template:selected.dataset.name, status:'ready'};
-  user.myVideos.push(video);
-  if(!user.isPaid) user.freeVideosLeft--;
-  renderMyVideos();
-  alert('Video generated (mock)');
-}
-
-function renderTemplates(){
-  const container = document.getElementById('templates'); container.innerHTML='';
-  templatesData.forEach(t=>{
-    const div = document.createElement('div');
-    div.className='template-preview p-4';
-    div.dataset.name=t.name;
-    div.innerHTML=`<strong>${t.name}</strong> (${t.category}) ${t.isPaid&&!user.isPaid?'[LOCKED]':''} <br><button onclick='selectTemplate(this)'>Select</button>`;
-    container.appendChild(div);
-  });
-}
-
-function selectTemplate(btn){
-  document.querySelectorAll('.template-preview').forEach(d=>d.classList.remove('selected'));
-  btn.parentElement.classList.add('selected');
-}
-
-function renderMyVideos(){
-  const container = document.getElementById('my-videos');
-  container.innerHTML = user.myVideos.map(v=>`<div>${v.template} - ${v.status}</div>`).join('');
-}
-
-function applyBoost(){alert('Fame Booster applied (mock)');}
-function copyAffiliateLink(){
-  const link = document.getElementById('affiliate-link'); link.select(); document.execCommand('copy'); alert('Link copied');
-}
-</script>
+    // initial set to monthly (already set in markup)
+    toggleBilling('monthly');
+  </script>
 </body>
 </html>
