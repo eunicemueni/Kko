@@ -3,129 +3,107 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kairah Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<title>Kairah Studio — Divine Cinematics by AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Poppins&display=swap" rel="stylesheet">
 <style>
-body { font-family:'Poppins', sans-serif; background:#1b1b1b; color:#fff; scroll-behavior:smooth; }
-h1,h2,h3{color:#D4AF37; font-family:'Cinzel Display', serif;}
-header { display:flex; justify-between; align-items:center; padding:1rem 2rem; position:sticky; top:0; background:rgba(0,0,0,0.85); z-index:50;}
-header h1{font-size:2.5rem;}
-header nav a{margin-left:1.5rem; font-weight:500; transition:all 0.3s;}
-header nav a:hover{color:#D4AF37;}
-button{transition:all 0.3s; cursor:pointer;}
-.bg-yellow-paypal{background:#FFC439; color:#000;}
-.bg-blue-stripe{background:#6772e5; color:#fff;}
-.bg-red-visa{background:#FF5F00; color:#fff;}
-.bg-blue-visa{background:#1A1F71; color:#fff;}
-.card { background:rgba(50,30,60,0.8); border-radius:1rem; padding:1.5rem; box-shadow:0 8px 20px rgba(0,0,0,0.5);}
-.card:hover { transform: translateY(-5px); box-shadow:0 12px 24px rgba(0,0,0,0.6);}
-.accordion { cursor:pointer; padding:1rem; border-radius:0.5rem; background:rgba(50,30,60,0.6); margin-bottom:0.5rem;}
-.accordion-content { max-height:0; overflow:hidden; transition:max-height 0.3s ease; padding-left:0;}
-.locked{opacity:0.6; pointer-events:none;}
-.video-container { position: relative; max-width:720px; margin:2rem auto; }
-.video-container video { border-radius:0.75rem; box-shadow:0 10px 30px rgba(0,0,0,0.6); width:100%; }
-.sparkle { position: absolute; width:5px; height:5px; background: rgba(212,175,55,0.8); border-radius:50%; opacity:0.8; animation: sparkleAnim 4s linear infinite; }
-.sparkle1 { top:10%; left:20%; animation-delay:0s; }
-.sparkle2 { top:50%; left:70%; animation-delay:1.5s; }
-.sparkle3 { top:80%; left:40%; animation-delay:3s; }
-@keyframes sparkleAnim {0% {transform:scale(1) translateY(0) rotate(0deg); opacity:0.8;} 50% {transform:scale(1.5) translateY(-10px) rotate(45deg); opacity:0.5;} 100% {transform:scale(1) translateY(0) rotate(90deg); opacity:0.8;}}
-.watermark { position:absolute; top:1rem; left:50%; transform:translateX(-50%); font-weight:bold; font-size:1.5rem; color:rgba(212,175,55,0.85); animation:bounce 2s infinite; pointer-events:none;}
-@keyframes bounce {0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(-5px);}}
-textarea, input[type="text"], input[type="email"], input[type="password"] { resize:none; width:100%; padding:0.75rem; border-radius:0.5rem; color:black; margin-bottom:0.5rem; }
-.section-card { background:rgba(40,20,60,0.85); padding:1rem; border-radius:0.75rem; margin-bottom:1rem; box-shadow:0 6px 18px rgba(0,0,0,0.5);}
-button:hover { transform: scale(1.05); }
-#affiliate .card:hover { background:linear-gradient(135deg,#D4AF37,#3D2C41); color:#fff;}
-.booster-pulse { animation: pulse 2s infinite; }
-@keyframes pulse {0% { transform:scale(1);} 50%{ transform:scale(1.1);} 100%{transform:scale(1);}}
+  body { margin:0; font-family:'Poppins',sans-serif; background:#1a1a1a; color:#f5f5f5; }
+  h1,h2,h3 { font-family:'Cinzel Decorative', serif; }
+  .container { max-width:1200px; margin:auto; padding:1rem; }
+  .hero { text-align:center; padding:4rem 1rem; background:linear-gradient(135deg,#0f0f0f,#3d2c41); color:#d4af37; }
+  .btn { padding:0.6rem 1.2rem; border:none; border-radius:0.4rem; cursor:pointer; font-weight:bold; transition:0.2s; }
+  .btn-yellow { background:#d4af37; color:#1a1a1a; }
+  .btn-yellow:hover { background:#ffc845; }
+  .btn-paypal { background:#003087; color:white; margin:0.3rem; }
+  .btn-stripe { background:#6772e5; color:white; margin:0.3rem; }
+  .btn-card { background:#efefef; color:#1a1a1a; margin:0.3rem; }
+  .section { padding:4rem 1rem; }
+  .grid { display:grid; gap:1rem; }
+  .grid-2 { grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); }
+  .card { background:#2c2c2c; padding:1.5rem; border-radius:0.6rem; box-shadow:0 0 15px rgba(0,0,0,0.5); }
+  .accordion { background:#3d2c41; cursor:pointer; padding:1rem; border-radius:0.4rem; margin-bottom:0.5rem; transition:0.2s; }
+  .accordion:hover { background:#5a3a5a; }
+  .accordion-content { max-height:0; overflow:hidden; transition:max-height 0.3s ease; padding-left:1rem; }
+  .login-container, .signup-container { display:flex; flex-direction:column; gap:0.5rem; background:#2c2c2c; padding:1rem; border-radius:0.6rem; max-width:400px; margin:auto; }
+  input { padding:0.6rem; border:none; border-radius:0.4rem; }
+  video { max-width:100%; border-radius:0.6rem; margin-top:1rem; background:#000; }
+  footer { text-align:center; padding:2rem 1rem; color:#aaa; }
+  .sparkle { position:absolute; width:6px; height:6px; background:#d4af37; border-radius:50%; animation: sparkle 2s infinite; }
+  @keyframes sparkle { 0%,100%{opacity:0;}50%{opacity:1;} }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Kairah Studio</h1>
-  <nav>
-    <a href="#features">Features</a>
-    <a href="#pricing">Pricing</a>
-    <a href="#about">About</a>
-    <a href="#affiliate">Affiliate</a>
-    <a href="#settings">Settings</a>
-    <a href="#support">Support</a>
-    <a href="#loginSection">Sign Up/Login</a>
-  </nav>
-</header>
+<!-- Hero -->
+<section class="hero">
+  <h1 style="font-size:3rem;">Kairah Studio</h1>
+  <p style="font-size:1.5rem;">Divine Cinematics by AI — Beyond Reality. Into Royalty.</p>
+  <button class="btn btn-yellow" onclick="document.getElementById('signupSection').scrollIntoView()">Create Your First Royal Video</button>
+</section>
 
-<section class="text-center py-16">
-  <h2 class="text-5xl font-bold mb-4">Beyond Reality. Into Royalty.</h2>
-  <p class="mb-6 text-lg max-w-xl mx-auto">Kairah Studio is a cinematic AI video generator blending divine beauty, emotional storytelling, and the signature Meow Meow universe.</p>
-  <div class="flex justify-center gap-4 flex-wrap">
-    <button class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-3 rounded font-semibold" onclick="showLogin()">Create Your First Royal Video</button>
-    <button class="border border-white px-6 py-3 rounded hover:bg-white hover:text-black">View Features</button>
+<!-- Sign Up / Login -->
+<section id="signupSection" class="section container">
+  <div style="display:flex; justify-content:center; gap:2rem;">
+    <div class="signup-container">
+      <h2>Sign Up</h2>
+      <input type="text" id="signupName" placeholder="Full Name">
+      <input type="email" id="signupEmail" placeholder="Email">
+      <input type="password" id="signupPass" placeholder="Password">
+      <input type="password" id="signupConfirm" placeholder="Confirm Password">
+      <select id="signupPlan">
+        <option value="Free">Free</option>
+        <option value="Pro">Pro</option>
+        <option value="Diamond">Diamond</option>
+        <option value="Lifetime">Lifetime</option>
+      </select>
+      <button class="btn btn-yellow" onclick="mockSignup()">Sign Up</button>
+    </div>
+    <div class="login-container">
+      <h2>Login</h2>
+      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPass" placeholder="Password">
+      <button class="btn btn-yellow" onclick="mockLogin()">Login</button>
+      <p id="loginStatus"></p>
+    </div>
   </div>
 </section>
 
-<section id="loginSection" class="max-w-md mx-auto my-8 hidden">
-  <h2 class="text-3xl font-bold text-center mb-4">Sign Up / Login</h2>
-  <input type="email" id="email" placeholder="Email" class="mb-2 w-full p-2 rounded text-black"/>
-  <input type="password" id="password" placeholder="Password" class="mb-2 w-full p-2 rounded text-black"/>
-  <button class="bg-yellow-400 px-4 py-2 rounded w-full font-semibold hover:bg-yellow-500" onclick="login()">Sign Up / Login</button>
-  <p id="loginStatus" class="mt-2 text-center text-sm"></p>
-</section>
-
-<section id="videoSection">
-  <h2 class="text-3xl font-bold text-center mb-4">Cinematic Preview</h2>
-  <div class="video-container">
-    <video id="videoPreview" controls></video>
-    <div class="sparkle sparkle1"></div>
-    <div class="sparkle sparkle2"></div>
-    <div class="sparkle sparkle3"></div>
-    <div class="watermark">Kairah Studio</div>
-  </div>
-  <textarea id="prompt" placeholder="Type your scene or prompt here..."></textarea>
-  <div class="mt-4 flex justify-center gap-4">
-    <button id="freeBtn" class="bg-yellow-400 px-6 py-2 rounded font-semibold hover:bg-yellow-500" onclick="generateVideo('free')">▶ 6-sec Preview</button>
-    <button id="proBtn" class="bg-yellow-400 px-6 py-2 rounded font-semibold hover:bg-yellow-500 locked" onclick="generateVideo('pro')">▶ Full Video</button>
-    <button id="boosterBtn" class="bg-purple-500 px-4 py-2 rounded hover:bg-purple-600 booster-pulse" onclick="activateBooster()">🔥 Fame Booster $9</button>
-  </div>
-  <p id="status" class="mt-2 text-center"></p>
-</section>
-
-<section id="photoVideo" class="py-12 max-w-4xl mx-auto">
-  <h2 class="text-3xl font-bold text-center mb-4">Photo / Text → Video</h2>
-  <div class="section-card">
-    <input type="text" id="photoPrompt" placeholder="Describe the video you want from photo/text..."/>
-    <input type="file" id="photoUpload"/>
-    <button class="bg-yellow-400 px-4 py-2 rounded hover:bg-yellow-500 mt-2" onclick="mockPhotoVideo()">Generate Video</button>
-    <p id="photoVideoStatus" class="mt-2"></p>
+<!-- Video / Media Generators -->
+<section class="section container">
+  <h2 style="text-align:center;">Generate Your Royal Content</h2>
+  <div class="grid grid-2">
+    <div class="card">
+      <h3>Video Generator</h3>
+      <video id="videoPreview" controls></video>
+      <div style="margin-top:0.5rem;">
+        <button class="btn btn-yellow" onclick="generateVideo('free')">Play Free 6s Clip</button>
+        <button class="btn btn-yellow" onclick="generateVideo('pro')">Play Full Clip</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Photo/Text → Video</h3>
+      <textarea id="photoText" placeholder="Enter text or upload image" rows="4" style="width:100%;border-radius:0.4rem;padding:0.5rem;"></textarea>
+      <button class="btn btn-yellow" onclick="mockPhotoVideo()">Generate Video</button>
+      <p id="photoVideoStatus"></p>
+    </div>
+    <div class="card">
+      <h3>AI Image Generator</h3>
+      <textarea id="imagePrompt" placeholder="Describe your image" rows="3" style="width:100%;border-radius:0.4rem;padding:0.5rem;"></textarea>
+      <button class="btn btn-yellow" onclick="mockAIImage()">Generate Image</button>
+      <p id="imageStatus"></p>
+    </div>
+    <div class="card">
+      <h3>Audio / Voice Generator</h3>
+      <textarea id="audioPrompt" placeholder="Enter text for narration or music" rows="3" style="width:100%;border-radius:0.4rem;padding:0.5rem;"></textarea>
+      <button class="btn btn-yellow" onclick="mockAudio()">Generate Audio</button>
+      <p id="audioStatus"></p>
+    </div>
   </div>
 </section>
 
-<section id="imageCreator" class="py-12 max-w-4xl mx-auto">
-  <h2 class="text-3xl font-bold text-center mb-4">AI Image Creator</h2>
-  <div class="section-card">
-    <textarea id="imagePrompt" placeholder="Type a prompt to generate an AI image..."></textarea>
-    <button class="bg-yellow-400 px-4 py-2 rounded hover:bg-yellow-500 mt-2" onclick="mockAIImage()">Generate Image</button>
-    <p id="imageStatus" class="mt-2"></p>
-  </div>
-</section>
-
-<section id="audioCreator" class="py-12 max-w-4xl mx-auto">
-  <h2 class="text-3xl font-bold text-center mb-4">Audio / Voice Creator</h2>
-  <div class="section-card">
-    <textarea id="audioPrompt" placeholder="Type text to generate voice/audio clip..."></textarea>
-    <select id="voiceSelect" class="mt-2 p-2 rounded text-black w-full">
-      <option value="royal">Royal Voice of Kairah</option>
-      <option value="calm">Calm Female</option>
-      <option value="energetic">Energetic</option>
-    </select>
-    <button class="bg-yellow-400 px-4 py-2 rounded hover:bg-yellow-500 mt-2" onclick="mockAudio()">Generate Audio</button>
-    <p id="audioStatus" class="mt-2"></p>
-  </div>
-</section>
-
-<section id="features" class="py-16 max-w-4xl mx-auto">
-  <h2 class="text-3xl font-bold text-center mb-4">Members Can Do</h2>
-  <div class="grid md:grid-cols-2 gap-4">
+<!-- Members Can Do -->
+<section class="section container">
+  <h2 style="text-align:center;">Members Can Do</h2>
+  <div class="grid grid-2">
     <div class="card">🎞 Full-Length AI Videos (2–3 mins)</div>
     <div class="card">🧩 Clip Merging & Editing</div>
     <div class="card">🔊 AI Music + Voice</div>
@@ -139,111 +117,149 @@ button:hover { transform: scale(1.05); }
   </div>
 </section>
 
-<section id="pricing" class="py-16 max-w-5xl mx-auto">
-  <h2 class="text-3xl font-bold text-center mb-8">Pricing Plans</h2>
-  <div class="grid md:grid-cols-2 gap-4">
+<!-- Pricing -->
+<section class="section container">
+  <h2 style="text-align:center;">Pricing Plans</h2>
+  <div class="grid grid-2">
     <div class="card text-center">
-      <h3 class="text-2xl font-bold mb-2">Free</h3>
-      <p>Try one 6-second cinematic clip</p>
-      <p>1 free 6s video (watermarked), Prompt Magic Lite</p>
-      <button class="bg-yellow-400 px-4 py-2 rounded mt-2 hover:bg-yellow-500" onclick="processPayment('Free',0)">Get Free Demo</button>
+      <h3>Free</h3>
+      <p>1 free 6s video (watermarked)</p>
+      <button class="btn btn-paypal">PayPal</button>
+      <button class="btn btn-stripe">Stripe</button>
     </div>
     <div class="card text-center">
-      <h3 class="text-2xl font-bold mb-2">Pro</h3>
+      <h3>Pro</h3>
       <p>$19/month or $300/year</p>
-      <p>Up to 1-min videos, 10 generations/month, 1080p, Merge 3 clips</p>
-      <button class="bg-yellow-400 px-4 py-2 rounded mt-2 hover:bg-yellow-500" onclick="processPayment('Pro',19)">Pay $19 Monthly</button>
-      <button class="bg-yellow-400 px-4 py-2 rounded mt-2 hover:bg-yellow-500" onclick="processPayment('Pro',300)">Pay $300 Yearly</button>
+      <button class="btn btn-paypal">PayPal</button>
+      <button class="btn btn-stripe">Stripe</button>
     </div>
     <div class="card text-center">
-      <h3 class="text-2xl font-bold mb-2">Diamond</h3>
+      <h3>Diamond</h3>
       <p>$49/month or $450/year</p>
-      <p>Up to 2-min videos, 50 generations/month, 4K Export</p>
-      <button class="bg-yellow-400 px-4 py-2 rounded mt-2 hover:bg-yellow-500" onclick="processPayment('Diamond',49)">Pay $49 Monthly</button>
-      <button class="bg-yellow-400 px-4 py-2 rounded mt-2 hover:bg-yellow-500" onclick="processPayment('Diamond',450)">Pay $450 Yearly</button>
+      <button class="btn btn-paypal">PayPal</button>
+      <button class="btn btn-stripe">Stripe</button>
     </div>
     <div class="card text-center">
-      <h3 class="text-2xl font-bold mb-2">Lifetime</h3>
-      <p>$500 (launch)</p>
-      <p>All features, unlimited videos, 4K Export, full Royal Filters</p>
-      <button class="bg-yellow-400 px-4 py-2 rounded mt-2 hover:bg-yellow-500" onclick="processPayment('Lifetime',500)">Pay $500</button>
+      <h3>Lifetime</h3>
+      <p>$500 (launch special)</p>
+      <button class="btn btn-paypal">PayPal</button>
+      <button class="btn btn-stripe">Stripe</button>
     </div>
   </div>
 </section>
 
-<section id="about" class="py-16 max-w-4xl mx-auto">
-  <h2 class="text-3xl font-bold text-center mb-4">About Kairah Studio</h2>
+<!-- About / FAQ -->
+<section class="section container">
+  <h2 style="text-align:center;">About Kairah Studio</h2>
   <div class="accordion">What is Kairah Studio?</div>
   <div class="accordion-content"><p>Kairah Studio is a cinematic AI video generator blending divine beauty, storytelling, and viral-ready content creation tools.</p></div>
-  <div class="accordion">How does video generation work?</div>
+
+  <div class="accordion">How do I generate videos?</div>
   <div class="accordion-content"><p>Type a prompt, select filters, and generate videos. Merge clips, add voice/music, and export in HD/4K.</p></div>
-  <div class="accordion">Platforms for sharing videos?</div>
-  <div class="accordion-content"><p>Social media, YouTube, TikTok, Instagram Reels, or download for personal/brand use.</p></div>
-  <div class="accordion">Safe for children?</div>
-  <div class="accordion-content"><p>Yes, family-friendly. Some features require supervision.</p></div>
-  <div class="accordion">Video generation limits?</div>
-  <div class="accordion-content"><p>Depends on your plan: Free=1x6s, Pro/Diamond=multiple per month, Lifetime=unlimited.</p></div>
+
+  <div class="accordion">Can I merge multiple clips?</div>
+  <div class="accordion-content"><p>Yes, up to 10 clips for Pro/Diamond/Lifetime plans.</p></div>
+
+  <div class="accordion">Can I add music or voiceovers?</div>
+  <div class="accordion-content"><p>Yes, Kairah Studio has built-in AI music and voice integration.</p></div>
+
+  <div class="accordion">What are the subscription limits?</div>
+  <div class="accordion-content"><p>Free: 1x6s video. Pro/Diamond: Multiple videos/month. Lifetime: Unlimited.</p></div>
+
+  <div class="accordion">How does the Fame Booster work?</div>
+  <div class="accordion-content"><p>It promotes your top clips on social media for viral reach.</p></div>
+
+  <div class="accordion">Is Kairah Studio safe for children?</div>
+  <div class="accordion-content"><p>Yes, family-friendly content. Some features may need supervision.</p></div>
+
+  <div class="accordion">How does the affiliate program work?</div>
+  <div class="accordion-content"><p>Earn 30% commission automatically sent to your account; 70% goes to Kairah Studio. $500 payout after 100 Lifetime plan sales. Dashboard shows referral links and analytics.</p></div>
+
+  <div class="accordion">Who do I contact for support?</div>
+  <div class="accordion-content"><p>Email: <a href="mailto:keishapoa@gmail.com" style="color:#d4af37;">keishapoa@gmail.com</a></p></div>
 </section>
 
-<section id="affiliate" class="py-16 max-w-4xl mx-auto">
-  <h2 class="text-3xl font-bold text-center mb-4">Affiliate Program</h2>
-  <p>Earn <strong>30% commission</strong> automatically sent to your account; 70% to Kairah Studio.</p>
-  <p>Payout: <strong>$500 after 100 Lifetime plan sales</strong>.</p>
-  <p>Dashboard: referral links, analytics, viral promotion instructions.</p>
+<!-- Settings -->
+<section class="section container">
+  <h2 style="text-align:center;">Settings</h2>
+  <div class="grid grid-2">
+    <div class="card">
+      <h3>Profile</h3>
+      <p>Name, Email, Password, Profile Picture</p>
+    </div>
+    <div class="card">
+      <h3>Subscription & Billing</h3>
+      <p>Plan, payment methods, billing info</p>
+    </div>
+    <div class="card">
+      <h3>Video Preferences</h3>
+      <p>Length, style, filters, Fame Booster settings</p>
+    </div>
+    <div class="card">
+      <h3>Notifications</h3>
+      <p>Email & push notifications, new feature alerts</p>
+    </div>
+    <div class="card">
+      <h3>Affiliate Dashboard</h3>
+      <p>Referral links, earnings, payouts</p>
+    </div>
+    <div class="card">
+      <h3>Connected Accounts</h3>
+      <p>Stripe, PayPal</p>
+    </div>
+    <div class="card">
+      <h3>Theme</h3>
+      <p>Dark / Light</p>
+    </div>
+  </div>
 </section>
 
-<section id="settings" class="py-16 max-w-4xl mx-auto">
-  <h2 class="text-3xl font-bold text-center mb-4">Settings</h2>
-  <p>Profile, email, username, password</p>
-  <p>Subscription & billing info</p>
-  <p>Video preferences: style, length, filters</p>
-  <p>Notification preferences</p>
-  <p>Fame Booster management</p>
-  <p>Affiliate dashboard</p>
-  <p>Connected accounts: PayPal, Stripe</p>
-  <p>Theme settings (dark/light)</p>
-</section>
+<!-- Footer -->
+<footer>
+  © 2025 Kairah Empire — Beyond Reality. Into Royalty.
+</footer>
 
-<section id="support" class="py-16 max-w-4xl mx-auto text-center">
-  <h2 class="text-3xl font-bold mb-4">Support</h2>
-  <p>Contact us at <a href="mailto:keishapoa@gmail.com" class="underline text-yellow-400">keishapoa@gmail.com</a></p>
-</section>
-
-<footer class="text-center py-8 text-sm">© 2025 Kairah Empire — Beyond Reality. Into Royalty.</footer>
-
+<!-- Scripts -->
 <script>
 document.querySelectorAll('.accordion').forEach(a=>{
   a.addEventListener('click',()=>{
     a.classList.toggle('active');
     const panel=a.nextElementSibling;
-    if(panel.style.maxHeight){panel.style.maxHeight=null;}else{panel.style.maxHeight=panel.scrollHeight+"px";}
+    if(panel.style.maxHeight){panel.style.maxHeight=null;}
+    else{panel.style.maxHeight=panel.scrollHeight+"px";}
   });
 });
+
 let user={loggedIn:false,plan:null};
-function showLogin(){document.getElementById('loginSection').classList.toggle('hidden');}
-function login(){const email=document.getElementById('email').value; const pass=document.getElementById('password').value;
-if(email && pass){user.loggedIn=true; user.plan='Free'; document.getElementById('loginStatus').textContent="✅ Logged in as "+email; document.getElementById('proBtn').classList.remove('locked');} 
-else{document.getElementById('loginStatus').textContent="❌ Please enter email & password";}}
+
+function mockSignup(){
+  const name=document.getElementById('signupName').value;
+  const email=document.getElementById('signupEmail').value;
+  const pass=document.getElementById('signupPass').value;
+  const confirm=document.getElementById('signupConfirm').value;
+  const plan=document.getElementById('signupPlan').value;
+  if(name && email && pass && pass===confirm){
+    user.loggedIn=true; user.plan=plan;
+    alert(`✅ Signed up as ${name} (${plan} plan)`);
+  } else { alert("❌ Please fill all fields correctly"); }
+}
+
+function mockLogin(){
+  const email=document.getElementById('loginEmail').value;
+  const pass=document.getElementById('loginPass').value;
+  if(email && pass){ user.loggedIn=true; user.plan='Free'; document.getElementById('loginStatus').textContent="✅ Logged in as "+email; }
+  else{ document.getElementById('loginStatus').textContent="❌ Please enter email & password"; }
+}
+
 function generateVideo(type){
-  const status=document.getElementById('status'); const video=document.getElementById('videoPreview'); 
-  if(type==='pro' && !(user.loggedIn && ['Pro','Diamond','Cinematic','Lifetime'].includes(user.plan))){status.textContent="🔒 Upgrade to generate full video"; video.src=""; return;}
-  if(type==='free'){video.src="https://samplelib.com/lib/preview/mp4/sample-5s.mp4"; video.play(); status.textContent="🎬 Playing 6-sec preview...";}
-  else{video.src="https://samplelib.com/lib/preview/mp4/sample-10s.mp4"; video.play(); status.textContent="🎬 Playing full video...";}
+  const video=document.getElementById('videoPreview');
+  if(type==='free'){ video.src="https://samplelib.com/lib/preview/mp4/sample-5s.mp4"; video.play(); }
+  else{ if(user.loggedIn && ['Pro','Diamond','Lifetime'].includes(user.plan)){ video.src="https://samplelib.com/lib/preview/mp4/sample-10s.mp4"; video.play(); } else{ alert("🔒 Upgrade your plan to generate full video"); } }
 }
-function activateBooster(){alert("🔥 Fame Booster activated!");}
-function mockPhotoVideo(){document.getElementById('photoVideoStatus').textContent="🎬 Generated video from photo/text preview...";}
-function mockAIImage(){document.getElementById('imageStatus').textContent="🖼️ AI Image generated preview...";}
-function mockAudio(){document.getElementById('audioStatus').textContent="🔊 Audio clip generated preview...";}
-function processPayment(plan, amount){
-  if(!user.loggedIn){alert("Please login first"); return;}
-  const affiliatePercent = 30;
-  const studioPercent = 70;
-  const affiliateAmount = amount * (affiliatePercent/100);
-  const studioAmount = amount * (studioPercent/100);
-  alert(`💰 Payment of $${amount} for ${plan} processed!\n✅ $${affiliateAmount} goes to affiliate\n💎 $${studioAmount} goes to Kairah Studio.`);
-  user.plan = plan;
-  document.getElementById('status').textContent = `🎉 Plan upgraded to ${plan}!`;
-}
+
+function mockPhotoVideo(){document.getElementById('photoVideoStatus').textContent="🎬 Video generated from photo/text preview";}
+function mockAIImage(){document.getElementById('imageStatus').textContent="🖼️ AI Image generated preview";}
+function mockAudio(){document.getElementById('audioStatus').textContent="🔊 Audio clip generated preview";}
 </script>
 
 </body>
