@@ -43,6 +43,7 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
 .tabs button:hover { background:#D4AF37; color:#000; }
 .tab-content { margin-top:1rem; display:none; }
 .tab-content.active { display:block; }
+.payment-icons img { width:36px; height:auto; margin-right:0.5rem; }
 </style>
 </head>
 <body>
@@ -78,13 +79,13 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
       <input type="text" placeholder="Affiliate ID (optional)">
       <button type="submit">Continue</button>
     </form>
-    <p style="text-align:center; margin-top:1rem; color:#FFD700; font-size:0.9rem;">We never share your info. Support: keishapoa@gmail.com</p>
+    <p style="text-align:center; margin-top:1rem; color:#FFD700; font-size:0.9rem;">Support: keishapoa@gmail.com</p>
   </div>
 </div>
 
 <section id="hero">
   <h2>Create Your First Royal Video</h2>
-  <div class="video-mock">🎬 Your Meow Meow Clip Preview Here</div>
+  <div class="video-mock">🎬 Cinematic Clip Preview</div>
   <div style="text-align:center; margin-top:1rem;">
     <button onclick="openAuth()">Sign Up / Login</button>
     <button>Start Free 6s Video</button>
@@ -94,7 +95,7 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
 <section id="features">
   <h2>Features</h2>
   <div class="features">
-    <div class="card"><h3>Full-Length AI Videos</h3><p>Generate 2–3 min cinematic videos — cats, humans, fantasy, products, or stories.</p></div>
+    <div class="card"><h3>Full-Length AI Videos</h3><p>Generate 2–3 min cinematic videos — humans, fantasy, products, or stories.</p></div>
     <div class="card"><h3>Clip Merging & Editing</h3><p>Combine up to 10 scenes into one seamless video.</p></div>
     <div class="card"><h3>AI Music + Voice</h3><p>Add background music or voiceovers from Kairah’s sound library.</p></div>
     <div class="card"><h3>4K Export & Branding</h3><p>Download watermark-free HD/4K videos.</p></div>
@@ -110,22 +111,37 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
 <section id="pricing">
   <h2>Pricing</h2>
   <div class="pricing">
-    <div class="card"><h3>Free</h3><p>1 free 6s video (watermarked), preview tools, Prompt Magic Lite</p><button onclick="openAuth()">Start Free</button></div>
+    <div class="card"><h3>Free</h3><p>1 free 6s cinematic clip, preview tools, Prompt Magic Lite</p><button onclick="openAuth()">Start Free</button></div>
     <div class="card"><h3>Pro</h3><p>$19/mo or $300/yr — 1-min videos, 10 gens/month, 1080p, merge 3 clips</p>
-      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-        <button><img src="https://img.icons8.com/color/24/000000/stripe.png"/> Stripe</button>
+      <div class="payment-icons">
+        <img src="https://img.icons8.com/color/36/000000/visa.png"/>
+        <img src="https://img.icons8.com/color/36/000000/mastercard.png"/>
+        <img src="https://img.icons8.com/color/36/000000/amex.png"/>
+      </div>
+      <div style="margin-top:0.5rem;">
+        <button>Stripe</button>
         <div id="paypal-pro"></div>
       </div>
     </div>
     <div class="card"><h3>Diamond</h3><p>$49/mo or $450/yr — 3-min videos, 30 gens, 4K, merge 10 clips, series creator</p>
-      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-        <button><img src="https://img.icons8.com/color/24/000000/stripe.png"/> Stripe</button>
+      <div class="payment-icons">
+        <img src="https://img.icons8.com/color/36/000000/visa.png"/>
+        <img src="https://img.icons8.com/color/36/000000/mastercard.png"/>
+        <img src="https://img.icons8.com/color/36/000000/amex.png"/>
+      </div>
+      <div style="margin-top:0.5rem;">
+        <button>Stripe</button>
         <div id="paypal-diamond"></div>
       </div>
     </div>
     <div class="card"><h3>Lifetime</h3><p>$500 one-time — unlimited videos, all features unlocked</p>
-      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-        <button><img src="https://img.icons8.com/color/24/000000/stripe.png"/> Stripe</button>
+      <div class="payment-icons">
+        <img src="https://img.icons8.com/color/36/000000/visa.png"/>
+        <img src="https://img.icons8.com/color/36/000000/mastercard.png"/>
+        <img src="https://img.icons8.com/color/36/000000/amex.png"/>
+      </div>
+      <div style="margin-top:0.5rem;">
+        <button>Stripe</button>
         <div id="paypal-lifetime"></div>
       </div>
     </div>
@@ -167,7 +183,7 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
 
 <section id="about">
   <h2>About Kairah Studio</h2>
-  <p>Kairah Studio blends divine beauty, royal aesthetics, and emotional storytelling for films, shorts, and Meow Meow universe creations.</p>
+  <p>Kairah Studio blends divine beauty, royal aesthetics, and emotional storytelling for films, shorts, and cinematic creations.</p>
   <div class="faq">
     <div class="faq-item" onclick="toggleFAQ(this)"><h4>How does video generation work?</h4><p>Type a prompt. AI generates scenes with cinematic lighting, royal filters, and story continuity.</p></div>
     <div class="faq-item" onclick="toggleFAQ(this)"><h4>File formats supported?</h4><p>MP4 for videos, JPG/PNG for images, WAV/MP3 for audio.</p></div>
