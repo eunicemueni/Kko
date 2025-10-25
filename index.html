@@ -5,41 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kairah Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-<!-- Stripe -->
 <script src="https://js.stripe.com/v3/"></script>
-<!-- PayPal -->
 <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
 <style>
 body { margin:0; font-family:'Poppins', sans-serif; background: linear-gradient(135deg, #0B0A0B, #1C1B1C); color:#fff; }
-header { background:linear-gradient(90deg,#D4AF37,#3D2C41); padding:2rem; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.5);}
-header h1 { font-family:'Cinzel Display', serif; font-size:3rem; margin:0; }
-header p { font-size:1.2rem; margin:0.5rem 0 0; }
+header { background:#3D2C41; padding:2rem; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.5);}
+header h1 { font-family:'Cinzel Display', serif; font-size:3rem; margin:0; color:#D4AF37; }
+header p { font-size:1.2rem; margin:0.5rem 0 0; color:#FFD700; }
 nav { display:flex; justify-content:center; gap:2rem; margin-top:1rem; flex-wrap:wrap; }
-nav a { color:#fff; text-decoration:none; font-weight:500; transition:0.3s; }
-nav a:hover { color:#FFD700; }
+nav a { color:#FFD700; text-decoration:none; font-weight:500; transition:0.3s; }
+nav a:hover { color:#fff; }
 section { padding:4rem 2rem; max-width:1200px; margin:auto; }
 h2 { font-family:'Cinzel Display', serif; font-size:2rem; margin-bottom:1rem; text-align:center; }
 .features, .pricing, .affiliate, .faq, .settings { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:2rem; margin-top:2rem; }
 .card { background: rgba(255,255,255,0.05); padding:2rem; border-radius:1rem; box-shadow:0 8px 20px rgba(0,0,0,0.5); transition:0.3s; }
 .card:hover { transform: translateY(-5px); box-shadow:0 12px 25px rgba(212,175,55,0.6);}
 button { background:#D4AF37; border:none; padding:0.8rem 1.5rem; border-radius:0.5rem; font-weight:600; cursor:pointer; transition:0.3s; }
-button:hover { background:#FFD700; }
+button:hover { background:#FFD700; color:#000; }
 .video-mock { background:#111; height:200px; display:flex; align-items:center; justify-content:center; color:#D4AF37; font-weight:700; font-size:1.2rem; border-radius:1rem; margin-top:1rem;}
 footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid rgba(212,175,55,0.3); margin-top:4rem; }
 .faq-item { margin-bottom:1rem; cursor:pointer; }
 .faq-item p { display:none; margin-top:0.5rem; color:#FFD700; }
-/* Signup/Login Overlay */
 #auth-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:1000; display:flex; align-items:center; justify-content:center; }
 #auth-overlay div { background:#1C1B1C; padding:2rem; border-radius:1rem; width:90%; max-width:400px; position:relative; }
 #auth-overlay span { position:absolute; top:1rem; right:1rem; cursor:pointer; color:#D4AF37; font-weight:bold; }
 #auth-form { display:flex; flex-direction:column; gap:1rem; margin-top:1rem; }
 #auth-form input, #auth-form select { padding:0.8rem; border-radius:0.5rem; border:none; }
-/* Tabs */
-.tabs button { background:#3D2C41; color:#fff; padding:0.5rem 1rem; border-radius:0.5rem; border:none; cursor:pointer; }
+.tabs button { background:#3D2C41; color:#FFD700; padding:0.5rem 1rem; border-radius:0.5rem; border:none; cursor:pointer; margin-right:0.3rem; }
 .tabs button:hover { background:#D4AF37; color:#000; }
 .tab-content { margin-top:1rem; display:none; }
 .tab-content.active { display:block; }
@@ -62,7 +57,6 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
   </nav>
 </header>
 
-<!-- Signup/Login Overlay -->
 <div id="auth-overlay">
   <div>
     <span onclick="closeAuth()">X</span>
@@ -74,6 +68,7 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
         <option value="Free">Free - 6s clip</option>
         <option value="Pro">Pro - $19/mo or $300/yr</option>
         <option value="Diamond">Diamond - $49/mo or $450/yr</option>
+        <option value="Cinematic">Cinematic - $99/mo or $600/yr</option>
         <option value="Lifetime">Lifetime - $500 one-time</option>
       </select>
       <input type="text" placeholder="Affiliate ID (optional)">
@@ -111,74 +106,42 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
 <section id="pricing">
   <h2>Pricing</h2>
   <div class="pricing">
-    <div class="card"><h3>Free</h3><p>1 free 6s cinematic clip, preview tools, Prompt Magic Lite</p><button onclick="openAuth()">Start Free</button></div>
-    <div class="card"><h3>Pro</h3><p>$19/mo or $300/yr — 1-min videos, 10 gens/month, 1080p, merge 3 clips</p>
-      <div class="payment-icons">
-        <img src="https://img.icons8.com/color/36/000000/visa.png"/>
-        <img src="https://img.icons8.com/color/36/000000/mastercard.png"/>
-        <img src="https://img.icons8.com/color/36/000000/amex.png"/>
-      </div>
-      <div style="margin-top:0.5rem;">
-        <button>Stripe</button>
-        <div id="paypal-pro"></div>
-      </div>
-    </div>
-    <div class="card"><h3>Diamond</h3><p>$49/mo or $450/yr — 3-min videos, 30 gens, 4K, merge 10 clips, series creator</p>
-      <div class="payment-icons">
-        <img src="https://img.icons8.com/color/36/000000/visa.png"/>
-        <img src="https://img.icons8.com/color/36/000000/mastercard.png"/>
-        <img src="https://img.icons8.com/color/36/000000/amex.png"/>
-      </div>
-      <div style="margin-top:0.5rem;">
-        <button>Stripe</button>
-        <div id="paypal-diamond"></div>
-      </div>
-    </div>
-    <div class="card"><h3>Lifetime</h3><p>$500 one-time — unlimited videos, all features unlocked</p>
-      <div class="payment-icons">
-        <img src="https://img.icons8.com/color/36/000000/visa.png"/>
-        <img src="https://img.icons8.com/color/36/000000/mastercard.png"/>
-        <img src="https://img.icons8.com/color/36/000000/amex.png"/>
-      </div>
-      <div style="margin-top:0.5rem;">
-        <button>Stripe</button>
-        <div id="paypal-lifetime"></div>
-      </div>
-    </div>
+    <div class="card"><h3>Free</h3><p>1 free 6s video, watermarked, preview all tools.</p><p>$0</p></div>
+    <div class="card"><h3>Pro</h3><p>Up to 1-min videos, 10 generations/month, 1080p export, merge 3 clips.</p><p>$19/mo or $300/yr</p></div>
+    <div class="card"><h3>Diamond</h3><p>Up to 2-min videos, 50 generations/month, 4K export, bulk generator.</p><p>$49/mo or $450/yr</p></div>
+    <div class="card"><h3>Cinematic</h3><p>Full creative control, studio-grade videos, advanced storytelling AI.</p><p>$99/mo or $600/yr</p></div>
+    <div class="card"><h3>Lifetime</h3><p>All features, lifetime access, prestige plan.</p><p>$500 one-time</p></div>
+  </div>
+  <div style="text-align:center; margin-top:1rem;" class="payment-icons">
+    <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" alt="PayPal">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Mastercard-logo.svg" alt="Mastercard">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Amex_logo.svg" alt="Amex">
   </div>
 </section>
 
 <section id="affiliate">
   <h2>Affiliate Program</h2>
   <div class="affiliate">
-    <div class="card"><h3>Earn 30% Commission</h3><p>30% goes straight to your account, 70% to Kairah Empire automatically.</p></div>
-    <div class="card"><h3>Payouts</h3><p>Reach $500 after 100 lifetime sales, automatic payout.</p></div>
-    <div class="card"><h3>How It Works</h3><p>Share your affiliate link, track referrals, exclusive perks for high tiers.</p></div>
+    <div class="card">
+      <h3>Earn 30% Commission</h3>
+      <p>Share your referral link. 30% of each sale goes directly to your account, 70% to Kairah Studio automatically.</p>
+    </div>
+    <div class="card">
+      <h3>Payouts & Bonuses</h3>
+      <p>Automatic payouts after $500 earned. Lifetime bonuses for affiliates reaching 100 lifetime sales.</p>
+    </div>
   </div>
 </section>
 
 <section id="settings">
   <h2>Settings</h2>
   <div class="settings">
-    <div class="card"><h3>Profile</h3><p>Update name, email, password.</p></div>
-    <div class="card"><h3>Plan Management</h3><p>Upgrade, downgrade, cancel subscription.</p></div>
-    <div class="card"><h3>Payment Methods</h3><p>Add/remove credit cards, PayPal, Stripe.</p></div>
-    <div class="card"><h3>Notifications</h3><p>Email alerts for videos, Fame Boost, affiliate earnings.</p></div>
+    <div class="card"><h3>Profile</h3><p>Update email, password, subscription plan, affiliate ID.</p></div>
+    <div class="card"><h3>Notifications</h3><p>Enable email alerts, video completion notifications, promotions.</p></div>
+    <div class="card"><h3>Payment Methods</h3><p>Add/edit Stripe or PayPal accounts for subscription & affiliate payouts.</p></div>
+    <div class="card"><h3>Privacy</h3><p>Manage data sharing, video visibility, and account security.</p></div>
   </div>
-</section>
-
-<section id="dashboard">
-  <h2>Dashboard</h2>
-  <div class="tabs">
-    <button onclick="openTab('video')">🎬 Video</button>
-    <button onclick="openTab('text-video')">📝 Photo/Text-to-Video</button>
-    <button onclick="openTab('image')">🖼 Image</button>
-    <button onclick="openTab('audio')">🎵 Audio</button>
-  </div>
-  <div id="video" class="tab-content active"><div class="video-mock">Full-length Video Preview</div><button onclick="createVideo('video')">Create Video</button></div>
-  <div id="text-video" class="tab-content"><div class="video-mock">Photo/Text-to-Video Preview</div><button onclick="createVideo('text-video')">Generate Clip</button></div>
-  <div id="image" class="tab-content"><div class="video-mock">Image Preview</div><button onclick="createVideo('image')">Create Image</button></div>
-  <div id="audio" class="tab-content"><div class="video-mock">Audio Preview</div><button onclick="createVideo('audio')">Create Audio</button></div>
 </section>
 
 <section id="about">
@@ -188,7 +151,8 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
     <div class="faq-item" onclick="toggleFAQ(this)"><h4>How does video generation work?</h4><p>Type a prompt. AI generates scenes with cinematic lighting, royal filters, and story continuity.</p></div>
     <div class="faq-item" onclick="toggleFAQ(this)"><h4>File formats supported?</h4><p>MP4 for videos, JPG/PNG for images, WAV/MP3 for audio.</p></div>
     <div class="faq-item" onclick="toggleFAQ(this)"><h4>Can I merge multiple clips?</h4><p>Yes, up to 10 clips can be combined seamlessly.</p></div>
-    <div class="faq-item" onclick="toggleFAQ(this)"><h4>Affiliate program?</h4><p>Share your link, earn 30% commission, automatic payouts after $500.</p></div>
+    <div class="faq-item" onclick="toggleFAQ(this)"><h4>Affiliate program?</h4><p>Share your link, earn 30% commission, automatic payouts after $500, lifetime bonuses for 100+ sales.</p></div>
+    <div class="faq-item" onclick="toggleFAQ(this)"><h4>Support?</h4><p>Reach out at keishapoa@gmail.com for help, billing, or technical issues.</p></div>
   </div>
 </section>
 
@@ -197,7 +161,6 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
 </footer>
 
 <script>
-  // Firebase
   const firebaseConfig = { apiKey:"YOUR_API_KEY", authDomain:"YOUR_PROJECT.firebaseapp.com", projectId:"YOUR_PROJECT", storageBucket:"YOUR_PROJECT.appspot.com", messagingSenderId:"YOUR_SENDER_ID", appId:"YOUR_APP_ID" };
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
@@ -219,16 +182,6 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
   function toggleFAQ(el){ const p=el.querySelector('p'); p.style.display=p.style.display==='block'?'none':'block'; }
   function openAuth(){ document.getElementById('auth-overlay').style.display='flex'; }
   function closeAuth(){ document.getElementById('auth-overlay').style.display='none'; }
-  function openTab(tab){ document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active')); document.getElementById(tab).classList.add('active'); }
-
-  async function createVideo(type){
-    const user = auth.currentUser;
-    if(!user){ openAuth(); return; }
-    const prompt = prompt("Enter prompt/scene:");
-    const res = await fetch(`/generate/${type}`,{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({userId:user.uid,prompt})});
-    const data = await res.json();
-    alert(`✅ Your ${type} is ready! Download: ${data.url}`);
-  }
 </script>
 
 </body>
