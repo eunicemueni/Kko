@@ -54,6 +54,7 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
     <a href="#dashboard">Dashboard</a>
     <a href="#about">About</a>
     <a href="#faq">FAQ</a>
+    <a href="#filters">Filters</a>
   </nav>
 </header>
 
@@ -97,7 +98,7 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
     <div class="card"><h3>Prompt Magic Pro</h3><p>Enhanced storytelling AI expands short ideas into full scripts.</p></div>
     <div class="card"><h3>Bulk Generator</h3><p>Create multiple videos at once from one theme or script.</p></div>
     <div class="card"><h3>Scene Control</h3><p>Choose lighting, mood, and cinematic camera angles.</p></div>
-    <div class="card"><h3>Royal Filters</h3><p>Signature teal-gold glow, fantasy light, dreamy skies.</p></div>
+    <div class="card"><h3>Royal Filters</h3><p>Default teal-gold glow or select custom colors and moods.</p></div>
     <div class="card"><h3>Series Creator</h3><p>Build ongoing episodes (YouTube or brand series).</p></div>
     <div class="card"><h3>Kairah Fame Boost</h3><p>Instantly push videos to social media for virality.</p></div>
   </div>
@@ -144,15 +145,48 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
   </div>
 </section>
 
+<section id="filters">
+  <h2>Video Style & Filters</h2>
+  <p>Choose your cinematic look or use Kairah Studio’s signature teal-gold glow.</p>
+  <div class="card">
+    <label for="style-select">Select Style:</label>
+    <select id="style-select">
+      <option value="kairah-default" selected>Teal-Gold Signature</option>
+      <option value="classic">Classic Cinematic</option>
+      <option value="vibrant">Vibrant Colors</option>
+      <option value="dreamy">Dreamy Pastels</option>
+      <option value="custom">Custom...</option>
+    </select>
+    <div id="custom-style" style="display:none; margin-top:1rem;">
+      <label for="color-picker">Choose Color:</label>
+      <input type="color" id="color-picker" value="#D4AF37">
+      <label for="glow-intensity">Glow Intensity:</label>
+      <input type="range" id="glow-intensity" min="0" max="100" value="50">
+      <label for="light-angle">Light Angle:</label>
+      <input type="range" id="light-angle" min="0" max="360" value="45">
+    </div>
+  </div>
+</section>
+
 <section id="about">
   <h2>About Kairah Studio</h2>
-  <p>Kairah Studio blends divine beauty, royal aesthetics, and emotional storytelling for films, shorts, and cinematic creations.</p>
-  <div class="faq">
-    <div class="faq-item" onclick="toggleFAQ(this)"><h4>How does video generation work?</h4><p>Type a prompt. AI generates scenes with cinematic lighting, royal filters, and story continuity.</p></div>
-    <div class="faq-item" onclick="toggleFAQ(this)"><h4>File formats supported?</h4><p>MP4 for videos, JPG/PNG for images, WAV/MP3 for audio.</p></div>
-    <div class="faq-item" onclick="toggleFAQ(this)"><h4>Can I merge multiple clips?</h4><p>Yes, up to 10 clips can be combined seamlessly.</p></div>
-    <div class="faq-item" onclick="toggleFAQ(this)"><h4>Affiliate program?</h4><p>Share your link, earn 30% commission, automatic payouts after $500, lifetime bonuses for 100+ sales.</p></div>
-    <div class="faq-item" onclick="toggleFAQ(this)"><h4>Support?</h4><p>Reach out at keishapoa@gmail.com for help, billing, or technical issues.</p></div>
+  <p>Kairah Studio is a cinematic AI video generator combining beauty, storytelling, and royalty. Users can generate films, viral shorts, brand ads, and more.</p>
+  <p>FAQ and operational details are included below. Support: keishapoa@gmail.com</p>
+</section>
+
+<section id="faq">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-item">
+    <h4>How does the AI generate videos?</h4>
+    <p>It uses advanced cinematic AI engines that interpret scripts, prompts, and styles to produce 2–3 minute high-quality videos.</p>
+  </div>
+  <div class="faq-item">
+    <h4>Can I choose my own video colors?</h4>
+    <p>Yes, you can use the filter selector to pick any color, glow, or lighting style.</p>
+  </div>
+  <div class="faq-item">
+    <h4>How does the affiliate program work?</h4>
+    <p>Share your referral link. 30% commission goes directly to you automatically, 70% to Kairah Studio. Bonuses paid after 100 lifetime sales.</p>
   </div>
 </section>
 
@@ -161,28 +195,22 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
 </footer>
 
 <script>
-  const firebaseConfig = { apiKey:"YOUR_API_KEY", authDomain:"YOUR_PROJECT.firebaseapp.com", projectId:"YOUR_PROJECT", storageBucket:"YOUR_PROJECT.appspot.com", messagingSenderId:"YOUR_SENDER_ID", appId:"YOUR_APP_ID" };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+function openAuth(){ document.getElementById('auth-overlay').style.display='flex'; }
+function closeAuth(){ document.getElementById('auth-overlay').style.display='none'; }
 
-  document.getElementById('auth-form').addEventListener('submit', async function(e){
-    e.preventDefault();
-    const email = e.target[0].value;
-    const password = e.target[1].value;
-    const plan = e.target[2].value;
-    const affiliate = e.target[3].value;
-    try{
-      let user = await auth.createUserWithEmailAndPassword(email,password);
-      await db.collection('users').doc(user.user.uid).set({email,plan,affiliate,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-      alert(`✅ Welcome ${email}, plan: ${plan}`); closeAuth();
-    }catch(err){ try{ let user = await auth.signInWithEmailAndPassword(email,password); alert(`✅ Welcome back ${email}`); closeAuth(); }catch(err2){ alert(err2.message); } }
+const styleSelect = document.getElementById('style-select');
+const customStyle = document.getElementById('custom-style');
+styleSelect.addEventListener('change', () => {
+  if(styleSelect.value === 'custom'){ customStyle.style.display='block'; }
+  else{ customStyle.style.display='none'; }
+});
+
+document.querySelectorAll('.faq-item h4').forEach(item=>{
+  item.addEventListener('click',()=>{ 
+    const p = item.nextElementSibling;
+    p.style.display = p.style.display==='block'?'none':'block';
   });
-
-  function toggleFAQ(el){ const p=el.querySelector('p'); p.style.display=p.style.display==='block'?'none':'block'; }
-  function openAuth(){ document.getElementById('auth-overlay').style.display='flex'; }
-  function closeAuth(){ document.getElementById('auth-overlay').style.display='none'; }
+});
 </script>
-
 </body>
 </html>
