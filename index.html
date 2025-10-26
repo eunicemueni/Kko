@@ -1,44 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kairah Studio</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Kairah Studio — Divine Cinematics by AI</title>
+
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Firebase (visual scaffold - replace keys in script) -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+<!-- Stripe + PayPal (visual buttons) -->
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
+
 <style>
-body { margin:0; font-family:'Poppins', sans-serif; background: linear-gradient(135deg, #0B0A0B, #1C1B1C); color:#fff; }
-header { background:#3D2C41; padding:2rem; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.5);}
-header h1 { font-family:'Cinzel Display', serif; font-size:3rem; margin:0; color:#D4AF37; }
-header p { font-size:1.2rem; margin:0.5rem 0 0; color:#FFD700; }
-nav { display:flex; justify-content:center; gap:2rem; margin-top:1rem; flex-wrap:wrap; }
-nav a { color:#FFD700; text-decoration:none; font-weight:500; transition:0.3s; }
-nav a:hover { color:#fff; }
-section { padding:4rem 2rem; max-width:1200px; margin:auto; }
-h2 { font-family:'Cinzel Display', serif; font-size:2rem; margin-bottom:1rem; text-align:center; }
-.features, .pricing, .affiliate, .faq, .settings { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:2rem; margin-top:2rem; }
-.card { background: rgba(255,255,255,0.05); padding:2rem; border-radius:1rem; box-shadow:0 8px 20px rgba(0,0,0,0.5); transition:0.3s; }
-.card:hover { transform: translateY(-5px); box-shadow:0 12px 25px rgba(212,175,55,0.6);}
-button { background:#D4AF37; border:none; padding:0.8rem 1.5rem; border-radius:0.5rem; font-weight:600; cursor:pointer; transition:0.3s; }
-button:hover { background:#FFD700; color:#000; }
-.video-mock { background:#111; height:200px; display:flex; align-items:center; justify-content:center; color:#D4AF37; font-weight:700; font-size:1.2rem; border-radius:1rem; margin-top:1rem;}
-footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid rgba(212,175,55,0.3); margin-top:4rem; }
-.faq-item { margin-bottom:1rem; cursor:pointer; }
-.faq-item p { display:none; margin-top:0.5rem; color:#FFD700; }
-#auth-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:1000; display:flex; align-items:center; justify-content:center; }
-#auth-overlay div { background:#1C1B1C; padding:2rem; border-radius:1rem; width:90%; max-width:400px; position:relative; }
-#auth-overlay span { position:absolute; top:1rem; right:1rem; cursor:pointer; color:#D4AF37; font-weight:bold; }
-#auth-form { display:flex; flex-direction:column; gap:1rem; margin-top:1rem; }
-#auth-form input, #auth-form select { padding:0.8rem; border-radius:0.5rem; border:none; }
-.tabs button { background:#3D2C41; color:#FFD700; padding:0.5rem 1rem; border-radius:0.5rem; border:none; cursor:pointer; margin-right:0.3rem; }
-.tabs button:hover { background:#D4AF37; color:#000; }
-.tab-content { margin-top:1rem; display:none; }
-.tab-content.active { display:block; }
-.payment-icons img { width:36px; height:auto; margin-right:0.5rem; }
+  :root{
+    --deep-plum:#3D2C41;
+    --gold:#D4AF37;
+    --gold-2:#FFD700;
+    --card-bg: rgba(255,255,255,0.04);
+    --glass: rgba(255,255,255,0.03);
+    --accent:#D4AF37;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background: linear-gradient(135deg,#0B0A0B,#1C1B1C);
+    color:#fff;
+    -webkit-font-smoothing:antialiased;
+  }
+  header{
+    background:var(--deep-plum);
+    padding:28px 20px;
+    text-align:center;
+    box-shadow:0 6px 20px rgba(0,0,0,0.6);
+    position:sticky;
+    top:0;
+    z-index:40;
+  }
+  header h1{
+    margin:0;
+    font-family:'Cinzel Display',serif;
+    font-size:36px;
+    color:var(--gold);
+    letter-spacing:0.5px;
+  }
+  header p{ margin:6px 0 0; color:var(--gold-2); font-weight:500; }
+  nav{ margin-top:12px; display:flex; gap:18px; justify-content:center; flex-wrap:wrap; }
+  nav a{ color:var(--gold-2); text-decoration:none; font-weight:500; padding:6px 8px; border-radius:6px; }
+  nav a:hover{ background:rgba(255,215,0,0.08); color:#fff; }
+
+  main{ max-width:1200px; margin:36px auto; padding:0 20px; }
+
+  section{ margin-bottom:48px; }
+  h2{ font-family:'Cinzel Display',serif; font-size:24px; margin:0 0 18px; text-align:center; }
+  .hero{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:18px;
+    align-items:center;
+    text-align:center;
+  }
+  .video-mock{
+    background:linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.7));
+    border:1px solid rgba(212,175,55,0.06);
+    height:320px;
+    border-radius:14px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    color:var(--gold);
+    box-shadow:0 18px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+    font-weight:700;
+    font-size:18px;
+  }
+  .hero .cta{ margin-top:10px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  button.primary{ background:var(--gold); border:none; color:#111; padding:12px 18px; border-radius:10px; font-weight:700; cursor:pointer; }
+  button.ghost{ background:transparent; border:1px solid rgba(212,175,55,0.18); color:var(--gold-2); padding:10px 16px; border-radius:10px; cursor:pointer; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; }
+
+  .card{
+    background:var(--card-bg);
+    padding:18px;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.02);
+  }
+  .card h3{ margin:0 0 8px; font-size:18px; }
+  .card p{ margin:0; color: #eae6df; font-size:14px; line-height:1.45; }
+
+  /* Pricing layout */
+  .pricing-grid{ display:flex; gap:16px; flex-wrap:wrap; justify-content:center; align-items:stretch; }
+  .price-card{ width:240px; padding:18px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15)); border:1px solid rgba(212,175,55,0.06); }
+  .price-card h4{ margin:0 0 6px; color:var(--gold-2); }
+  .price-card .price{ font-size:20px; font-weight:800; margin:8px 0; color:var(--gold); }
+  .payment-icons{ display:flex; gap:8px; align-items:center; margin-top:12px; justify-content:center; }
+  .payment-icons img{ width:44px; height:auto; filter: none; }
+
+  /* Signup overlay */
+  #auth-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.75);
+    z-index:120;
+    align-items:center;
+    justify-content:center;
+  }
+  #auth-box{ width:100%; max-width:480px; background:#121012; border-radius:12px; padding:20px; border:1px solid rgba(212,175,55,0.06); }
+  #auth-box h3{ font-family:'Cinzel Display',serif; color:var(--gold); margin:0 0 8px; text-align:center; }
+  #auth-box form{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+  #auth-box input, #auth-box select{ padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); background:transparent; color:#fff; }
+  #auth-box button{ padding:10px; border-radius:8px; border:none; background:var(--gold); color:#111; font-weight:700; cursor:pointer; }
+
+  /* Dashboard tabs */
+  .tabs{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:16px; }
+  .tabs button{ background:var(--deep-plum); color:var(--gold-2); border:none; padding:10px 14px; border-radius:8px; cursor:pointer; }
+  .tabs button.active{ background:var(--gold); color:#111; font-weight:700; }
+
+  .tab-content{ display:none; }
+  .tab-content.active{ display:block; }
+
+  /* Filters UI */
+  .filters-card{ display:flex; flex-direction:column; gap:8px; }
+  .filters-row{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
+  /* About - long content */
+  .about-long{ background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08)); padding:22px; border-radius:12px; border:1px solid rgba(255,255,255,0.02); }
+  .about-long h3{ margin-top:0; color:var(--gold); }
+  .about-questions{ margin-top:14px; display:grid; gap:12px; }
+  .q{ background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; }
+  .q h4{ margin:0 0 6px; font-size:15px; color:var(--gold-2); }
+  .q p{ margin:0; color:#e8e2d8; line-height:1.5; font-size:14px; }
+
+  footer{ text-align:center; margin:28px 0 60px; color:#cfc7b8; font-size:13px; border-top:1px solid rgba(255,255,255,0.02); padding-top:18px; }
+
+  /* Responsive */
+  @media (max-width:720px){
+    .video-mock{ height:200px; }
+    .payment-icons img{ width:32px;}
+  }
 </style>
 </head>
 <body>
@@ -53,164 +160,525 @@ footer { text-align:center; padding:2rem; font-size:0.9rem; border-top:1px solid
     <a href="#settings">Settings</a>
     <a href="#dashboard">Dashboard</a>
     <a href="#about">About</a>
-    <a href="#faq">FAQ</a>
     <a href="#filters">Filters</a>
+    <a href="#faq">FAQ</a>
   </nav>
 </header>
 
-<div id="auth-overlay">
-  <div>
-    <span onclick="closeAuth()">X</span>
-    <h2 style="font-family:'Cinzel Display', serif; text-align:center;">Sign Up / Login</h2>
+<main>
+
+  <!-- HERO -->
+  <section id="hero" class="hero">
+    <h2>Create Your First Royal Video</h2>
+    <div class="video-mock">
+      <div style="font-size:22px; margin-bottom:6px;">Cinematic Clip Preview</div>
+      <div style="font-size:13px; color:#f0dca5; opacity:0.9; max-width:720px; text-align:center;">
+        Studio-grade cinematic rendering — choose a style, type a prompt, and generate short or full-length videos, images, and audio.
+      </div>
+      <div class="cta" style="margin-top:18px;">
+        <button class="primary" onclick="openAuth()">Sign Up / Login</button>
+        <button class="ghost" onclick="startFree()">Start Free 6s Clip</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <h2>Features</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Full-Length AI Videos (2–3 mins)</h3>
+        <p>Studio-grade storytelling, camera moves, cinematic lighting and color grading. Export in HD/4K depending on your plan.</p>
+      </div>
+      <div class="card">
+        <h3>Photo / Text → Video</h3>
+        <p>Turn images or text prompts into cinematic short clips with matches, mood, and continuity across scenes.</p>
+      </div>
+      <div class="card">
+        <h3>Image Generator</h3>
+        <p>Generate high-resolution promotional images, thumbnails, and posters using Royal Filters or your custom palette.</p>
+      </div>
+      <div class="card">
+        <h3>AI Music & Voiceover</h3>
+        <p>Built-in music and narration engine — pick a mood and voice, then sync to your scenes automatically.</p>
+      </div>
+      <div class="card">
+        <h3>Clip Merging & Editing</h3>
+        <p>Compose projects of up to 10 scenes, reorder, trim, and export as a single cinematic file.</p>
+      </div>
+      <div class="card">
+        <h3>Series Creator</h3>
+        <p>Plan and auto-generate episodic sequences — perfect for brand series, stories, and recurring content.</p>
+      </div>
+      <div class="card">
+        <h3>Prompt Magic Pro</h3>
+        <p>Turn a sentence into a full storyboard: camera directions, beats, and scene templates generated for you.</p>
+      </div>
+      <div class="card">
+        <h3>Scene Control</h3>
+        <p>Adjust mood, lighting angle, lens style, and cinematic color grade per scene for consistent storytelling.</p>
+      </div>
+      <div class="card">
+        <h3>Bulk Generation</h3>
+        <p>Create many iterations from one theme or script to speed up workflows and A/B test creatives.</p>
+      </div>
+      <div class="card">
+        <h3>Export & Branding</h3>
+        <p>Watermark-free export options, brand presets, and downloadable assets suitable for social and broadcast use.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <h2>Pricing</h2>
+
+    <div class="pricing-grid" style="justify-content:center;">
+      <div class="price-card">
+        <h4>Free</h4>
+        <div class="price">$0</div>
+        <p>1 free 6s watermarked clip, Prompt Magic Lite, preview tools.</p>
+      </div>
+
+      <div class="price-card">
+        <h4>Pro</h4>
+        <div class="price">$19 / month<br><small style="font-weight:500;color:#eadfb0;">or $300 / year</small></div>
+        <p>Up to 1-minute videos, 10 generations / month, 1080p export, merge 3 clips.</p>
+        <div style="margin-top:10px; display:flex; gap:8px; justify-content:center;">
+          <button class="primary" onclick="payStripe('pro_month')">Pay with Card (Stripe)</button>
+          <div id="paypal-pro" style="display:inline-block;"></div>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <h4>Diamond</h4>
+        <div class="price">$49 / month<br><small style="font-weight:500;color:#eadfb0;">or $450 / year</small></div>
+        <p>Up to 2–3 minute videos, 50 generations / month, 4K exports, bulk generator.</p>
+        <div style="margin-top:10px; display:flex; gap:8px; justify-content:center;">
+          <button class="primary" onclick="payStripe('diamond_month')">Pay with Card (Stripe)</button>
+          <div id="paypal-diamond" style="display:inline-block;"></div>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <h4>Cinematic</h4>
+        <div class="price">$99 / month<br><small style="font-weight:500;color:#eadfb0;">or $600 / year</small></div>
+        <p>Studio-grade control, priority rendering, extended length, advanced storytelling AI.</p>
+        <div style="margin-top:10px; display:flex; gap:8px; justify-content:center;">
+          <button class="primary" onclick="payStripe('cinematic_month')">Pay with Card (Stripe)</button>
+          <div id="paypal-cinematic" style="display:inline-block;"></div>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <h4>Lifetime (Launch)</h4>
+        <div class="price">$500 one-time</div>
+        <p>Unlimited videos, all features unlocked, lifetime access & priority support.</p>
+        <div style="margin-top:10px; display:flex; gap:8px; justify-content:center;">
+          <button class="primary" onclick="payStripe('lifetime')">Pay with Card (Stripe)</button>
+          <div id="paypal-lifetime" style="display:inline-block;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="payment-icons" style="margin-top:18px;">
+      <!-- PayPal mark + cards -->
+      <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" alt="PayPal">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Mastercard-logo.svg" alt="Mastercard">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Amex_logo.svg" alt="Amex">
+    </div>
+  </section>
+
+  <!-- AFFILIATE -->
+  <section id="affiliate">
+    <h2>Affiliate Program</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>30% Commission</h3>
+        <p>Affiliates receive 30% of the sale revenue for each referred purchase. Commissions are tracked in your affiliate dashboard automatically.</p>
+      </div>
+
+      <div class="card">
+        <h3>Payout Threshold</h3>
+        <p>Automatic payouts are issued once an affiliate reaches $500 in accrued commission. Affiliates can connect Stripe or PayPal for payouts.</p>
+      </div>
+
+      <div class="card">
+        <h3>How It Works</h3>
+        <p>Sign up, get your unique referral link, share it. When users purchase via your link, the system logs the sale, credits your affiliate account, and prepares it for payout.</p>
+      </div>
+
+      <div class="card">
+        <h3>Compliance & Transparency</h3>
+        <p>All affiliate earnings and payouts are visible in your affiliate dashboard. We log every sale, time, and payout for auditability.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="settings">
+    <h2>Settings</h2>
+    <div class="grid">
+      <div class="card"><h3>Profile</h3><p>Manage name, email, avatar, and billing info.</p></div>
+      <div class="card"><h3>Plan & Billing</h3><p>View current plan, billing cycle, invoices, and upgrade/downgrade options.</p></div>
+      <div class="card"><h3>Payment Methods</h3><p>Connect or remove Stripe/PayPal methods used for payments and affiliate payouts.</p></div>
+      <div class="card"><h3>Privacy & Security</h3><p>Two-factor authentication, password management, and data export tools.</p></div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard">
+    <h2>Creator Dashboard</h2>
+
+    <div class="tabs" role="tablist">
+      <button class="active" onclick="openTab('video')">🎬 Video</button>
+      <button onclick="openTab('text-video')">📝 Photo/Text→Video</button>
+      <button onclick="openTab('image')">🖼 Image</button>
+      <button onclick="openTab('audio')">🎵 Audio</button>
+    </div>
+
+    <div id="video" class="tab-content active">
+      <div class="video-mock" style="height:260px;">Full-length Video Preview (2–3 mins)</div>
+      <div style="display:flex; gap:10px; justify-content:center; margin-top:12px;">
+        <button class="primary" onclick="create('video')">Create Full Video</button>
+        <button class="ghost" onclick="create('short')">Create Short Clip</button>
+      </div>
+      <p style="text-align:center; margin-top:10px; color:#cabf9f;">Merge, add voice/music, select color & filter, and render your cinematic file.</p>
+    </div>
+
+    <div id="text-video" class="tab-content">
+      <div class="video-mock" style="height:220px;">Photo / Text → Video Preview</div>
+      <div style="display:flex; gap:10px; justify-content:center; margin-top:12px;">
+        <button class="primary" onclick="create('text-video')">Generate from Text</button>
+      </div>
+      <p style="text-align:center; margin-top:10px; color:#cabf9f;">Convert text or photos into motion with story beats and camera directions auto-applied.</p>
+    </div>
+
+    <div id="image" class="tab-content">
+      <div class="video-mock" style="height:220px;">AI Image Preview</div>
+      <div style="display:flex; gap:10px; justify-content:center; margin-top:12px;">
+        <button class="primary" onclick="create('image')">Create Image</button>
+      </div>
+      <p style="text-align:center; margin-top:10px; color:#cabf9f;">Generate high-res images, posters, and thumbnails with Royal Filters.</p>
+    </div>
+
+    <div id="audio" class="tab-content">
+      <div class="video-mock" style="height:220px;">Audio Preview</div>
+      <div style="display:flex; gap:10px; justify-content:center; margin-top:12px;">
+        <button class="primary" onclick="create('audio')">Create Audio</button>
+      </div>
+      <p style="text-align:center; margin-top:10px; color:#cabf9f;">Create music beds, voiceovers, and affirmations synced to your video timeline.</p>
+    </div>
+  </section>
+
+  <!-- FILTERS -->
+  <section id="filters">
+    <h2>Video Style & Filters</h2>
+    <div class="card filters-card">
+      <p>Choose a quick preset or select <strong>Custom</strong> to pick color, glow intensity and lighting angle.</p>
+      <div class="filters-row">
+        <label for="style-select" style="min-width:140px;">Style:</label>
+        <select id="style-select" style="padding:8px;border-radius:8px;background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.04);">
+          <option value="kairah-default" selected>Teal-Gold Signature (recommended)</option>
+          <option value="classic">Classic Cinematic</option>
+          <option value="vibrant">Vibrant Colors</option>
+          <option value="dreamy">Dreamy Pastels</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+
+      <div id="custom-style" style="display:none; margin-top:10px;">
+        <div class="filters-row">
+          <label for="color-picker">Primary Tint:</label>
+          <input id="color-picker" type="color" value="#D4AF37" style="width:64px;height:36px;border-radius:8px;border:none;">
+          <label for="glow-intensity" style="margin-left:8px;">Glow:</label>
+          <input id="glow-intensity" type="range" min="0" max="100" value="50" style="flex:1;">
+        </div>
+        <div class="filters-row" style="margin-top:8px;">
+          <label for="light-angle">Light Angle:</label>
+          <input id="light-angle" type="range" min="0" max="360" value="45" style="flex:1;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT (LONG & DETAILED) -->
+  <section id="about">
+    <h2>About Kairah Studio — Everything you need to know</h2>
+
+    <div class="about-long">
+      <h3>What is Kairah Studio?</h3>
+      <p>Kairah Studio is a cinematic AI creation platform designed for creators, brands, and studios who want studio-grade video, image, and audio output without the production overhead. We combine advanced generative models with story-aware prompt expansion (Prompt Magic), cinematic color grading, scene continuity, and easy export options for social and broadcast.</p>
+
+      <h3 style="margin-top:14px;">How it works — Quick walkthrough</h3>
+      <ol style="margin:8px 0 0 18px; color:#efe7d4;">
+        <li><strong>Sign up:</strong> Create an account or sign in with email.</li>
+        <li><strong>Pick a plan:</strong> Free, Pro, Diamond, Cinematic, or Lifetime.</li>
+        <li><strong>Create:</strong> Use the Dashboard to create a Video, Text→Video, Image, or Audio.</li>
+        <li><strong>Style & refine:</strong> Choose a preset or custom color/filter, apply Royal Filters, add voice/music.</li>
+        <li><strong>Render & export:</strong> Export in the allowed resolution for your plan (watermarked on Free).</li>
+        <li><strong>Manage & monetize:</strong> Use the Affiliate program or distribute your content externally.</li>
+      </ol>
+
+      <h3 style="margin-top:14px;">Pricing explained</h3>
+      <p>We offer monthly and discounted yearly billing. Each plan controls maximum clip length, generation credits, merge count, and export resolution. The Lifetime plan is a one-time purchase unlocking all features forever. Billing is handled through Stripe or PayPal; affiliates get 30% of each sale they refer.</p>
+
+      <h3 style="margin-top:14px;">Subscription tiers (at a glance)</h3>
+      <ul style="margin:8px 0 0 18px; color:#efe7d4;">
+        <li><strong>Free:</strong> Trial with 1 short watermarked clip and preview access.</li>
+        <li><strong>Pro:</strong> Entry-level creators — HD exports, 10 gens/month.</li>
+        <li><strong>Diamond:</strong> Influencers & brands — 4K export, bulk generation.</li>
+        <li><strong>Cinematic:</strong> Studio-level controls, priority render, advanced storytelling AI.</li>
+        <li><strong>Lifetime:</strong> One-time purchase for all features, forever access.</li>
+      </ul>
+
+      <h3 style="margin-top:14px;">Affiliate program details</h3>
+      <p>Affiliates receive 30% commission on referred sales. The system keeps a ledger of all affiliate earnings and issues automatic payouts once your accrued total reaches $500. Affiliates must link a Stripe or PayPal payout method to receive their funds. Lifetime bonuses and referral competitions are available for high-performing affiliates.</p>
+
+      <h3 style="margin-top:14px;">Support & contact</h3>
+      <p>For billing, technical support, or onboarding help, reach us at <strong>keishapoa@gmail.com</strong>. We also provide documentation and video walkthroughs inside your dashboard after signup.</p>
+
+      <h3 style="margin-top:14px;">Security & privacy</h3>
+      <p>Kairah Studio stores minimal personal data, uses industry-standard encryption for data in transit, and offers privacy controls in the Settings panel. You may request data exports or deletion via support.</p>
+
+      <h3 style="margin-top:14px;">Frequently asked questions (10+)</h3>
+      <div class="about-questions">
+        <div class="q">
+          <h4>1) What kind of videos can I create?</h4>
+          <p>Anything cinematic: human performances, product ads, fantasy & VFX scenes, brand stories, short-form social clips, and episodic series. Content must follow our Terms of Use (no illegal/explicit content).</p>
+        </div>
+
+        <div class="q">
+          <h4>2) How long do render times take?</h4>
+          <p>Render times depend on length and complexity. Short 6–30s clips render quickly (minutes). Full 2–3 minute cinematic pieces can take longer — Diamond and Cinematic plans receive priority queueing.</p>
+        </div>
+
+        <div class="q">
+          <h4>3) What file formats will I get?</h4>
+          <p>Videos: MP4 (H.264/H.265 as available). Images: JPG/PNG. Audio: MP3/WAV. High-bitrate and 4K export options depend on plan.</p>
+        </div>
+
+        <div class="q">
+          <h4>4) Do I own the generated content?</h4>
+          <p>Yes — unless explicit third-party IP or restricted content is used, you retain the rights to your generated content. See Terms for full license details.</p>
+        </div>
+
+        <div class="q">
+          <h4>5) Can I use my own images or voice recordings?</h4>
+          <p>Yes. You can upload references, photos, or use your voice files. We provide tools to integrate those assets into generated scenes.</p>
+        </div>
+
+        <div class="q">
+          <h4>6) Are there usage limits?</h4>
+          <p>Each plan has generation limits and merge allowances. Usage is tracked in your dashboard — upgrade anytime for higher quotas.</p>
+        </div>
+
+        <div class="q">
+          <h4>7) How do refunds work?</h4>
+          <p>Refunds are handled case-by-case. One-time lifetime purchases are final except for extenuating circumstances; subscriptions can be canceled per billing cycle. Contact support for billing issues.</p>
+        </div>
+
+        <div class="q">
+          <h4>8) What payment methods are accepted?</h4>
+          <p>Stripe (cards: Visa, Mastercard, Amex) and PayPal (recently added). Invoices and enterprise billing available for agencies.</p>
+        </div>
+
+        <div class="q">
+          <h4>9) How does the affiliate payout work?</h4>
+          <p>Commissions are logged automatically. Once you reach the $500 threshold, the system marks the payout eligible and sends funds via your connected Stripe/PayPal method. Payout records are available in your Affiliate Dashboard.</p>
+        </div>
+
+        <div class="q">
+          <h4>10) Is the platform suitable for brands and agencies?</h4>
+          <p>Yes. Diamond and Cinematic tiers are tailored for agencies and studios, providing bulk generation, priority rendering, and 4K exports. Contact sales for enterprise integrations.</p>
+        </div>
+
+        <div class="q">
+          <h4>11) How can I make videos SEO/social-ready?</h4>
+          <p>Use our templates for aspect ratios, caption export, and built-in audio sync options. Suggested export presets for TikTok, YouTube Shorts, Instagram Reels, and standard YouTube formats are included.</p>
+        </div>
+
+        <div class="q">
+          <h4>12) Are there team or collaboration features?</h4>
+          <p>Team & seat-based billing is available for larger studios on request. Shared project folders and role-based permissions are in the roadmap or available on Cinematic/Enterprise plans.</p>
+        </div>
+
+        <div class="q">
+          <h4>13) Where do I report bugs or request features?</h4>
+          <p>Contact <strong>keishapoa@gmail.com</strong>. Enterprise customers get a dedicated onboarding specialist and prioritized feature requests.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ (short) -->
+  <section id="faq">
+    <h2>Quick FAQ</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Support</h3>
+        <p>keishapoa@gmail.com — email for billing & technical help.</p>
+      </div>
+      <div class="card">
+        <h3>Security</h3>
+        <p>We store minimal data and follow encryption best practices for user data and payments.</p>
+      </div>
+      <div class="card">
+        <h3>Terms & Policies</h3>
+        <p>Accessible from the footer (coming soon) — includes content policy & licensing details.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  © 2025 Kairah Empire — Beyond Reality. Into Royalty. &nbsp; • &nbsp; Support: keishapoa@gmail.com
+</footer>
+
+<!-- Sign-up / Login overlay -->
+<div id="auth-overlay" aria-hidden="true" style="display:none; align-items:center; justify-content:center;">
+  <div id="auth-box" role="dialog" aria-modal="true">
+    <h3>Sign Up / Login</h3>
     <form id="auth-form">
-      <input type="email" placeholder="Email" required>
-      <input type="password" placeholder="Password" required>
-      <select id="plan-select">
+      <input id="auth-email" type="email" placeholder="Email" required />
+      <input id="auth-pass" type="password" placeholder="Password" required />
+      <select id="auth-plan">
         <option value="Free">Free - 6s clip</option>
         <option value="Pro">Pro - $19/mo or $300/yr</option>
         <option value="Diamond">Diamond - $49/mo or $450/yr</option>
         <option value="Cinematic">Cinematic - $99/mo or $600/yr</option>
         <option value="Lifetime">Lifetime - $500 one-time</option>
       </select>
-      <input type="text" placeholder="Affiliate ID (optional)">
-      <button type="submit">Continue</button>
+      <input id="auth-aff" type="text" placeholder="Affiliate ID (optional)" />
+      <div style="display:flex; gap:8px; margin-top:6px;">
+        <button type="submit">Continue</button>
+        <button type="button" onclick="closeAuth()" style="background:transparent;color:var(--gold-2);border:1px solid rgba(255,255,255,0.04);">Cancel</button>
+      </div>
+      <p style="color:#d9cfa7; font-size:12px; margin-top:8px;">By continuing you agree to our Terms. Support: keishapoa@gmail.com</p>
     </form>
-    <p style="text-align:center; margin-top:1rem; color:#FFD700; font-size:0.9rem;">Support: keishapoa@gmail.com</p>
   </div>
 </div>
 
-<section id="hero">
-  <h2>Create Your First Royal Video</h2>
-  <div class="video-mock">🎬 Cinematic Clip Preview</div>
-  <div style="text-align:center; margin-top:1rem;">
-    <button onclick="openAuth()">Sign Up / Login</button>
-    <button>Start Free 6s Video</button>
-  </div>
-</section>
-
-<section id="features">
-  <h2>Features</h2>
-  <div class="features">
-    <div class="card"><h3>Full-Length AI Videos</h3><p>Generate 2–3 min cinematic videos — humans, fantasy, products, or stories.</p></div>
-    <div class="card"><h3>Clip Merging & Editing</h3><p>Combine up to 10 scenes into one seamless video.</p></div>
-    <div class="card"><h3>AI Music + Voice</h3><p>Add background music or voiceovers from Kairah’s sound library.</p></div>
-    <div class="card"><h3>4K Export & Branding</h3><p>Download watermark-free HD/4K videos.</p></div>
-    <div class="card"><h3>Prompt Magic Pro</h3><p>Enhanced storytelling AI expands short ideas into full scripts.</p></div>
-    <div class="card"><h3>Bulk Generator</h3><p>Create multiple videos at once from one theme or script.</p></div>
-    <div class="card"><h3>Scene Control</h3><p>Choose lighting, mood, and cinematic camera angles.</p></div>
-    <div class="card"><h3>Royal Filters</h3><p>Default teal-gold glow or select custom colors and moods.</p></div>
-    <div class="card"><h3>Series Creator</h3><p>Build ongoing episodes (YouTube or brand series).</p></div>
-    <div class="card"><h3>Kairah Fame Boost</h3><p>Instantly push videos to social media for virality.</p></div>
-  </div>
-</section>
-
-<section id="pricing">
-  <h2>Pricing</h2>
-  <div class="pricing">
-    <div class="card"><h3>Free</h3><p>1 free 6s video, watermarked, preview all tools.</p><p>$0</p></div>
-    <div class="card"><h3>Pro</h3><p>Up to 1-min videos, 10 generations/month, 1080p export, merge 3 clips.</p><p>$19/mo or $300/yr</p></div>
-    <div class="card"><h3>Diamond</h3><p>Up to 2-min videos, 50 generations/month, 4K export, bulk generator.</p><p>$49/mo or $450/yr</p></div>
-    <div class="card"><h3>Cinematic</h3><p>Full creative control, studio-grade videos, advanced storytelling AI.</p><p>$99/mo or $600/yr</p></div>
-    <div class="card"><h3>Lifetime</h3><p>All features, lifetime access, prestige plan.</p><p>$500 one-time</p></div>
-  </div>
-  <div style="text-align:center; margin-top:1rem;" class="payment-icons">
-    <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" alt="PayPal">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Mastercard-logo.svg" alt="Mastercard">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Amex_logo.svg" alt="Amex">
-  </div>
-</section>
-
-<section id="affiliate">
-  <h2>Affiliate Program</h2>
-  <div class="affiliate">
-    <div class="card">
-      <h3>Earn 30% Commission</h3>
-      <p>Share your referral link. 30% of each sale goes directly to your account, 70% to Kairah Studio automatically.</p>
-    </div>
-    <div class="card">
-      <h3>Payouts & Bonuses</h3>
-      <p>Automatic payouts after $500 earned. Lifetime bonuses for affiliates reaching 100 lifetime sales.</p>
-    </div>
-  </div>
-</section>
-
-<section id="settings">
-  <h2>Settings</h2>
-  <div class="settings">
-    <div class="card"><h3>Profile</h3><p>Update email, password, subscription plan, affiliate ID.</p></div>
-    <div class="card"><h3>Notifications</h3><p>Enable email alerts, video completion notifications, promotions.</p></div>
-    <div class="card"><h3>Payment Methods</h3><p>Add/edit Stripe or PayPal accounts for subscription & affiliate payouts.</p></div>
-    <div class="card"><h3>Privacy</h3><p>Manage data sharing, video visibility, and account security.</p></div>
-  </div>
-</section>
-
-<section id="filters">
-  <h2>Video Style & Filters</h2>
-  <p>Choose your cinematic look or use Kairah Studio’s signature teal-gold glow.</p>
-  <div class="card">
-    <label for="style-select">Select Style:</label>
-    <select id="style-select">
-      <option value="kairah-default" selected>Teal-Gold Signature</option>
-      <option value="classic">Classic Cinematic</option>
-      <option value="vibrant">Vibrant Colors</option>
-      <option value="dreamy">Dreamy Pastels</option>
-      <option value="custom">Custom...</option>
-    </select>
-    <div id="custom-style" style="display:none; margin-top:1rem;">
-      <label for="color-picker">Choose Color:</label>
-      <input type="color" id="color-picker" value="#D4AF37">
-      <label for="glow-intensity">Glow Intensity:</label>
-      <input type="range" id="glow-intensity" min="0" max="100" value="50">
-      <label for="light-angle">Light Angle:</label>
-      <input type="range" id="light-angle" min="0" max="360" value="45">
-    </div>
-  </div>
-</section>
-
-<section id="about">
-  <h2>About Kairah Studio</h2>
-  <p>Kairah Studio is a cinematic AI video generator combining beauty, storytelling, and royalty. Users can generate films, viral shorts, brand ads, and more.</p>
-  <p>FAQ and operational details are included below. Support: keishapoa@gmail.com</p>
-</section>
-
-<section id="faq">
-  <h2>Frequently Asked Questions</h2>
-  <div class="faq-item">
-    <h4>How does the AI generate videos?</h4>
-    <p>It uses advanced cinematic AI engines that interpret scripts, prompts, and styles to produce 2–3 minute high-quality videos.</p>
-  </div>
-  <div class="faq-item">
-    <h4>Can I choose my own video colors?</h4>
-    <p>Yes, you can use the filter selector to pick any color, glow, or lighting style.</p>
-  </div>
-  <div class="faq-item">
-    <h4>How does the affiliate program work?</h4>
-    <p>Share your referral link. 30% commission goes directly to you automatically, 70% to Kairah Studio. Bonuses paid after 100 lifetime sales.</p>
-  </div>
-</section>
-
-<footer>
-  © 2025 Kairah Empire — Beyond Reality. Into Royalty.
-</footer>
-
 <script>
-function openAuth(){ document.getElementById('auth-overlay').style.display='flex'; }
-function closeAuth(){ document.getElementById('auth-overlay').style.display='none'; }
+/* ------------------------------
+  Minimal interactive behavior only.
+  Backend integration points are placeholders.
+  This file is the frozen frontend mock.
+-------------------------------*/
 
+/* Signup overlay */
+function openAuth(){ document.getElementById('auth-overlay').style.display='flex'; document.getElementById('auth-overlay').setAttribute('aria-hidden','false'); }
+function closeAuth(){ document.getElementById('auth-overlay').style.display='none'; document.getElementById('auth-overlay').setAttribute('aria-hidden','true'); }
+
+/* Simple start free action (visual) */
+function startFree(){ openAuth(); document.getElementById('auth-plan').value='Free'; alert('Starting the free 6s clip flow (visual mock).'); }
+
+/* Tabs */
+function openTab(id){
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  // activate clicked button
+  const btns = Array.from(document.querySelectorAll('.tabs button'));
+  const idx = Array.from(['video','text-video','image','audio']).indexOf(id);
+  if(btns[idx]) btns[idx].classList.add('active');
+  const el = document.getElementById(id);
+  if(el) el.classList.add('active');
+}
+
+/* Filters: show custom controls when needed */
 const styleSelect = document.getElementById('style-select');
 const customStyle = document.getElementById('custom-style');
-styleSelect.addEventListener('change', () => {
-  if(styleSelect.value === 'custom'){ customStyle.style.display='block'; }
-  else{ customStyle.style.display='none'; }
+if(styleSelect){
+  styleSelect.addEventListener('change', () => {
+    if(styleSelect.value === 'custom') customStyle.style.display = 'block';
+    else customStyle.style.display = 'none';
+  });
+}
+
+/* Create actions: will call backend later */
+async function create(type){
+  // Visual guard
+  alert('Create action (visual mock). This will call the backend generation endpoint: /generate/' + type);
+}
+
+/* Pay actions: visual only — link to backend endpoints you implement */
+function payStripe(priceKey){
+  alert('Stripe Checkout (visual). Frontend should call /create-stripe-session with priceKey: ' + priceKey);
+}
+function initPayPalButtons(){
+  // Render visual PayPal buttons in the 4 containers (if PayPal SDK loaded)
+  if(typeof paypal === 'undefined') return;
+  const setup = (id, value) => {
+    const target = document.getElementById(id);
+    if(!target) return;
+    paypal.Buttons({
+      style:{layout:'vertical', color:'gold', shape:'rect', label:'paypal'},
+      createOrder: function(data, actions){
+        // Use server endpoint to create order in production
+        return actions.order.create({
+          purchase_units:[{ amount:{ value: (value || '19.00') } }]
+        });
+      },
+      onApprove: function(data, actions){
+        return actions.order.capture().then(function(details){
+          alert('Transaction completed by ' + (details.payer.name?.given_name || 'payer'));
+        });
+      }
+    }).render('#' + id);
+  };
+  setup('paypal-pro','19.00');
+  setup('paypal-diamond','49.00');
+  setup('paypal-cinematic','99.00');
+  setup('paypal-lifetime','500.00');
+}
+window.addEventListener('load', ()=>{ initPayPalButtons(); });
+
+/* Auth form (visual Firebase scaffold) */
+document.getElementById('auth-form').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const email = document.getElementById('auth-email').value;
+  const pass = document.getElementById('auth-pass').value;
+  const plan = document.getElementById('auth-plan').value;
+  const affiliate = document.getElementById('auth-aff').value;
+  // Visual: attempt to create account with Firebase if configured
+  try{
+    if(typeof firebase !== 'undefined' && firebase && firebase.auth){
+      // Firebase is loaded — use compat flow (scaffold)
+      const auth = firebase.auth();
+      let user;
+      try {
+        user = await auth.createUserWithEmailAndPassword(email, pass);
+      } catch(err){
+        // if already exists, sign in
+        user = await auth.signInWithEmailAndPassword(email, pass);
+      }
+      // store basic data in Firestore (visual)
+      const db = firebase.firestore();
+      await db.collection('users').doc(user.user.uid).set({ email, plan, affiliate, createdAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge:true });
+      alert('✅ Welcome ' + email + ' — plan: ' + plan);
+    } else {
+      // No Firebase configured — visual fallback
+      alert('✅ (Visual) Account ready: ' + email + ' — plan: ' + plan + '\\n(Replace with real Firebase config & backend.)');
+    }
+    closeAuth();
+  }catch(err){
+    alert('Auth error (visual): ' + (err.message || err));
+  }
 });
 
-document.querySelectorAll('.faq-item h4').forEach(item=>{
-  item.addEventListener('click',()=>{ 
-    const p = item.nextElementSibling;
-    p.style.display = p.style.display==='block'?'none':'block';
+/* FAQ toggles for About section (collapsible answers) */
+document.querySelectorAll('.about-questions .q h4').forEach(h=>{
+  h.style.cursor='pointer';
+  h.addEventListener('click', ()=>{
+    const p = h.nextElementSibling;
+    if(p.style.display==='block') p.style.display='none';
+    else p.style.display='block';
   });
 });
 </script>
+
 </body>
 </html>
+v
